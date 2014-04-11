@@ -14,16 +14,21 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class LoginActivity extends Activity {
+@SuppressLint("NewApi") public class LoginActivity extends Activity  implements OnClickListener {
 
 	TextView usernameTV, pwdTV;
 	EditText usernameET, pwdET;
@@ -40,51 +45,39 @@ public class LoginActivity extends Activity {
         
         // setup login button 
         loginBT = (Button)findViewById(R.id.loginButton);
-        loginBT.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String username = "weihao1988";
-				String pwd = "3cf8d29203bdab6eae0b8fed8f889d31";
-				String httpUrl = "http://www.cc98.org/login.asp";
-				
-				// set up http post parameters
-				HttpPost httpRequest = new HttpPost(httpUrl);
-				
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				params.add(new BasicNameValuePair("u", username));
-				params.add(new BasicNameValuePair("p", pwd));
-				params.add(new BasicNameValuePair("a", "i"));
-				params.add(new BasicNameValuePair("userhidden", "2"));
-				
-				try {
-					// set encodings
-					HttpEntity httpEntity = new UrlEncodedFormEntity(params, "UTF-8");
-					// set http request
-					httpRequest.setEntity(httpEntity);
-					// get default http client
-					HttpClient httpClient = new DefaultHttpClient();
-					// get http response
-					HttpResponse httpResponse = httpClient.execute(httpRequest);
-					
-					// HttpStatus.SC_OK indicates post success
-					if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-						// get return string from the site
-						String strRes = EntityUtils.toString(httpResponse.getEntity());
-						Intent switchIntent = new Intent(LoginActivity.this, TestWebView.class);
-						switchIntent.putExtra("login page", strRes);
-		    			startActivity(switchIntent);
-					}
-					else
-					{
-						;//
-					}
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace(); ;
-				}
-			}
-		});
+        loginBT.setOnClickListener(this);
+        
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads()
+        		.detectDiskWrites().detectNetwork().penaltyLog().build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
+        		.detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
 	}
+	
+	public void onClick(View v){
+    	switch (v.getId()) {
+    	case R.id.loginButton:
+    		EditText userNameTextView = (EditText)findViewById(R.id.usernameEditText);
+			EditText pswTextView = (EditText)findViewById(R.id.pwdEditText);
+    		NetworkProxy networkProxy = new NetworkProxy(this);
+    		String[] status = networkProxy.trySign(userNameTextView.getText().toString(), pswTextView.getText().toString());
+    		StringBuilder tmpStrBud = new StringBuilder();
+    		tmpStrBud.append("statusCode=");
+    		if (status[1] != null)
+    			tmpStrBud.append(status[0]);
+    		tmpStrBud.append("&statusMessage=");
+    		if (status[1] != null)
+    			tmpStrBud.append(status[1]);
+    		SharedPreferences userSettings = this.getSharedPreferences(this.getString(R.string.userInfoFileName), Activity.MODE_WORLD_READABLE);  
+    		String cookie = userSettings.getString(this.getString(R.string.cookieFile), null);
+    		tmpStrBud.append("&cookie=");
+    		if (cookie != null)
+    			tmpStrBud.append(cookie);
+    		userNameTextView.setText(tmpStrBud.toString());
+    	break;
+    	// More buttons go here (if any) ...
+    	}
+    }
+	
+	
+	
 }
