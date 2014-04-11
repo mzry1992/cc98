@@ -45,7 +45,7 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				String username = "weihao1988";
-				String pwd = "26071647";
+				String pwd = "3cf8d29203bdab6eae0b8fed8f889d31";
 				String httpUrl = "http://www.cc98.org/login.asp";
 				
 				// set up http post parameters
