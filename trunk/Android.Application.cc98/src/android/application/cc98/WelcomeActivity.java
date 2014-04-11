@@ -26,5 +26,7 @@ public class WelcomeActivity extends Activity {
         		WelcomeActivity.this.finish();
         	}
         }, 2000);
+        
+        
     }
 }

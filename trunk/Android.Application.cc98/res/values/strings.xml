@@ -9,5 +9,9 @@
     <string name="password">密码：</string>
     <string name="loginText">用户登陆</string>
     <string name="loginButton">登陆</string>
-
+	
+    <string name="userInfoFileName">UserInfo</string>
+    <string name="userNameFile">UserName</string>
+    <string name="passwordFile">Password</string>
+    <string name="cookieFile">Cookie</string>
 </resources>
