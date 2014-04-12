@@ -6,7 +6,7 @@
     
     <string name="username">用户名：</string>
     <string name="textStyle">微软雅黑</string>
-    <string name="password">密码：</string>
+    <string name="password">密  码：</string>
     <string name="loginText">用户登陆</string>
     <string name="loginButton">登陆</string>
 	
