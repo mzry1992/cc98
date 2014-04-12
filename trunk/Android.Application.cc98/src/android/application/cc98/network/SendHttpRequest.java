@@ -1,4 +1,4 @@
-package android.application.cc98;
+package android.application.cc98.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+
 
 public class SendHttpRequest {
    
