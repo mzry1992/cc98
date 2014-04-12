@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class LoginActivity extends Activity  implements OnClickListener {
+public class LoginActivity extends Activity  implements OnClickListener, SignInInterface {
 
 	EditText usernameET, pwdET;
 	Button loginBT;
@@ -63,11 +63,13 @@ public class LoginActivity extends Activity  implements OnClickListener {
 		return signURL;
 	}
 	
-	public ProgressDialog getProgressDialog() {
-		return this.progressDialog;
+	@Override
+	public void SignInPreProgress() {
+		this.progressDialog.show(); 
 	}
 	
-	public void PostProgress(String[] status) {
+	@Override
+	public void SignInPostProgress(String[] status) {
 		StringBuilder tmpStrBud = new StringBuilder();
 		tmpStrBud.append("statusCode=");
 		if (status[0] != null)
@@ -81,5 +83,11 @@ public class LoginActivity extends Activity  implements OnClickListener {
 		if (cookie != null)
 			tmpStrBud.append(cookie);
 		usernameET.setText(tmpStrBud.toString());
+		this.progressDialog.dismiss();
+	}
+	
+	@Override
+	public void SignInProgressUpdate() {
+		
 	}
 }

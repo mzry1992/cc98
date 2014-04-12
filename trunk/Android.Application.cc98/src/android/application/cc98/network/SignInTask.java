@@ -6,23 +6,25 @@ import java.util.HashMap;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.EntityUtils;
 
-import android.app.Activity;
 import android.application.cc98.LoginActivity;
-import android.application.cc98.R;
-import android.content.SharedPreferences;
+import android.application.cc98.SignInInterface;
 import android.os.AsyncTask;
 
 public class SignInTask extends AsyncTask<String, Integer, String[]> {
-	private LoginActivity activity = null;
 	
-	public SignInTask(LoginActivity activity) {
+	private SignInInterface activity = null;
+	
+	public SignInTask(SignInInterface activity) {
+		if (null == activity)
+			return;
 		this.activity = activity;
 	}
 	
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		this.activity.getProgressDialog().show(); 
+		this.activity.SignInPreProgress();
+		
 	}
 		
 	////////////////////////////////////////
@@ -40,8 +42,7 @@ public class SignInTask extends AsyncTask<String, Integer, String[]> {
 		String username = inputs[0];
 		String pwd = inputs[1];
 		//check whether store user name and pwd
-		if (username == null || pwd == null || username.length() == 0 || pwd.length() == 0)
-		{
+		if (username == null || pwd == null || username.length() == 0 || pwd.length() == 0) {
 			resultList[0] = "1";
 			return resultList;
 		}
@@ -53,8 +54,7 @@ public class SignInTask extends AsyncTask<String, Integer, String[]> {
 		params.put("userhidden","2");
 		try {
 			HttpResult response =  SendHttpRequest.sendPost(signURL, null, params, "utf-8");
-			if (response.getStatusCode() == 200)
-			{
+			if (response.getStatusCode() == 200) {
 				resultList[0] = "3";
 				resultList[1] = EntityUtils.toString(response.getHttpEntity());
 				if (resultList[1] == "9898") {
@@ -76,8 +76,7 @@ public class SignInTask extends AsyncTask<String, Integer, String[]> {
 	    	 resultList[0] = "4";
 		     e.printStackTrace(); 
 	     } 
-	     catch (Exception e) 
-	     {  
+	     catch (Exception e) {  
 	    	 resultList[0] = "4";
 		     e.printStackTrace(); 
 	     }  
@@ -92,7 +91,6 @@ public class SignInTask extends AsyncTask<String, Integer, String[]> {
 	@Override
 	protected void onPostExecute(String[] results) {
 		super.onPostExecute(results);
-		this.activity.PostProgress(results);		
-		this.activity.getProgressDialog().dismiss();
+		this.activity.SignInPostProgress(results);
 	}
 }
