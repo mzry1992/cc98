@@ -56,7 +56,7 @@ public class SignInTask extends AsyncTask<String, Integer, String[]> {
 			if (response.getStatusCode() == 200) {
 				resultList[0] = "3";
 				resultList[1] = EntityUtils.toString(response.getHttpEntity());
-				if (resultList[1] == "9898") {
+				if (resultList[1].equals("9898")) {
 					//set cookies
 					String resCookie = response.getCookie();
 					resultList[2] = resCookie;
