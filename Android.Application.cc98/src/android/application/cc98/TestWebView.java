@@ -14,8 +14,8 @@ public class TestWebView extends Activity {
 	        setContentView(R.layout.testwebview);
 	        
 	        Intent intent = getIntent();
-	        String loginPageHtml = intent.getStringExtra("login page");
-	        WebView wbView = (WebView)findViewById(R.id.login_page_webview);
+	        String loginPageHtml = intent.getStringExtra("home page");
+	        WebView wbView = (WebView)findViewById(R.id.webview_page);
 	        wbView.getSettings().setDefaultTextEncodingName("UTF-8");
 	        wbView.loadData(loginPageHtml, "text/html; charset=UTF-8", null);
 	    }
