@@ -1,4 +1,4 @@
-package android.application.cc98;
+package android.application.cc98.network;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
