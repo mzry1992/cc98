@@ -30,11 +30,11 @@ public final class R {
         public static final int imageView1=0x7f080007;
         public static final int loginButton=0x7f080005;
         public static final int loginTextView=0x7f080000;
-        public static final int login_page_webview=0x7f080006;
         public static final int pwdEditText=0x7f080004;
         public static final int pwdTextView=0x7f080003;
         public static final int usernameEditText=0x7f080002;
         public static final int usernameTextView=0x7f080001;
+        public static final int webview_page=0x7f080006;
     }
     public static final class layout {
         public static final int login=0x7f030000;
@@ -49,6 +49,7 @@ public final class R {
         public static final int app_name=0x7f050000;
         public static final int cookieFile=0x7f05000a;
         public static final int loginButton=0x7f050006;
+        public static final int loginSuffix=0x7f05000d;
         public static final int loginText=0x7f050005;
         public static final int password=0x7f050004;
         public static final int passwordFile=0x7f050009;

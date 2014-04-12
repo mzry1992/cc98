@@ -6,7 +6,6 @@ import java.util.HashMap;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.EntityUtils;
 
-import android.application.cc98.LoginActivity;
 import android.application.cc98.SignInInterface;
 import android.os.AsyncTask;
 
@@ -86,6 +85,7 @@ public class SignInTask extends AsyncTask<String, Integer, String[]> {
 	@Override
 	protected void onProgressUpdate(Integer... values) {
 		super.onProgressUpdate(values);
+		this.activity.SignInProgressUpdate();
 	}
 	
 	@Override

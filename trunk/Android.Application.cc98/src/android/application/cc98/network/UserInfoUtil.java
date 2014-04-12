@@ -44,4 +44,27 @@ public class UserInfoUtil {
 		userSettingsEditor.putString(activity.getString(R.string.cookieFile), cookie);
 		userSettingsEditor.commit();
 	}
+	
+	public static String getSignURL(Activity activity) {
+		if (activity == null)
+			return null;
+		StringBuilder signURLBuilder = new StringBuilder();
+		signURLBuilder.append("http://");
+		signURLBuilder.append(activity.getString(R.string.serverName)); 
+		signURLBuilder.append("/");
+		signURLBuilder.append(activity.getString(R.string.signSuffix));
+		String signURL = signURLBuilder.toString();
+		return signURL;
+	}
+	
+	public static String getHomePageURL(Activity activity) {
+		if (activity == null)
+			return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("http://");
+		sb.append(activity.getString(R.string.serverName)); 
+		sb.append("/");
+		String homeUrl = sb.toString();
+		return homeUrl;
+	}
 }

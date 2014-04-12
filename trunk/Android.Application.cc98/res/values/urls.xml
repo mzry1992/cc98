@@ -2,4 +2,5 @@
 <resources>
     <string name="serverName">www.cc98.org</string>
     <string name="signSuffix">sign.asp</string>
+    <string name="loginSuffix">login.asp</string>
 </resources>
