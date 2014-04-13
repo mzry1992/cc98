@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.application.cc98.network.SignInTask;
 import android.application.cc98.network.UserInfoUtil;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -134,7 +135,7 @@ public class LoginActivity extends Activity  implements OnClickListener, SignInI
 			//set user info
 			UserInfoUtil.SetUserInfo(this, usernameET.getText().toString(), pwdET.getText().toString());
 			//start home activity
-			
+			jumpToHomePage();
 			return;
 		}
 		switch (errorCode) {
@@ -160,5 +161,11 @@ public class LoginActivity extends Activity  implements OnClickListener, SignInI
 			strBuilder.append("未知错误，请联系开发人员");
 			break;
 		}
+	}
+	
+	private void jumpToHomePage() {
+		Intent loginIntent = new Intent(LoginActivity.this, HomePageActivity.class);
+		LoginActivity.this.startActivity(loginIntent);
+		LoginActivity.this.finish();
 	}
 }
