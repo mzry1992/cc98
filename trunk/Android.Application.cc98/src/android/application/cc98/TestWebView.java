@@ -3,6 +3,7 @@ package android.application.cc98;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 
@@ -18,6 +19,7 @@ public class TestWebView extends Activity {
 	        WebView wbView = (WebView)findViewById(R.id.webview_page);
 	        wbView.getSettings().setDefaultTextEncodingName("UTF-8");
 	        wbView.loadData(loginPageHtml, "text/html; charset=UTF-8", null);
+	        Log.i("html",loginPageHtml);
 	    }
 
 }

@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-public class HomePageActivity extends Activity implements GetHomePageInterface{
+public class HomePageActivity extends Activity implements GetWebPageInterface{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,17 +20,17 @@ public class HomePageActivity extends Activity implements GetHomePageInterface{
 	}
 	
 	@Override
-	public void getHomePreProgress() {
+	public void getWebPagePreProgress() {
 		
 	}
 	
 	@Override
-	public void getHomeProgressUpdate() {
+	public void getWebPageProgressUpdate() {
 		
 	}
 	
 	@Override
-	public void getHomePostProgress(String[] status) {
+	public void getWebPagePostProgress(String[] status) {
 		Toast.makeText(this, "In getHomePagePostProgress" + "  status[0]:" + status[0], Toast.LENGTH_SHORT).show();
 		if (status[0].equals("3")) {
 			//Intent intent = new Intent(this, TestWebView.class);
