@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity  implements OnClickListener, SignInInterface {
+public class LoginActivity extends Activity  implements OnClickListener, GetWebPageInterface {
 
 	EditText usernameET, pwdET;
 	Button loginBT;
@@ -77,12 +77,12 @@ public class LoginActivity extends Activity  implements OnClickListener, SignInI
 	}
 	
 	@Override
-	public void SignInPreProgress() {
+	public void getWebPagePreProgress() {
 		this.progressDialog.show(); 
 	}
 	
 	@Override
-	public void SignInPostProgress(String[] status) {
+	public void getWebPagePostProgress(String[] status) {
 		
 		TextView errorTV = (TextView)this.findViewById(R.id.errorTextView);
 		if (status[0] == null) {
@@ -116,7 +116,7 @@ public class LoginActivity extends Activity  implements OnClickListener, SignInI
 	}
 	
 	@Override
-	public void SignInProgressUpdate() {
+	public void getWebPageProgressUpdate() {
 		
 	}
 	

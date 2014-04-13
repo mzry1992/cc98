@@ -11,7 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-public class WelcomeActivity extends Activity implements SignInInterface{
+public class WelcomeActivity extends Activity implements GetWebPageInterface{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +44,16 @@ public class WelcomeActivity extends Activity implements SignInInterface{
     }
     
     @Override
-	public void SignInPreProgress() {
+	public void getWebPagePreProgress() {
 	}
 	
 	@Override
-	public void SignInProgressUpdate() {
+	public void getWebPageProgressUpdate() {
 		
 	}
 	
 	@Override
-	public void SignInPostProgress(String[] status) {
+	public void getWebPagePostProgress(String[] status) {
 		
 		if (status[0].equals("3") && status[1].equals("9898")) {
 			String cookie = status[2];

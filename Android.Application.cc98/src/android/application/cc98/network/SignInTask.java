@@ -6,14 +6,14 @@ import java.util.HashMap;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.EntityUtils;
 
-import android.application.cc98.SignInInterface;
+import android.application.cc98.GetWebPageInterface;
 import android.os.AsyncTask;
 
 public class SignInTask extends AsyncTask<String, Integer, String[]> {
 	
-	private SignInInterface activity = null;
+	private GetWebPageInterface activity = null;
 	
-	public SignInTask(SignInInterface activity) {
+	public SignInTask(GetWebPageInterface activity) {
 		if (null == activity)
 			return;
 		this.activity = activity;
@@ -22,7 +22,7 @@ public class SignInTask extends AsyncTask<String, Integer, String[]> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		this.activity.SignInPreProgress();
+		this.activity.getWebPagePreProgress();
 		
 	}
 		
@@ -85,12 +85,12 @@ public class SignInTask extends AsyncTask<String, Integer, String[]> {
 	@Override
 	protected void onProgressUpdate(Integer... values) {
 		super.onProgressUpdate(values);
-		this.activity.SignInProgressUpdate();
+		this.activity.getWebPageProgressUpdate();
 	}
 	
 	@Override
 	protected void onPostExecute(String[] results) {
 		super.onPostExecute(results);
-		this.activity.SignInPostProgress(results);
+		this.activity.getWebPagePostProgress(results);
 	}
 }

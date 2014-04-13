@@ -6,16 +6,15 @@ import java.util.HashMap;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.EntityUtils;
 
-import android.application.cc98.GetHomePageInterface;
-import android.application.cc98.SignInInterface;
+import android.application.cc98.GetWebPageInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class HomePageTask extends AsyncTask<String, Integer, String[]> {
 
-private GetHomePageInterface activity = null;
+private GetWebPageInterface activity = null;
 	
-	public HomePageTask(GetHomePageInterface activity) {
+	public HomePageTask(GetWebPageInterface activity) {
 		if (null == activity)
 			return;
 		this.activity = activity;
@@ -24,7 +23,7 @@ private GetHomePageInterface activity = null;
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		this.activity.getHomePreProgress();
+		this.activity.getWebPagePreProgress();
 		
 	}
 	///////////////////////////////////////////////
@@ -77,12 +76,12 @@ private GetHomePageInterface activity = null;
 	@Override
 	protected void onProgressUpdate(Integer... values) {
 		super.onProgressUpdate(values);
-		this.activity.getHomeProgressUpdate();
+		this.activity.getWebPageProgressUpdate();
 	}
 	
 	@Override
 	protected void onPostExecute(String[] results) {
 		super.onPostExecute(results);
-		this.activity.getHomePostProgress(results);
+		this.activity.getWebPagePostProgress(results);
 	}
 }
