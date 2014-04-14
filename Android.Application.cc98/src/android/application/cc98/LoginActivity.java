@@ -82,8 +82,8 @@ public class LoginActivity extends Activity  implements OnClickListener, GetWebP
 	}
 	
 	@Override
-	public void getWebPagePostProgress(String[] status) {
-		
+	public void getWebPagePostProgress(Object outputs) {
+		String[] status = (String[])outputs;
 		TextView errorTV = (TextView)this.findViewById(R.id.errorTextView);
 		if (status[0] == null) {
 			errorTV.setText("未知错误，请联系开发人员");

@@ -26,21 +26,34 @@ public final class R {
         public static final int welcome=0x7f020002;
     }
     public static final class id {
-        public static final int action_settings=0x7f080009;
-        public static final int errorTextView=0x7f080006;
-        public static final int imageView1=0x7f080008;
-        public static final int loginButton=0x7f080005;
-        public static final int loginTextView=0x7f080000;
-        public static final int pwdEditText=0x7f080004;
-        public static final int pwdTextView=0x7f080003;
-        public static final int usernameEditText=0x7f080002;
-        public static final int usernameTextView=0x7f080001;
-        public static final int webview_page=0x7f080007;
+        public static final int action_settings=0x7f080013;
+        public static final int customItemText=0x7f080006;
+        public static final int customItemTitle=0x7f080005;
+        public static final int customListItem=0x7f080004;
+        public static final int defaultItemImage=0x7f080008;
+        public static final int defaultItemTitle=0x7f080009;
+        public static final int defaultListItem=0x7f080007;
+        public static final int errorTextView=0x7f080010;
+        public static final int homePageCustomList=0x7f080002;
+        public static final int homePageDefaultGrid=0x7f080003;
+        public static final int homePageLayout=0x7f080000;
+        public static final int homePageUsername=0x7f080001;
+        public static final int imageView1=0x7f080012;
+        public static final int loginButton=0x7f08000f;
+        public static final int loginTextView=0x7f08000a;
+        public static final int pwdEditText=0x7f08000e;
+        public static final int pwdTextView=0x7f08000d;
+        public static final int usernameEditText=0x7f08000c;
+        public static final int usernameTextView=0x7f08000b;
+        public static final int webview_page=0x7f080011;
     }
     public static final class layout {
-        public static final int login=0x7f030000;
-        public static final int testwebview=0x7f030001;
-        public static final int welcome=0x7f030002;
+        public static final int home=0x7f030000;
+        public static final int home_custom_list_item=0x7f030001;
+        public static final int home_default_list_item=0x7f030002;
+        public static final int login=0x7f030003;
+        public static final int testwebview=0x7f030004;
+        public static final int welcome=0x7f030005;
     }
     public static final class menu {
         public static final int welcome=0x7f070000;
@@ -49,16 +62,27 @@ public final class R {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
         public static final int cookieFile=0x7f05000a;
+        public static final int customItemText=0x7f05000e;
+        public static final int customItemTitle=0x7f05000d;
+        public static final int defaultItemTitle=0x7f05000f;
+        /**  home page string 
+         */
+        public static final int homePageCustomTextView=0x7f05000b;
+        public static final int homePageDefaultTextView=0x7f05000c;
         public static final int loginButton=0x7f050006;
-        public static final int loginSuffix=0x7f05000d;
+        public static final int loginSuffix=0x7f050012;
         public static final int loginText=0x7f050005;
         public static final int password=0x7f050004;
         public static final int passwordFile=0x7f050009;
-        public static final int serverName=0x7f05000b;
-        public static final int signSuffix=0x7f05000c;
+        public static final int serverName=0x7f050010;
+        public static final int signSuffix=0x7f050011;
         public static final int textStyle=0x7f050003;
+        /**  user information and cookie 
+         */
         public static final int userInfoFileName=0x7f050007;
         public static final int userNameFile=0x7f050008;
+        /**  login string 
+         */
         public static final int username=0x7f050002;
     }
     public static final class style {
