@@ -8,6 +8,7 @@ import android.application.cc98.network.HomePageTask;
 import android.application.cc98.network.UserInfoUtil;
 import android.application.cc98.view.GrapeGridView;
 import android.application.cc98.view.Utility;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,14 +28,17 @@ public class HomePageActivity extends Activity implements GetWebPageInterface{
 	private ArrayList<String> defaultBoardNames;
 	private ArrayList<String> defaultBoardUrls;
 	
+	private String homePage, serverName, boardUrlName;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
 		
+		homePage = UserInfoUtil.getHomePageURL(this);
+		serverName = this.getString(R.string.serverName);
+		boardUrlName = this.getString(R.string.boardUrl);
 		String cookie = UserInfoUtil.GetCookieInfo(this);
-		new HomePageTask(this, this.getString(R.string.serverName)).execute(cookie,
-																UserInfoUtil.getHomePageURL(this));
+		new HomePageTask(this, serverName).execute(cookie, homePage);
 	}
 	
 	@Override
@@ -103,9 +107,13 @@ public class HomePageActivity extends Activity implements GetWebPageInterface{
      	
      	// set view
 		customLv.setOnItemClickListener(new OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        	Toast.makeText(getApplicationContext(), "Url:" + customBoardUrls.get(position), Toast.LENGTH_SHORT).show();
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				String boardUrl = homePage + customBoardUrls.get(position);
+				Toast.makeText(getApplicationContext(), "Url:" + boardUrl, Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(HomePageActivity.this, LeafBoardActivity.class);
+				intent.putExtra(boardUrlName, boardUrl);
+				HomePageActivity.this.startActivity(intent);
         	}
         });
 	}
@@ -134,9 +142,13 @@ public class HomePageActivity extends Activity implements GetWebPageInterface{
      	
 		// set view
      	defaultGv.setOnItemClickListener(new OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        	Toast.makeText(getApplicationContext(), "Url:" + defaultBoardUrls.get(position), Toast.LENGTH_SHORT).show();
+	        @Override
+	        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	        	String boardUrl = homePage + defaultBoardUrls.get(position);
+				Toast.makeText(getApplicationContext(), "Url:" + boardUrl, Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(HomePageActivity.this, LeafBoardActivity.class);
+				intent.putExtra(boardUrlName, boardUrl);
+				HomePageActivity.this.startActivity(intent);
         	}
         });
 	}
