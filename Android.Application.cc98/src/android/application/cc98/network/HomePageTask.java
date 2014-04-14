@@ -174,20 +174,6 @@ public class HomePageTask extends AsyncTask<String, Integer, ArrayList<ArrayList
 				isTitle = false;
 		}
 		
-		/*StringBuilder sb1 = new StringBuilder();
-		for (String str : boardNames)
-			sb1.append(str + "\n");
-		Toast.makeText(this, sb1.toString(), Toast.LENGTH_LONG).show();
-		
-		StringBuilder sb2 = new StringBuilder();
-		for (String str : boardUrls)
-			sb2.append(str + "\n");
-		Toast.makeText(this, sb2.toString(), Toast.LENGTH_LONG).show();
-		
-		StringBuilder sb3 = new StringBuilder();
-		for (String str : boardDescripts)
-			sb3.append(str + "\n");
-		Toast.makeText(this, sb3.toString(), Toast.LENGTH_LONG).show();*/
 	}
 	
 	private void getDefaultBoardNames(Element table, ArrayList<String> boardNames, ArrayList<String> boardUrls) {

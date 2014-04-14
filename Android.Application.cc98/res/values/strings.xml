@@ -23,4 +23,10 @@
     <string name="customItemTitle">customItemTitle</string>
     <string name="customItemText">customItemText</string>
     <string name="defaultItemTitle">defaultItemTitle</string>
+    
+    <!-- board page string -->
+    <string name="boardUrl">board URL</string>
+    <string name="leafBoardTopicTextView">帖子主题</string>
+    <string name="leafItemTitle">leafItemTitle</string>
+    <string name="leafItemText">leafItemText</string>
 </resources>
