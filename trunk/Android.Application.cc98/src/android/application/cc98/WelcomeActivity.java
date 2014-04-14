@@ -53,8 +53,8 @@ public class WelcomeActivity extends Activity implements GetWebPageInterface{
 	}
 	
 	@Override
-	public void getWebPagePostProgress(String[] status) {
-		
+	public void getWebPagePostProgress(Object outputs) {
+		String[] status = (String[])outputs;
 		if (status[0].equals("3") && status[1].equals("9898")) {
 			String cookie = status[2];
 			UserInfoUtil.SetCookieInfo(this, cookie);
