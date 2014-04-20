@@ -18,12 +18,15 @@
     <string name="cookieFile">Cookie</string>
     
     <!-- home page string -->
+    <string name="homePageExistButton">用户退出</string>
     <string name="homePageCustomTextView">个人定制区</string>
     <string name="homePageDefaultTextView">版面分类</string>
     <string name="customItemTitle">customItemTitle</string>
     <string name="customItemText">customItemText</string>
     <string name="defaultItemTitle">defaultItemTitle</string>
     
+    <!-- loading page string -->
+    <string name="loadingStr">正在载入，请稍后...</string>
     <!-- board page string -->
     <string name="boardUrl">board URL</string>
     <string name="leafBoardTopicTextView">帖子主题</string>
