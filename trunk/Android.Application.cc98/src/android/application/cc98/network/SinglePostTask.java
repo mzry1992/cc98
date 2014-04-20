@@ -101,6 +101,16 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	private void parseSinglePostHtml(String singlePostHtml,
 									 ArrayList<ArrayList<String>> outputs) {
 		try {
+			/*int idx = 0, brCnt = 0;
+			while (true) {
+				idx = singlePostHtml.indexOf("<br>", idx + 1);
+				if (idx >= 0 && idx < singlePostHtml.length()) brCnt++;
+				else break;
+			}
+			//System.out.println("Html has <br> count: " + brCnt);
+			
+			singlePostHtml = singlePostHtml.replace("<br>", "\n");
+			singlePostHtml = singlePostHtml.replace("\n\n", "\n");*/
 			InputStream instr = new ByteArrayInputStream(singlePostHtml.getBytes());
 			Document httpDoc = Jsoup.parse(instr, "UTF-8", serverName);
 			Element body = httpDoc.body();
@@ -154,7 +164,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 				break;
 			}
 		}
-		System.out.println("Post count: " + postCnt);
+		//System.out.println("Post count: " + postCnt);
 		return postCnt;
 	}
 	// get post title
@@ -163,7 +173,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 		String text = elem.text();
 		int idx = text.indexOf("Ìû×ÓÖ÷Ìâ£º");
 		String title = text.substring(idx + 5).trim();
-		System.out.println("Post title: " + title);
+		//System.out.println("Post title: " + title);
 		return title;
 	}
 	// get posts details
@@ -181,7 +191,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 				Element name = td1.select("a[name]").first();
 				Element author = name.select("b").first();
 				authors.add(author.text());
-				System.out.println("Author:" + author.text());
+				//System.out.println("Author:" + author.text());
 			}
 			
 			{ // content
@@ -190,26 +200,31 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 				Element td = bq.select("td").first();
 				String title = td.select("b").first().text().trim();
 				StringBuilder sb = new StringBuilder();
-				sb.append(title);
+				if (title.length() > 0) {
+					sb.append(title);
+					sb.append("\n\n");
+				}
 				Element span = td.select("span").first();
-				while (span.children().size() != 0) {
+				while (true) {
 					String content = span.text().trim();
 					if (content.length() > 0) {
 						sb.append(content);
 						sb.append("\n");
 					}
-					span = span.child(0);
+					if (span.children().size() != 0)
+						span = span.child(0);
+					else break;
 				}
 				String contentStr = removeBrackets(sb.toString());
 				contents.add(contentStr);
-				System.out.println("Content:" + contentStr);
+				//System.out.println("Content:" + contentStr);
 			}		
 			
 			{ // time post
 				Element td = tr2.children().first();
 				String timestamp = td.text().trim();
 				timestamps.add(timestamp);
-				System.out.println("Timestamp:" + timestamp);
+				//System.out.println("Timestamp:" + timestamp);
 			}
 		}
 	}

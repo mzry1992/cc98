@@ -35,4 +35,8 @@
     
     <!-- post page string -->
     <string name="postUrl">post URL</string>
+    <string name="postFLoorText">postFloorText</string>
+    <string name="postAuthorText">postAuthorText</string>
+    <string name="postContentText">postContentText</string>
+    <string name="postTimestampText">postTimestampText</string>
 </resources>

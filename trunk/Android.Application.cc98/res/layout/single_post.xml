@@ -16,6 +16,23 @@
             android:layout_height="wrap_content"
             android:textSize="23sp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/lightgrey" />
+	    
+	    <TextView
+	        android:id="@+id/singlePostInfo"
+	        android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/darkgrey"
+            android:layout_marginBottom="25dp" />
+	    
+	    <android.application.cc98.view.NoScrollListView
+            android:name="android.application.cc98.view.NoScrollListView"
+        	class="android.application.cc98.view.NoScrollListView"
+            android:id="@+id/singlePostList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="25dp" />
 	    
 	</LinearLayout>
