@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -39,6 +40,16 @@ public class HomePageActivity extends Activity implements GetWebPageInterface{
 		boardUrlName = this.getString(R.string.boardUrl);
 		String cookie = UserInfoUtil.GetCookieInfo(this);
 		new HomePageTask(this, serverName).execute(cookie, homePage);
+		
+		Button existButton = (Button)this.findViewById(R.id.homeExitButton);
+		existButton.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);	// clear activity stack
+				HomePageActivity.this.startActivity(intent);
+			}
+		});
 	}
 	
 	@Override

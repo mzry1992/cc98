@@ -43,7 +43,9 @@
             android:layout_marginBottom="12dp"
             android:text="@string/leafBoardTopicTextView" />
         
-        <ListView
+        <android.application.cc98.view.NoScrollListView
+            android:name="android.application.cc98.view.NoScrollListView"
+        	class="android.application.cc98.view.NoScrollListView"
             android:id="@+id/leafBoardTopicList"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
