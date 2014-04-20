@@ -11,12 +11,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class LeafBoardActivity extends Activity implements GetWebPageInterface{
 	
@@ -93,8 +93,7 @@ public class LeafBoardActivity extends Activity implements GetWebPageInterface{
 		
 		// set data
 		ArrayList<HashMap<String, String>> displist = new ArrayList<HashMap<String, String>>();
-        for (int i = 0; i < topicTitles.size(); i++)
-        {
+        for (int i = 0; i < topicTitles.size(); i++) {
         	HashMap<String, String> map = new HashMap<String, String>();
         	map.put(this.getString(R.string.leafItemTitle), topicTitles.get(i));
         	map.put(this.getString(R.string.leafItemText), topicAdditions.get(i));
