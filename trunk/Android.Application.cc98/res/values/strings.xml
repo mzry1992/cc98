@@ -32,4 +32,7 @@
     <string name="leafBoardTopicTextView">帖子主题</string>
     <string name="leafItemTitle">leafItemTitle</string>
     <string name="leafItemText">leafItemText</string>
+    
+    <!-- post page string -->
+    <string name="postUrl">post URL</string>
 </resources>

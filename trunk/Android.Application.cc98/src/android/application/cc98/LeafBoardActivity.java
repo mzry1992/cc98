@@ -24,16 +24,17 @@ public class LeafBoardActivity extends Activity implements GetWebPageInterface{
 	private ArrayList<String> topicUrls;
 	private ArrayList<String> topicAdditions;
 	private ArrayList<String> boardInfo;
-	private String homePage;
+	private String homePage, postUrlName;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.leaf_board);
 		
+		homePage = UserInfoUtil.getHomePageURL(this);
+		postUrlName = this.getString(R.string.postUrl);
 		Intent intent = getIntent();
         String boardUrl = intent.getStringExtra(this.getString(R.string.boardUrl));
 		String cookie = UserInfoUtil.GetCookieInfo(this);
-		homePage = UserInfoUtil.getHomePageURL(this);
 		new LeafBoardTask(this, this.getString(R.string.serverName)).execute(cookie, boardUrl);
 	}
 	
@@ -62,12 +63,12 @@ public class LeafBoardActivity extends Activity implements GetWebPageInterface{
 			topicAdditions = outputs.get(3);
 			boardInfo = outputs.get(4);
 			
-			System.out.println(topicTitles.size() + ":" + topicUrls.size() + ":" + topicAdditions.size());
+			/*System.out.println(topicTitles.size() + ":" + topicUrls.size() + ":" + topicAdditions.size());
 			for (int i = 0; i < topicTitles.size(); i++) {
 				System.out.println("New pair");
 				System.out.println(topicTitles.get(i));
 				System.out.println(topicAdditions.get(i));
-			}
+			}*/
 			
 			// set leaf board UI
 			setLeafBoard();
@@ -117,11 +118,11 @@ public class LeafBoardActivity extends Activity implements GetWebPageInterface{
      	topicLv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				String boardUrl = homePage + topicUrls.get(position);
-				Toast.makeText(getApplicationContext(), "Url:" + boardUrl, Toast.LENGTH_SHORT).show();
-				/*Intent intent = new Intent(HomePageActivity.this, LeafBoardActivity.class);
-				intent.putExtra(boardUrlName, boardUrl);
-				HomePageActivity.this.startActivity(intent);*/
+				String postUrl = homePage + topicUrls.get(position);
+				Toast.makeText(getApplicationContext(), "Url:" + postUrl, Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(LeafBoardActivity.this, SinglePostActivity.class);
+				intent.putExtra(postUrlName, postUrl);
+				LeafBoardActivity.this.startActivity(intent);
         	}
         });
 	}
