@@ -39,4 +39,7 @@
     <string name="postAuthorText">postAuthorText</string>
     <string name="postContentText">postContentText</string>
     <string name="postTimestampText">postTimestampText</string>
+    <string name="morePostText">更多回复</string>
+    <string name="loadingMorePostText">载入回复中...</string>
+    <string name="noMorePostText">已无更多回复</string>
 </resources>
