@@ -38,7 +38,8 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	// return value is status code
 	//"0" not handled error, please communication tech support
 	//"2" Network communication fail
-	//"3" Network communication success
+	//"1" Network communication success, first post page loading
+	//"3" Network communication success, following post page loading	
 	//"4" Network communication exception
 	@Override
 	protected ArrayList<ArrayList<String>> doInBackground(String... inputs) {
@@ -47,15 +48,18 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 		outputs.add(res);
 		
 		String cookie = inputs[0];
-		String boardUrl = inputs[1];
+		String url = inputs[1];
 		HashMap<String, String> header = new HashMap<String, String>();
 		header.put("Cookie", cookie);
 		res.add("0");
 		
 		try {
-			HttpResult response = SendHttpRequest.sendGet(boardUrl, header, null, "utf-8");
+			HttpResult response = SendHttpRequest.sendGet(url, header, null, "utf-8");
 			if (response.getStatusCode() == 200) {
-				res.set(0, "3");
+				if (url.charAt(url.length() - 1) == '1')
+					res.set(0, "1");
+				else
+					res.set(0, "3");
 				String htmlText = EntityUtils.toString(response.getHttpEntity());
 				res.add(htmlText);
 				parseSinglePostHtml(htmlText, outputs);
@@ -209,7 +213,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 					String content = span.text().trim();
 					if (content.length() > 0) {
 						sb.append(content);
-						sb.append("\n");
+						//sb.append("\n");
 					}
 					if (span.children().size() != 0)
 						span = span.child(0);

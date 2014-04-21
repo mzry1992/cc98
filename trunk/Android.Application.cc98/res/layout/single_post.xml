@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textColor="@color/darkgrey"
-            android:layout_marginBottom="25dp" />
+            android:layout_marginBottom="20dp" />
 	    
 	    <android.application.cc98.view.NoScrollListView
             android:name="android.application.cc98.view.NoScrollListView"
@@ -33,7 +33,20 @@
             android:id="@+id/singlePostList"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp" />
+            android:layout_marginBottom="10dp" />
 	    
+	    <Button
+	        android:id="@+id/singlePostMoreButton"
+	        android:layout_width="fill_parent"
+	        android:layout_height="30dp"
+	        android:textSize="20sp"
+	        android:textColor="@color/darkgrey"
+	        android:background="@drawable/post_more_style"
+	        android:gravity="center"
+	        android:layout_gravity="center"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginBottom="75dp"
+	        />
 	</LinearLayout>
 </ScrollView>
