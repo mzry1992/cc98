@@ -4,14 +4,17 @@
         android:orientation="vertical"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent" 
-        android:id="@+id/leafBoardListItem" 
-        android:paddingBottom="3dp" 
-        android:paddingLeft="10dp">
+        android:id="@+id/leafBoardListItem"
+        android:paddingTop="5dp" 
+        android:paddingBottom="5dp" 
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
         <TextView 
                 android:layout_height="wrap_content" 
                 android:layout_width="fill_parent" 
                 android:id="@+id/leafItemTitle" 
-                android:textSize="16sp">
+                android:textSize="16sp"
+                android:layout_marginBottom="1dp">
         </TextView>
         <TextView 
                 android:layout_height="wrap_content" 

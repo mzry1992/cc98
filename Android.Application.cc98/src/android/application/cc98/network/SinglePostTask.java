@@ -163,7 +163,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 		Elements elems = table.select("span[id]");
 		for (Element elem : elems) {
 			if (elem.attr("id").equals("topicPagesNavigation")) {
-				Element bElem = elem.select("b").first();
+				Element bElem = elem.getElementsByTag("b").first();
 				postCnt = Integer.parseInt(bElem.text());
 				break;
 			}
@@ -173,7 +173,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	}
 	// get post title
 	private String getSinglePostTitle(Element table) {
-		Element elem = table.select("th").first();
+		Element elem = table.getElementsByTag("th").first();
 		String text = elem.text();
 		int idx = text.indexOf("Ìû×ÓÖ÷Ìâ£º");
 		String title = text.substring(idx + 5).trim();
@@ -193,22 +193,22 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			{ // author name
 				Element td1 = tr1.child(0);
 				Element name = td1.select("a[name]").first();
-				Element author = name.select("b").first();
+				Element author = name.getElementsByTag("b").first();
 				authors.add(author.text());
 				//System.out.println("Author:" + author.text());
 			}
 			
 			{ // content
 				Element td2 = tr1.child(1);
-				Element bq = td2.select("blockquote").first();
-				Element td = bq.select("td").first();
-				String title = td.select("b").first().text().trim();
+				Element bq = td2.getElementsByTag("blockquote").first();
+				Element td = bq.getElementsByTag("td").first();
+				String title = td.getElementsByTag("b").first().text().trim();
 				StringBuilder sb = new StringBuilder();
 				if (title.length() > 0) {
 					sb.append(title);
 					sb.append("\n\n");
 				}
-				Element span = td.select("span").first();
+				Element span = td.getElementsByTag("span").first();
 				while (true) {
 					String content = span.text().trim();
 					if (content.length() > 0) {

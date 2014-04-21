@@ -11,37 +11,38 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical" >
     
-   		<TextView 
+   		<!-- <TextView 
             android:id="@+id/leafBoardUsername"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textSize="23sp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp" />
+            android:layout_marginBottom="15dp" /> -->
         
    		<TextView 
             android:id="@+id/leafBoardBoardname"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textSize="23sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp" />
+            android:textSize="22sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/lightPurple" />
    		
    		<TextView
    			android:id="@+id/leafBoardTopicCount"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="@color/red"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="25dp" />
+            android:textSize="18sp"
+            android:textColor="@color/darkgrey"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="20dp" />
    		
-        <TextView
+       <!--  <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textSize="23sp"
             android:layout_marginBottom="12dp"
-            android:text="@string/leafBoardTopicTextView" />
+            android:text="@string/leafBoardTopicTextView" /> -->
         
         <android.application.cc98.view.NoScrollListView
             android:name="android.application.cc98.view.NoScrollListView"
@@ -51,7 +52,19 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp" />
         
-    
+    	<Button
+	        android:id="@+id/leafBoardMoreButton"
+	        android:layout_width="fill_parent"
+	        android:layout_height="36dp"
+	        android:textSize="18sp"
+	        android:textColor="@color/darkgrey"
+	        android:background="@drawable/post_more_style"
+	        android:gravity="center"
+	        android:layout_gravity="center"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginBottom="30dp"
+	        />
         
 	</LinearLayout>
 </ScrollView>

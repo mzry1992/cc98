@@ -2,7 +2,8 @@
 <resources>
     <color name="white">#FFFFFF</color>
     <color name="red">#FF0000</color>
-    <color name="grey">#919191</color>
-    <color name="darkgrey">#696969</color>
-    <color name="lightgrey">#CCCCCC</color>
+    <color name="grey">#A3A3A3</color>
+    <color name="darkgrey">#898989</color>
+    <color name="lightgrey">#88CCCCCC</color>
+    <color name="lightPurple">#88A2BEFF</color>
 </resources>

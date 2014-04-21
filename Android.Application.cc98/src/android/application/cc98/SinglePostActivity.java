@@ -20,10 +20,12 @@ import android.widget.TextView;
 public class SinglePostActivity extends Activity implements OnClickListener, GetWebPageInterface{
 
 	// temporary variables to store data from HTML, updated when loading following posts
-	private ArrayList<String> postInfo;
 	private ArrayList<String> authors;
 	private ArrayList<String> contents;
 	private ArrayList<String> timestamps;
+	
+	// global variables to store data of the topic list
+	private ArrayList<String> postInfo;
 	
 	// variables to record post information
 	private int postCount, pageCount, displayedPage = 0;
@@ -44,7 +46,7 @@ public class SinglePostActivity extends Activity implements OnClickListener, Get
 		Intent intent = getIntent();
         postUrl = intent.getStringExtra(this.getString(R.string.postUrl));
         StringBuilder sb = new StringBuilder();
-        sb.append(postUrl); sb.append("1&star=");
+        sb.append(postUrl); sb.append("&star=");
         postUrl = sb.toString();
         
 		cookie = UserInfoUtil.GetCookieInfo(this);
