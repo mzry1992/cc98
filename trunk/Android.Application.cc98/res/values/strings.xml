@@ -19,19 +19,20 @@
     
     <!-- home page string -->
     <string name="homePageExistButton">用户退出</string>
-    <string name="homePageCustomTextView">个人定制区</string>
-    <string name="homePageDefaultTextView">版面分类</string>
+    <string name="homePageCustomTextView">" 个人定制区"</string>
+    <string name="homePageDefaultTextView">" 版面分类"</string>
     <string name="customItemTitle">customItemTitle</string>
     <string name="customItemText">customItemText</string>
     <string name="defaultItemTitle">defaultItemTitle</string>
     
-    <!-- loading page string -->
-    <string name="loadingStr">正在载入，请稍后...</string>
     <!-- board page string -->
     <string name="boardUrl">board URL</string>
     <string name="leafBoardTopicTextView">帖子主题</string>
     <string name="leafItemTitle">leafItemTitle</string>
     <string name="leafItemText">leafItemText</string>
+    <string name="morePageText">更多帖子</string>
+    <string name="loadingMorePageText">载入帖子中...</string>
+    <string name="noMorePageText">本版已无更多帖子</string>
     
     <!-- post page string -->
     <string name="postUrl">post URL</string>
@@ -41,5 +42,5 @@
     <string name="postTimestampText">postTimestampText</string>
     <string name="morePostText">更多回复</string>
     <string name="loadingMorePostText">载入回复中...</string>
-    <string name="noMorePostText">已无更多回复</string>
+    <string name="noMorePostText">本主题已无更多回复</string>
 </resources>

@@ -1,7 +1,6 @@
 package android.application.cc98.network;
 
 import java.io.ByteArrayInputStream;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,10 +13,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.app.Activity;
 import android.application.cc98.GetWebPageInterface;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayList<String>>> {
 	private GetWebPageInterface activity = null;
@@ -40,7 +37,8 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 	// return value is status code
 	//"0" not handled error, please communication tech support
 	//"2" Network communication fail
-	//"3" Network communication success
+	//"1" Network communication success, load the first page
+	//"3" Network communication success, load the following page
 	//"4" Network communication exception
 	@Override
 	protected ArrayList<ArrayList<String>> doInBackground(String... inputs) {
@@ -57,7 +55,10 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 		try {
 			HttpResult response = SendHttpRequest.sendGet(boardUrl, header, null, "utf-8");
 			if (response.getStatusCode() == 200) {
-				res.set(0, "3");
+				if (boardUrl.charAt(boardUrl.length() - 1) == '1')
+					res.set(0, "1");
+				else
+					res.set(0, "3");
 				String htmlText = EntityUtils.toString(response.getHttpEntity());
 				res.add(htmlText);
 				parseLeafBoardHtml(htmlText, outputs);
@@ -94,6 +95,9 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 		this.activity.getWebPagePostProgress(outputs);
 	}
 	
+	// boardInfo: 	0: boardName(nested),
+	//				1: total posts number
+	//				2: total pages number
 	private void parseLeafBoardHtml(String homePageHtml,
 									ArrayList<ArrayList<String>> outputs) {
 		try {
@@ -102,11 +106,10 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 			Element body = httpDoc.body();
 			Elements children = body.children();
 			
+			ArrayList<String> boardInfo = new ArrayList<String>();
 			ArrayList<String> topicTitles = new ArrayList<String>();
 			ArrayList<String> topicUrls = new ArrayList<String>();
 			ArrayList<String> topicAdditions = new ArrayList<String>();
-			
-			ArrayList<String> boardInfo = new ArrayList<String>();
 			
 			// get custom board data and default board data from html
 			int tableCnt = 0, formCnt = 0;
@@ -120,20 +123,37 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 							String content = topic.attr("title");
 							String url = topic.attr("href");
 							String[] attrs = content.split("\n");
-							String title = attrs[0].trim();
-							String addtion = attrs[1] + "\n" + attrs[2];
 							
-							assert(title.length() > 2);
-							title = title.substring(1, title.length() - 1);
+							// get article title
+							String title = attrs[0].trim();
+							assert(title.length() >= 2);
+							title = title.substring(1);
+							if (title.charAt(title.length() - 1) == '》')
+								title = title.substring(0, title.length() - 1);
+							
+							// get additional information
+							StringBuilder additionSb = new StringBuilder();
+							for (int i = 1; i < attrs.length; i++) {
+								if (attrs[i].startsWith("作者：")) {
+									additionSb.append(attrs[i]);
+									additionSb.append("\n");
+								}
+								else if (attrs[i].startsWith("发表于"))
+									additionSb.append(attrs[i]);
+							}
+							
 							topicTitles.add(title);
 							topicUrls.add(url);
-							topicAdditions.add(addtion);
+							topicAdditions.add(additionSb.toString());
 						}
 					}
 					else if (formCnt == 2) {
 						Element td = child.getElementsByTag("td").first();
-						String topicNumberStr = td.getElementsByTag("b").last().text().trim();
+						Elements bs = td.getElementsByTag("b");
+						String pageNumberStr = bs.get(1).text();
+						String topicNumberStr = bs.last().text().trim();
 						boardInfo.add(topicNumberStr);
+						boardInfo.add(pageNumberStr);
 					}
 					else continue;
 				}
@@ -142,11 +162,11 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 					// get board name
 					if (tableCnt == 3) {
 						Elements links = child.select("a[href]");
-						StringBuilder sb = new StringBuilder();
+						StringBuilder sb = new StringBuilder(" ");
 						for (Element link : links) {
 							String str = link.text();
 							if (str.contains("帖子列表")) break;
-							sb.append(str + "->");
+							sb.append(str + " → ");
 						}
 						//System.out.println("Test Board name!!!!!");
 						String str = sb.toString();
@@ -157,13 +177,10 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 				}
 			}
 			
+			outputs.add(boardInfo);
 			outputs.add(topicTitles);
 			outputs.add(topicUrls);
 			outputs.add(topicAdditions);
-			outputs.add(boardInfo);
-			//System.out.println("BoardInfo Size:" + boardInfo.size() + boardInfo.get(0));
-			/*System.out.println("Finish parsing... Topic count:" + topicTitles.size()
-					 + ":" + topicUrls.size() + ":" + topicAdditions.size());*/
 		}
 		catch (IOException e) {
 			e.printStackTrace();

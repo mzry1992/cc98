@@ -4,23 +4,28 @@
         android:orientation="vertical"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent" 
-        android:id="@+id/defaultListItem" 
-        android:paddingBottom="3dp" 
-        android:paddingLeft="10dp"
+        android:id="@+id/defaultListItem"
+        android:paddingTop="5dp"  
+        android:paddingBottom="5dp"
         android:gravity="center"
         android:layout_gravity="center">
+        <!-- android:paddingTop="3dp"  
+        android:paddingBottom="3dp"  -->
         <ImageView 
                 android:layout_height="wrap_content" 
                 android:layout_width="wrap_content" 
                 android:id="@+id/defaultItemImage"
-                android:src="@drawable/ic_launcher"
-                android:gravity="center" >
+                android:src="@drawable/cc98_small"
+                android:gravity="center" 
+                android:layout_marginBottom="3dp">
+                <!-- android:scaleType="centerInside" -->
         </ImageView>
         <TextView 
                 android:layout_height="wrap_content" 
                 android:layout_width="fill_parent" 
                 android:id="@+id/defaultItemTitle"
-                android:textSize="12sp"
-                android:gravity="center" >
+                android:textSize="15sp"
+                android:gravity="center"
+                android:layout_marginBottom="8dp">
         </TextView>
 </LinearLayout>
