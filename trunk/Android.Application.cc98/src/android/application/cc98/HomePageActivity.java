@@ -20,57 +20,63 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HomePageActivity extends Activity implements GetWebPageInterface{
+public class HomePageActivity extends Activity implements GetWebPageInterface {
 
 	private ArrayList<String> customBoardNames;
 	private ArrayList<String> customBoardUrls;
 	private ArrayList<String> customBoardDescripts;
-	
+
 	private ArrayList<String> defaultBoardNames;
 	private ArrayList<String> defaultBoardUrls;
-	
+
 	private String homePage, serverName, boardUrlName;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
-		
+
 		homePage = UserInfoUtil.getHomePageURL(this);
 		serverName = this.getString(R.string.serverName);
 		boardUrlName = this.getString(R.string.boardUrl);
 		String cookie = UserInfoUtil.GetCookieInfo(this);
 		new HomePageTask(this, serverName).execute(cookie, homePage);
-		
-		Button existButton = (Button)this.findViewById(R.id.homeExitButton);
+
+		Button existButton = (Button) this.findViewById(R.id.homeExitButton);
 		existButton.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);	// clear activity stack
+				Intent intent = new Intent(HomePageActivity.this,
+						LoginActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear
+																	// activity
+																	// stack
 				HomePageActivity.this.startActivity(intent);
 			}
 		});
 	}
-	
+
 	@Override
 	public void getWebPagePreProgress() {
 		// set layout invisible
-		LinearLayout layout = (LinearLayout)this.findViewById(R.id.homePageLayout);
+		LinearLayout layout = (LinearLayout) this
+				.findViewById(R.id.homePageLayout);
 		layout.setVisibility(View.INVISIBLE);
 	}
-	
+
 	@Override
 	public void getWebPageProgressUpdate() {
-		
+
 	}
-	
+
 	@Override
 	public void getWebPagePostProgress(Object outputRes) {
-		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>)outputRes;
+		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) outputRes;
 
 		ArrayList<String> status = outputs.get(0);
 		if (status.get(0).equals("3")) {
-			TextView username = (TextView)this.findViewById(R.id.homePageUsername);
+			TextView username = (TextView) this
+					.findViewById(R.id.homePageUsername);
 			username.setText("用户名：" + UserInfoUtil.GetUserName(this));
 
 			customBoardNames = outputs.get(1);
@@ -82,86 +88,125 @@ public class HomePageActivity extends Activity implements GetWebPageInterface{
 			setCustomBoard();
 			// set default board UI
 			setDefaultBoard();
-			
+
 			// set layout visible
-			LinearLayout layout = (LinearLayout)this.findViewById(R.id.homePageLayout);
+			LinearLayout layout = (LinearLayout) this
+					.findViewById(R.id.homePageLayout);
 			layout.setVisibility(View.VISIBLE);
-		}
-		else {
+		} else {
 			// show error
 		}
 	}
-	
+
 	private void setCustomBoard() {
 		// set data
 		ArrayList<HashMap<String, String>> displist = new ArrayList<HashMap<String, String>>();
-        for (int i = 0; i < customBoardNames.size(); i++)
-        {
-        	HashMap<String, String> map = new HashMap<String, String>();
-        	map.put(this.getString(R.string.customItemTitle), customBoardNames.get(i));
-        	map.put(this.getString(R.string.customItemText), customBoardDescripts.get(i));
-        	displist.add(map);
-        }
-        //Toast.makeText(this, "Custom List count:" + displist.size(), Toast.LENGTH_LONG).show();
-        
-        SimpleAdapter mSchedule = new SimpleAdapter(this,
-        		displist,
-        		R.layout.home_custom_list_item,	//	ListItem XML implementation
-                new String[] {this.getString(R.string.customItemTitle), 
-        					  this.getString(R.string.customItemText)}, // dynamic array and ListItem correspondings        
-                new int[] {R.id.customItemTitle,R.id.customItemText}); // ListItem XML's two TextView ID
+		for (int i = 0; i < customBoardNames.size(); i++) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put(this.getString(R.string.customItemTitle),
+					customBoardNames.get(i));
+			map.put(this.getString(R.string.customItemText),
+					customBoardDescripts.get(i));
+			displist.add(map);
+		}
+		// Toast.makeText(this, "Custom List count:" + displist.size(),
+		// Toast.LENGTH_LONG).show();
 
-        // set custom list view and listener
-     	ListView customLv = (ListView)this.findViewById(R.id.homePageCustomList);
-     	customLv.setAdapter(mSchedule);
-     	Utility.setListViewHeightBasedOnChildren(customLv);
-     	
-     	// set view
+		SimpleAdapter mSchedule = new SimpleAdapter(this, displist,
+				R.layout.home_custom_list_item, // ListItem XML implementation
+				new String[] { this.getString(R.string.customItemTitle),
+						this.getString(R.string.customItemText) }, // dynamic
+																	// array and
+																	// ListItem
+																	// correspondings
+				new int[] { R.id.customItemTitle, R.id.customItemText }); // ListItem
+																			// XML's
+																			// two
+																			// TextView
+																			// ID
+
+		// set custom list view and listener
+		ListView customLv = (ListView) this
+				.findViewById(R.id.homePageCustomList);
+		customLv.setAdapter(mSchedule);
+		Utility.setListViewHeightBasedOnChildren(customLv);
+
+		// set view
 		customLv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 				String boardUrl = homePage + customBoardUrls.get(position);
-				Toast.makeText(getApplicationContext(), "Url:" + boardUrl, Toast.LENGTH_SHORT).show();
-				Intent intent = new Intent(HomePageActivity.this, LeafBoardActivity.class);
+				Toast.makeText(getApplicationContext(), "Url:" + boardUrl,
+						Toast.LENGTH_SHORT).show();
+				String titleName = customBoardNames.get(position);
+				Intent intent = null;
+				if (titleName.contains("("))
+					intent = new Intent(HomePageActivity.this,
+							BBSListActivity.class);
+				else
+					intent = new Intent(HomePageActivity.this,
+							LeafBoardActivity.class);
 				intent.putExtra(boardUrlName, boardUrl);
 				HomePageActivity.this.startActivity(intent);
-        	}
-        });
+			}
+		});
 	}
 
 	private void setDefaultBoard() {
 		// set data
 		ArrayList<HashMap<String, String>> displist = new ArrayList<HashMap<String, String>>();
-        for (int i = 0; i < defaultBoardNames.size(); i++)
-        {
-        	HashMap<String, String> map = new HashMap<String, String>();
-        	map.put(this.getString(R.string.defaultItemTitle), defaultBoardNames.get(i));
-        	displist.add(map);
-        }
-        //Toast.makeText(this, "Custom List count:" + displist.size(), Toast.LENGTH_LONG).show();
-        
-        SimpleAdapter mSchedule = new SimpleAdapter(this,
-        		displist,
-        		R.layout.home_default_list_item,	//	ListItem XML implementation
-                new String[] {this.getString(R.string.defaultItemTitle)}, // dynamic array and ListItem correspondings        
-                new int[] {R.id.defaultItemTitle}); // ListItem XML's two TextView ID
+		for (int i = 0; i < defaultBoardNames.size(); i++) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put(this.getString(R.string.defaultItemTitle),
+					defaultBoardNames.get(i));
+			displist.add(map);
+		}
+		// Toast.makeText(this, "Custom List count:" + displist.size(),
+		// Toast.LENGTH_LONG).show();
 
-        // set custom list view and listener
-     	GrapeGridView defaultGv = (GrapeGridView)this.findViewById(R.id.homePageDefaultGrid);
-     	defaultGv.setAdapter(mSchedule);
-     	Utility.setGridViewHeightBasedOnChildren(defaultGv);
-     	
+		SimpleAdapter mSchedule = new SimpleAdapter(this, displist,
+				R.layout.home_default_list_item, // ListItem XML implementation
+				new String[] { this.getString(R.string.defaultItemTitle) }, // dynamic
+																			// array
+																			// and
+																			// ListItem
+																			// correspondings
+				new int[] { R.id.defaultItemTitle }); // ListItem XML's two
+														// TextView ID
+
+		// set custom list view and listener
+		GrapeGridView defaultGv = (GrapeGridView) this
+				.findViewById(R.id.homePageDefaultGrid);
+		defaultGv.setAdapter(mSchedule);
+		Utility.setGridViewHeightBasedOnChildren(defaultGv);
+
 		// set view
-     	defaultGv.setOnItemClickListener(new OnItemClickListener() {
-	        @Override
-	        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	        	String boardUrl = homePage + defaultBoardUrls.get(position);
-				Toast.makeText(getApplicationContext(), "Url:" + boardUrl, Toast.LENGTH_SHORT).show();
-				Intent intent = new Intent(HomePageActivity.this, LeafBoardActivity.class);
+		defaultGv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String boardUrl = homePage + defaultBoardUrls.get(position);
+				Toast.makeText(getApplicationContext(), "Url:" + boardUrl,
+						Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(HomePageActivity.this,
+						BBSListActivity.class);
 				intent.putExtra(boardUrlName, boardUrl);
 				HomePageActivity.this.startActivity(intent);
-        	}
-        });
+			}
+		});
 	}
-}
 
+	// Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		// 退出
+		if ((Intent.FLAG_ACTIVITY_CLEAR_TOP & intent.getFlags()) != 0) {
+			String exitCode = intent.getStringExtra("exit_code");
+			if (exitCode.equals("true"))
+				finish();
+		}
+	}
+
+}

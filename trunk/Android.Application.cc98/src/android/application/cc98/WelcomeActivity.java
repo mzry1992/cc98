@@ -33,7 +33,7 @@ public class WelcomeActivity extends Activity implements GetWebPageInterface{
         		
         	}
         }, 1000);*/
-        
+		//jumpToLogin();
         if (username != null && username.length() > 0 &&
     		pwd != null && pwd.length() > 0) {
     		signInTask.execute(username, pwd, url);
@@ -76,5 +76,10 @@ public class WelcomeActivity extends Activity implements GetWebPageInterface{
 		Intent welcomeIntent = new Intent(WelcomeActivity.this, LoginActivity.class);
 		WelcomeActivity.this.startActivity(welcomeIntent);
 		WelcomeActivity.this.finish();
+	}
+	
+	private void testPage() {
+		Intent bbsListIntent = new Intent(WelcomeActivity.this, BBSListActivity.class);
+		WelcomeActivity.this.startActivity(bbsListIntent);
 	}
 }

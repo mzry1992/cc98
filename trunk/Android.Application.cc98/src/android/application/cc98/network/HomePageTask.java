@@ -154,7 +154,7 @@ public class HomePageTask extends AsyncTask<String, Integer, ArrayList<ArrayList
 				for (Element elem : elems) {
 					String link = elem.attr("href");
 					if (link.startsWith("list.asp?boardid=")) {
-						boardNames.add(elem.text());
+						boardNames.add(elem.parent().text());
 						boardUrls.add(link);
 					}		
 				}
