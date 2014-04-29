@@ -1,5 +1,8 @@
 package android.application.cc98.view;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -46,5 +49,16 @@ public class Utility {
 			params.height = count / 4 * totalHeight + (count / 4 - 1) * 10;
 		}
 		gridView.setLayoutParams(params);
+	}
+	
+	public static String parseLoginName(Element body) {
+		String name = null;
+		Elements elements = body.getElementsByClass("TopLighNav1");
+		if (elements.size() > 0) {
+			Elements brNames = elements.get(0).getElementsByTag("b");
+			if (brNames.size() > 0)
+				name = brNames.get(0).text();
+		}
+		return name;
 	}
 }

@@ -165,6 +165,8 @@ public class LoginActivity extends Activity  implements OnClickListener, GetWebP
 	
 	private void jumpToHomePage() {
 		Intent loginIntent = new Intent(LoginActivity.this, HomePageActivity.class);
+		loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		loginIntent.putExtra("exit_code", "false");
 		LoginActivity.this.startActivity(loginIntent);
 		LoginActivity.this.finish();
 	}
