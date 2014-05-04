@@ -1,60 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">cc98</string>
-    <string name="action_settings">Settings</string>
-    
-    <!-- login string -->
-    <string name="username">用户名：</string>
-    <string name="textStyle">微软雅黑</string>
-    <string name="password">密  码：</string>
-    <string name="loginText">用户登陆</string>
-    <string name="loginButton">登陆</string>
-	
-    <!-- user information and cookie -->
-    <string name="userInfoFileName">UserInfo</string>
-    <string name="userNameFile">UserName</string>
-    <string name="passwordFile">Password</string>
-    <string name="cookieFile">Cookie</string>
-	
+	<string name="app_name">cc98</string>
+	<string name="action_settings">Settings</string>
+	<!-- login string -->
+	<string name="username">用户名：</string>
+	<string name="textStyle">微软雅黑</string>
+	<string name="password">密 码：</string>
+	<string name="loginText">用户登陆</string>
+	<string name="loginButton">登陆</string>
+
+	<!-- user information and cookie -->
+	<string name="userInfoFileName">UserInfo</string>
+	<string name="userNameFile">UserName</string>
+	<string name="passwordFile">Password</string>
+	<string name="cookieFile">Cookie</string>
+
 	<string name="pull_to_refresh_pull_label">下拉刷新</string>
-    <string name="pull_to_refresh_release_label">松开后刷新</string>
-    <string name="pull_to_refresh_refreshing_label">刷新\u2026</string>
-    <string name="pull_to_refresh_footer_release_label">松开后加载</string>
-    <string name="pull_to_refresh_footer_pull_label">上拉加载更多</string>
-    <string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
-    <string name="text">http://miloisbadboy.com/</string>
-    <string name="hello_world">hello_world</string>
-    <string name="menu_settings">menu_settings</string>
-    
-    
-    <!-- home page string -->
-    <string name="homePageExistButton">用户退出</string>
-    <string name="homePageCustomTextView">" 个人定制区"</string>
-    <string name="homePageDefaultTextView">" 版面分类"</string>
-    <string name="customItemTitle">customItemTitle</string>
-    <string name="customItemText">customItemText</string>
-    <string name="defaultItemTitle">defaultItemTitle</string>
-    
-    <!-- board page string -->
-    <string name="boardUrl">board URL</string>
-    <string name="leafBoardTopicTextView">帖子主题</string>
-    <string name="leafItemTitle">leafItemTitle</string>
-    <string name="leafItemText">leafItemText</string>
-    <string name="morePageText">更多帖子</string>
-    <string name="loadingMorePageText">载入帖子中...</string>
-    <string name="noMorePageText">本版已无更多帖子</string>
-    
-    <!-- post page string -->
-    <string name="postUrl">post URL</string>
-    <string name="postFLoorText">postFloorText</string>
-    <string name="postAuthorText">postAuthorText</string>
-    <string name="postContentText">postContentText</string>
-    <string name="postTimestampText">postTimestampText</string>
-    <string name="morePostText">更多回复</string>
-    <string name="loadingMorePostText">载入回复中...</string>
-    <string name="noMorePostText">本主题已无更多回复</string>
-    
-    <!-- menu string -->
-    <string name="exitProgram">退出程序</string>
+	<string name="pull_to_refresh_release_label">松开后刷新</string>
+	<string name="pull_to_refresh_refreshing_label">刷新\u2026</string>
+	<string name="pull_to_refresh_footer_release_label">松开后加载</string>
+	<string name="pull_to_refresh_footer_pull_label">上拉加载更多</string>
+	<string name="pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
+	<string name="text">http://miloisbadboy.com/</string>
+	<string name="hello_world">hello_world</string>
+	<string name="menu_settings">menu_settings</string>
+
+
+	<!-- home page string -->
+	<string name="homePageExistButton">用户退出</string>
+	<string name="homePageCustomTextView">" 个人定制区"</string>
+	<string name="homePageDefaultTextView">" 版面分类"</string>
+	<string name="customItemTitle">customItemTitle</string>
+	<string name="customItemText">customItemText</string>
+	<string name="defaultItemTitle">defaultItemTitle</string>
+
+	<!-- board page string -->
+	<string name="boardUrl">board URL</string>
+	<string name="leafBoardTopicTextView">帖子主题</string>
+	<string name="leafItemTitle">leafItemTitle</string>
+	<string name="leafItemText">leafItemText</string>
+	<string name="morePageText">更多帖子</string>
+	<string name="loadingMorePageText">载入帖子中...</string>
+	<string name="noMorePageText">本版已无更多帖子</string>
+
+	<!-- post page string -->
+	<string name="postUrl">post URL</string>
+	<string name="postFLoorText">postFloorText</string>
+	<string name="postAuthorText">postAuthorText</string>
+	<string name="postContentText">postContentText</string>
+	<string name="postTimestampText">postTimestampText</string>
+	<string name="morePostText">更多回复</string>
+	<string name="loadingMorePostText">载入回复中...</string>
+	<string name="noMorePostText">本主题已无更多回复</string>
+
+	<!-- menu string -->
+	<string name="changeUser">切换用户</string>
+	<string name="aboutUs">关于我们</string>
+	<string name="exitProgram">退出程序</string>
+
+	<!-- about dialog string -->
+	<string name="about_title">关于CC98安卓版</string>
+	<string name="about_text">
+		\
+		CC98安卓版是浙江大学内部人气论坛CC98的安卓手机版本，是一款免费且开源的安卓软件，项目地址:http://cc98.googlecode.com/，欢迎大家提供意见和加入我们。
+	</string>
+	
+	<!-- loading string -->
+	<string name="loading_str">努力求是中，请稍后......</string>
 </resources>

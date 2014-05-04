@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.application.cc98.network.BBSListTask;
 import android.application.cc98.network.HomePageTask;
 import android.application.cc98.network.UserInfoUtil;
 import android.application.cc98.view.GrapeGridView;
 import android.application.cc98.view.Utility;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,7 +22,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HomePageActivity extends Activity implements GetWebPageInterface {
+public class HomePageActivity extends LoadWebPageActivity {
 
 	private ArrayList<String> customBoardNames;
 	private ArrayList<String> customBoardUrls;
@@ -32,15 +34,26 @@ public class HomePageActivity extends Activity implements GetWebPageInterface {
 	private String homePage, serverName, boardUrlName;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.home);
 
 		homePage = UserInfoUtil.getHomePageURL(this);
 		serverName = this.getString(R.string.serverName);
 		boardUrlName = this.getString(R.string.boardUrl);
-		String cookie = UserInfoUtil.GetCookieInfo(this);
+
+	}
+
+	@Override
+	public void loadPage() {
 		new HomePageTask(this, serverName).execute(cookie, homePage);
+	}
+
+	@Override
+	public void loadPageSucess(Object output) {
+
+		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) output;
+
+		setContentView(R.layout.home);
 
 		Button existButton = (Button) this.findViewById(R.id.homeExitButton);
 		existButton.setOnClickListener(new Button.OnClickListener() {
@@ -54,48 +67,41 @@ public class HomePageActivity extends Activity implements GetWebPageInterface {
 				HomePageActivity.this.startActivity(intent);
 			}
 		});
+
+		fillContent(output);
 	}
 
-	@Override
-	public void getWebPagePreProgress() {
-		// set layout invisible
-		LinearLayout layout = (LinearLayout) this
-				.findViewById(R.id.homePageLayout);
-		layout.setVisibility(View.INVISIBLE);
+	public int getStatusCode(Object outputRes) {
+		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) outputRes;
+		ArrayList<String> status = outputs.get(0);
+		int statusCode = Integer.parseInt(status.get(0));
+		return statusCode;
 	}
 
-	@Override
-	public void getWebPageProgressUpdate() {
-
+	public String getErrorMessage(Object outputs) {
+		return "";
 	}
 
-	@Override
-	public void getWebPagePostProgress(Object outputRes) {
+	public void fillContent(Object outputRes) {
 		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) outputRes;
 
-		ArrayList<String> status = outputs.get(0);
-		if (status.get(0).equals("3")) {
-			TextView username = (TextView) this
-					.findViewById(R.id.homePageUsername);
-			username.setText("用户名：" + UserInfoUtil.GetUserName(this));
+		TextView username = (TextView) this.findViewById(R.id.homePageUsername);
+		username.setText("用户名：" + UserInfoUtil.GetUserName(this));
 
-			customBoardNames = outputs.get(1);
-			customBoardUrls = outputs.get(2);
-			customBoardDescripts = outputs.get(3);
-			defaultBoardNames = outputs.get(4);
-			defaultBoardUrls = outputs.get(5);
-			// set custom board UI
-			setCustomBoard();
-			// set default board UI
-			setDefaultBoard();
+		customBoardNames = outputs.get(1);
+		customBoardUrls = outputs.get(2);
+		customBoardDescripts = outputs.get(3);
+		defaultBoardNames = outputs.get(4);
+		defaultBoardUrls = outputs.get(5);
+		// set custom board UI
+		setCustomBoard();
+		// set default board UI
+		setDefaultBoard();
 
-			// set layout visible
-			LinearLayout layout = (LinearLayout) this
-					.findViewById(R.id.homePageLayout);
-			layout.setVisibility(View.VISIBLE);
-		} else {
-			// show error
-		}
+		// set layout visible
+		LinearLayout layout = (LinearLayout) this
+				.findViewById(R.id.homePageLayout);
+		layout.setVisibility(View.VISIBLE);
 	}
 
 	private void setCustomBoard() {
@@ -206,6 +212,9 @@ public class HomePageActivity extends Activity implements GetWebPageInterface {
 			String exitCode = intent.getStringExtra("exit_code");
 			if (exitCode.equals("true"))
 				finish();
+			else
+				preLoadPage();
+				
 		}
 	}
 

@@ -7,6 +7,15 @@
         android:showAsAction="always">
     </item>
     
+    
+    <item android:id="@+id/change_user_menu_item"
+          android:title="@string/changeUser"
+          android:showAsAction="never" />
+  
+  <item android:id="@+id/about_us_menu_item"
+          android:title="@string/aboutUs"
+          android:showAsAction="never" />
+    
     <item android:id="@+id/exit_menu_item"
           android:title="@string/exitProgram"
           android:showAsAction="never" />

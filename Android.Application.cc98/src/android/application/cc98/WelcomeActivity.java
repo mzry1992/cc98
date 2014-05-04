@@ -6,6 +6,7 @@ import android.application.cc98.network.SignInTask;
 import android.application.cc98.network.UserInfoUtil;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,27 +21,13 @@ public class WelcomeActivity extends Activity implements GetWebPageInterface{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome);
-        
-		final String username = UserInfoUtil.GetUserName(this);
-		final String pwd = UserInfoUtil.GetPassword(this);
-		final String url = UserInfoUtil.getSignURL(this);
-		final SignInTask signInTask = new SignInTask(this);
 		
-        /*new Handler().postDelayed(new Runnable() {
-        	
+        new Handler().postDelayed(new Runnable() {
         	@Override
         	public void run() {
-        		
+        		jumpToHomePage();
         	}
-        }, 1000);*/
-		//jumpToLogin();
-        if (username != null && username.length() > 0 &&
-    		pwd != null && pwd.length() > 0) {
-    		signInTask.execute(username, pwd, url);
-    	}
-    	else {
-    		jumpToLogin();
-    	}
+        }, 1000);
     }
     
     @Override
@@ -78,8 +65,4 @@ public class WelcomeActivity extends Activity implements GetWebPageInterface{
 		WelcomeActivity.this.finish();
 	}
 	
-	private void testPage() {
-		Intent bbsListIntent = new Intent(WelcomeActivity.this, BBSListActivity.class);
-		WelcomeActivity.this.startActivity(bbsListIntent);
-	}
 }
