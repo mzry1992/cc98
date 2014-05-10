@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class LeafBoardActivity extends LoadWebPageActivity implements
 		OnClickListener {
@@ -193,8 +192,8 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				String postUrl = homePage + globalTopicUrls.get(position);
-				Toast.makeText(getApplicationContext(), "Url:" + postUrl,
-						Toast.LENGTH_LONG).show();
+				/*Toast.makeText(getApplicationContext(), "Url:" + postUrl,
+						Toast.LENGTH_LONG).show();*/
 				Intent intent = new Intent(LeafBoardActivity.this,
 						SinglePostActivity.class);
 				intent.putExtra(postUrlName, postUrl);
