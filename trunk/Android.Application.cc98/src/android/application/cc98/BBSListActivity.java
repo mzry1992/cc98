@@ -74,7 +74,6 @@ public class BBSListActivity extends LoadWebPageActivity {
 		headerTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f);
 		int lightPurple = this.getResources().getColor(R.color.lightPurple);
 		headerTextView.setBackgroundColor(lightPurple);
-
 		fillContent(outputs);
 	}
 	
@@ -108,8 +107,8 @@ public class BBSListActivity extends LoadWebPageActivity {
 					int position, long id) {
 				String boardUrl = "http://" + serverName + "/"
 						+ linkArrayList.get(position);
-				Toast.makeText(getApplicationContext(), "Url:" + boardUrl,
-						Toast.LENGTH_SHORT).show();
+				/*Toast.makeText(getApplicationContext(), "Url:" + boardUrl,
+						Toast.LENGTH_SHORT).show();*/
 				String titleName = bordTitleArrayList.get(position);
 				Intent intent = null;
 				if (titleName.contains("("))

@@ -3,15 +3,12 @@ package android.application.cc98;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.Activity;
-import android.application.cc98.network.BBSListTask;
 import android.application.cc98.network.HomePageTask;
 import android.application.cc98.network.UserInfoUtil;
 import android.application.cc98.view.GrapeGridView;
 import android.application.cc98.view.Utility;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class HomePageActivity extends LoadWebPageActivity {
 
@@ -143,8 +139,8 @@ public class HomePageActivity extends LoadWebPageActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				String boardUrl = homePage + customBoardUrls.get(position);
-				Toast.makeText(getApplicationContext(), "Url:" + boardUrl,
-						Toast.LENGTH_SHORT).show();
+				/*Toast.makeText(getApplicationContext(), "Url:" + boardUrl,
+						Toast.LENGTH_SHORT).show();*/
 				String titleName = customBoardNames.get(position);
 				Intent intent = null;
 				if (titleName.contains("("))
@@ -193,8 +189,8 @@ public class HomePageActivity extends LoadWebPageActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				String boardUrl = homePage + defaultBoardUrls.get(position);
-				Toast.makeText(getApplicationContext(), "Url:" + boardUrl,
-						Toast.LENGTH_SHORT).show();
+				/*Toast.makeText(getApplicationContext(), "Url:" + boardUrl,
+						Toast.LENGTH_SHORT).show();*/
 				Intent intent = new Intent(HomePageActivity.this,
 						BBSListActivity.class);
 				intent.putExtra(boardUrlName, boardUrl);

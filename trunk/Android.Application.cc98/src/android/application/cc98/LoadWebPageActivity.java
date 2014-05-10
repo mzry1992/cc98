@@ -97,7 +97,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 	@Override
 	public void getWebPagePreProgress() {
 		// TODO Auto-generated method stub
-		showRefreshAnimation();
+		//showRefreshAnimation();
 		if (!isPageLoad) {
 			showLoadingPage();
 		}
