@@ -36,9 +36,10 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 	//// get home page of cc98 forum
 	// return value is status code
 	//"0" not handled error, please communication tech support
+	// "1"
 	//"2" Network communication fail
-	//"1" Network communication success, load the first page
-	//"3" Network communication success, load the following page
+	//"3" Network communication success, load the first page
+	//"5" Network communication success, load the following page
 	//"4" Network communication exception
 	@Override
 	protected ArrayList<ArrayList<String>> doInBackground(String... inputs) {
@@ -56,9 +57,9 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 			HttpResult response = SendHttpRequest.sendGet(boardUrl, header, null, "utf-8");
 			if (response.getStatusCode() == 200) {
 				if (boardUrl.charAt(boardUrl.length() - 1) == '1')
-					res.set(0, "1");
-				else
 					res.set(0, "3");
+				else
+					res.set(0, "5");
 				String htmlText = EntityUtils.toString(response.getHttpEntity());
 				res.add(htmlText);
 				parseLeafBoardHtml(htmlText, outputs);

@@ -38,8 +38,8 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	// return value is status code
 	//"0" not handled error, please communication tech support
 	//"2" Network communication fail
-	//"1" Network communication success, first post page loading
-	//"3" Network communication success, following post page loading	
+	//"3" Network communication success, first post page loading
+	//"5" Network communication success, following post page loading	
 	//"4" Network communication exception
 	@Override
 	protected ArrayList<ArrayList<String>> doInBackground(String... inputs) {
@@ -57,9 +57,9 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			HttpResult response = SendHttpRequest.sendGet(url, header, null, "utf-8");
 			if (response.getStatusCode() == 200) {
 				if (url.charAt(url.length() - 1) == '1')
-					res.set(0, "1");
-				else
 					res.set(0, "3");
+				else
+					res.set(0, "5");
 				String htmlText = EntityUtils.toString(response.getHttpEntity());
 				res.add(htmlText);
 				parseSinglePostHtml(htmlText, outputs);
@@ -146,9 +146,11 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			// get each post information
 			ArrayList<String> authors = new ArrayList<String>();
 			ArrayList<String> contents = new ArrayList<String>();
+			ArrayList<String> references = new ArrayList<String>();
 			ArrayList<String> timestamps = new ArrayList<String>();
-			getPostsDetails(tables, authors, contents, timestamps);
+			getPostsDetails(tables, authors, references, contents, timestamps);
 			outputs.add(authors);
+			outputs.add(references);
 			outputs.add(contents);
 			outputs.add(timestamps);
 		}
@@ -183,6 +185,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	// get posts details
 	private void getPostsDetails(ArrayList<Element> tables,
 								ArrayList<String> authors,
+								ArrayList<String> references,
 								ArrayList<String> contents,
 								ArrayList<String> timestamps) {
 		for (Element table : tables) {
@@ -203,14 +206,37 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 				Element bq = td2.getElementsByTag("blockquote").first();
 				Element td = bq.getElementsByTag("td").first();
 				String title = td.getElementsByTag("b").first().text().trim();
-				StringBuilder sb = new StringBuilder();
+				StringBuilder contentSb = new StringBuilder();
 				if (title.length() > 0) {
-					sb.append(title);
-					sb.append("\n\n");
+					contentSb.append(title);
+					contentSb.append("\n\n");
 				}
 				Element span = td.getElementsByTag("span").first();
-				while (true) {
-					String content = span.text().trim();
+				String text = span.html().trim();
+				
+				if (text.startsWith("[quotex]")) {
+					int idx = text.indexOf("[/quotex]");
+					String referStr = text.substring(0, idx + 8);
+					String contentStr = text.substring(idx + 9);
+					referStr = removeBrackets(referStr);
+					referStr = removeBR(referStr);
+					contentStr = removeBrackets(contentStr);
+					contentStr = removeBR(contentStr);
+					
+					contentSb.append(contentStr);
+					contents.add(contentSb.toString().trim());
+					references.add(referStr.trim()/* + "\n"*/);
+				}
+				else {
+					text = removeBrackets(text);
+					text = removeBR(text);
+					contentSb.append(text.trim());
+					contents.add(contentSb.toString());
+					references.add("");
+				}
+				
+				/*while (true) {
+					String content = span.html().trim();
 					if (content.length() > 0) {
 						sb.append(content);
 						//sb.append("\n");
@@ -221,7 +247,26 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 				}
 				String contentStr = removeBrackets(sb.toString());
 				contents.add(contentStr);
-				//System.out.println("Content:" + contentStr);
+				System.out.println("Post Content:" + contentStr);
+				
+				// reference
+				StringBuilder sb1 = new StringBuilder();
+				Element div = span.getElementsByTag("div").first();
+				if (div != null) {
+					System.out.println("div not null!!!!");
+					sb1.append(div.html().trim());
+				}
+				while (div != null) {
+					String content = div.html().trim();
+					if (content.length() > 0)
+						sb1.append(content);
+					if (div.children().size() != 0)
+						div = div.child(0);
+					else break;
+				}
+				String referStr = removeBrackets(sb1.toString());
+				references.add(referStr);
+				System.out.println("Post Reference:" + referStr);*/
 			}		
 			
 			{ // time post
@@ -239,18 +284,46 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 		//int cnt = 0;
 		while (i < text.length()) {
 			if (text.charAt(i) == '[') {
-				//cnt++;
-				while ( i < text.length() &&
-						text.charAt(i++) != ']');
-				continue;
+				if (   i + 1 < text.length() && text.charAt(i + 1) == 'e' 
+					&& i + 2 < text.length() && text.charAt(i + 2) == 'm')
+					sb.append(text.charAt(i++));
+				else {
+					while ( i < text.length() &&
+							text.charAt(i++) != ']');
+					continue;
+				}
 			}
 			else
 				sb.append(text.charAt(i++));
 		}
-		//System.out.println("Bracket Count: " + cnt);
 		String str = sb.toString();
-		//System.out.println("Remove bracket: " + str);
-		
+		return str;
+	}
+	
+	private String removeBR(String text) {
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		boolean beforeBR = false;
+		while (i < text.length()) {
+			if (text.charAt(i) == '<'
+				&& i + 1 < text.length() && text.charAt(i + 1) == 'b'
+				&& i + 2 < text.length() && text.charAt(i + 2) == 'r'
+				&& i + 3 < text.length() && text.charAt(i + 3) == ' '
+				&& i + 4 < text.length() && text.charAt(i + 4) == '/') {
+				if (beforeBR == false)
+					sb.append("<br />");
+				beforeBR = true;
+				i = i + 6;
+			}
+			else {
+				beforeBR = false;
+				sb.append(text.charAt(i++));
+			}
+		}
+		String str = sb.toString();
+		if (str.endsWith("<br />"))
+			str = str.substring(0, str.length() - 6);
+		str = str.replaceAll("<br />", "\n").trim();
 		return str;
 	}
 }

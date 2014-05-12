@@ -48,6 +48,7 @@
 	<string name="postUrl">post URL</string>
 	<string name="postFLoorText">postFloorText</string>
 	<string name="postAuthorText">postAuthorText</string>
+	<string name="postReferenceText">postReferenceText</string>
 	<string name="postContentText">postContentText</string>
 	<string name="postTimestampText">postTimestampText</string>
 	<string name="morePostText">更多回复</string>

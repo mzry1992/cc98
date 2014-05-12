@@ -73,7 +73,8 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) output;
 		ArrayList<String> status = outputs.get(0);
 		
-		if (status.get(0).equals("1")) {
+		//System.out.println("LeafBoard status code:" + status.get(0));
+		if (status.get(0).equals("3")) {
 			setContentView(R.layout.leaf_board);
 			pageMoreBtn = (Button) this.findViewById(R.id.leafBoardMoreButton);
 			pageMoreBtn.setOnClickListener(this);
@@ -86,8 +87,8 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) outputRes;
 		ArrayList<String> status = outputs.get(0);
 		int statusCode = Integer.parseInt(status.get(0));
-		if (statusCode == 1 || firstPageLoadSucess)
-			statusCode = 3;
+		/*if (statusCode == 3 || firstPageLoadSucess)
+			statusCode = 5;*/
 		return statusCode;
 	}
 
@@ -101,7 +102,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 		// Toast.makeText(this, "Status: " + status.get(0),
 		// Toast.LENGTH_LONG).show();
 
-		if (status.get(0).equals("1")) {
+		if (status.get(0).equals("3")) {
 
 			firstPageLoadSucess = true;
 			
@@ -123,7 +124,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 			LinearLayout layout = (LinearLayout) this
 					.findViewById(R.id.leafBoardLayout);
 			layout.setVisibility(View.VISIBLE);
-		} else if (status.get(0).equals("3")) {
+		} else if (status.get(0).equals("5")) {
 
 			topicTitles = outputs.get(2);
 			topicUrls = outputs.get(3);
