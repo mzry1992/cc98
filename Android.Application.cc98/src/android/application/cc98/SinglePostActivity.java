@@ -3,17 +3,20 @@ package android.application.cc98;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.Activity;
-import android.application.cc98.network.LeafBoardTask;
 import android.application.cc98.network.SinglePostTask;
-import android.application.cc98.network.UserInfoUtil;
 import android.application.cc98.view.Utility;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -21,9 +24,9 @@ import android.widget.TextView;
 public class SinglePostActivity extends LoadWebPageActivity implements
 		OnClickListener {
 
-	// temporary variables to store data from HTML, updated when loading
-	// following posts
+	// store data from HTML, updated when loading following posts
 	private ArrayList<String> authors;
+	private ArrayList<String> references;
 	private ArrayList<String> contents;
 	private ArrayList<String> timestamps;
 
@@ -36,8 +39,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 
 	// UI and data
 	private Button postMoreBtn;
-	private SimpleAdapter listItemAdapter;
-	private ArrayList<HashMap<String, String>> displist;
+	private SinglePostAdapter listAdapter;
 	
 	//mark status
 	private boolean firstPageLoadSucess = false;
@@ -67,7 +69,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) output;
 		ArrayList<String> status = outputs.get(0);
 		
-		if (status.get(0).equals("1")) {
+		if (status.get(0).equals("3")) {
 			setContentView(R.layout.single_post);
 			postMoreBtn = (Button) this.findViewById(R.id.singlePostMoreButton);
 			postMoreBtn.setOnClickListener(this);
@@ -80,8 +82,8 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) outputRes;
 		ArrayList<String> status = outputs.get(0);
 		int statusCode = Integer.parseInt(status.get(0));
-		if (statusCode == 1 || firstPageLoadSucess)
-			statusCode = 3;
+		/*if (statusCode == 3 || firstPageLoadSucess)
+			statusCode = 5;*/
 		return statusCode;
 	}
 
@@ -96,7 +98,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		ArrayList<String> status = outputs.get(0);
 
 		// first post page loading finish
-		if (status.get(0).equals("1")) {
+		if (status.get(0).equals("3")) {
 
 			firstPageLoadSucess = true;
 			
@@ -108,8 +110,9 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			displayedPage = 1;
 
 			authors = outputs.get(2);
-			contents = outputs.get(3);
-			timestamps = outputs.get(4);
+			references = outputs.get(3);
+			contents = outputs.get(4);
+			timestamps = outputs.get(5);
 
 			// set single post UI
 			setSinglePostUI();
@@ -120,11 +123,12 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			layout.setVisibility(View.VISIBLE);
 		}
 		// following post page loading finish
-		else if (status.get(0).equals("3")) {
+		else if (status.get(0).equals("5")) {
 
-			authors = outputs.get(2);
-			contents = outputs.get(3);
-			timestamps = outputs.get(4);
+			authors.addAll(outputs.get(2));
+			references.addAll(outputs.get(3));
+			contents.addAll(outputs.get(4));
+			timestamps.addAll(outputs.get(5));
 
 			// update UI for following posts
 			updateSinglePostUI();
@@ -143,61 +147,17 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			postMoreBtn.setText(this.getString(R.string.morePostText));
 		else
 			postMoreBtn.setText(this.getString(R.string.noMorePostText));
-
-		// set data
-		String postFloorText = this.getString(R.string.postFLoorText);
-		String postAuthorText = this.getString(R.string.postAuthorText);
-		String postContentText = this.getString(R.string.postContentText);
-		String postTimestampText = this.getString(R.string.postTimestampText);
-		displist = new ArrayList<HashMap<String, String>>();
-
-		for (int i = 0; i < authors.size(); i++) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put(postFloorText, " " + i + "F ");
-			map.put(postAuthorText, authors.get(i));
-			map.put(postTimestampText, timestamps.get(i));
-			map.put(postContentText, contents.get(i));
-			displist.add(map);
-		}
-
-		listItemAdapter = new SimpleAdapter(this, displist,
-				R.layout.single_post_list_item, // ListItem XML implementation
-				new String[] { postFloorText, postAuthorText,
-						postTimestampText, postContentText }, // dynamic array
-																// and ListItem
-																// correspondings
-				new int[] { R.id.postFloorText, R.id.postAuthorText,
-						R.id.postTimestampText, R.id.postContentText }); // ListItem
-																			// XML's
-																			// two
-																			// TextView
-																			// ID
-
-		// set custom list view
+		
 		ListView postLv = (ListView) this.findViewById(R.id.singlePostList);
-		postLv.setAdapter(listItemAdapter);
+		listAdapter = new SinglePostAdapter(getApplicationContext());
+		listAdapter.setData(authors, references, contents, timestamps);
+		postLv.setAdapter(listAdapter);
 		Utility.setListViewHeightBasedOnChildren(postLv);
 	}
 
 	private void updateSinglePostUI() {
-		// set data
-		String postFloorText = this.getString(R.string.postFLoorText);
-		String postAuthorText = this.getString(R.string.postAuthorText);
-		String postContentText = this.getString(R.string.postContentText);
-		String postTimestampText = this.getString(R.string.postTimestampText);
-
-		int baseIndex = (displayedPage - 1) * 10;
-		for (int i = 0; i < authors.size(); i++) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put(postFloorText, " " + (baseIndex + i) + "F ");
-			map.put(postAuthorText, authors.get(i));
-			map.put(postTimestampText, timestamps.get(i));
-			map.put(postContentText, contents.get(i));
-			displist.add(map);
-		}
-		// inform adapter to update UI
-		listItemAdapter.notifyDataSetChanged();
-
+		listAdapter.notifyDataSetChanged();
+		
 		if (displayedPage < pageCount)
 			postMoreBtn.setText(this.getString(R.string.morePostText));
 		else
@@ -223,5 +183,87 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			}
 			break;
 		}
+	}
+}
+
+class SinglePostAdapter extends BaseAdapter {
+	private LayoutInflater inflater;
+	private Context context;
+	private ArrayList<String> authors;
+	private ArrayList<String> references;
+	private ArrayList<String> contents;
+	private ArrayList<String> timestamps;
+	
+	public SinglePostAdapter(Context context) {
+		this.context = context;
+		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+	
+	public void setData(ArrayList<String> authors, ArrayList<String> references,
+						ArrayList<String> contents, ArrayList<String> timestamps) {
+		this.authors = authors;
+		this.references = references;
+		this.contents = contents;
+		this.timestamps = timestamps;
+	}
+	
+	@Override
+	public int getCount() {
+		return authors.size();
+	}
+	
+	@Override
+	public Object getItem(int position) {
+		return authors.get(position);
+	}
+	
+	@Override  
+    public long getItemId(int position) {  
+        return position;  
+    } 
+	
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		if (convertView == null)
+			convertView = inflater.inflate(R.layout.single_post_list_item, null);
+		
+		TextView floorTv = (TextView) convertView.findViewById(R.id.postFloorText);
+		TextView authorTv = (TextView) convertView.findViewById(R.id.postAuthorText);
+		TextView timestampTv = (TextView) convertView.findViewById(R.id.postTimestampText);
+		LinearLayout contentLayout = (LinearLayout)convertView.findViewById(R.id.singlePostContentItem);
+		contentLayout.removeAllViews();
+		
+		int i = position;
+		floorTv.setText(" " + i + "F ");
+		authorTv.setText(this.authors.get(i));
+		timestampTv.setText(this.timestamps.get(i));
+		
+		// add reference	
+		if (references.get(i).length() > 0) {
+			TextView referenceTv = new TextView(context.getApplicationContext());
+			referenceTv.setText(references.get(i));
+			referenceTv.setTextColor(context.getResources().getColor(R.color.darkgrey));
+			referenceTv.setBackgroundColor(context.getResources().getColor(R.color.thingrey));
+			referenceTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+			         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			layoutParams.setMargins(5, 5, 5, 5);
+			referenceTv.setLayoutParams(layoutParams);
+			contentLayout.addView(referenceTv);
+		}
+		
+		// add text content
+		TextView contentTv = new TextView(context.getApplicationContext());
+		contentTv.setText(contents.get(i));
+		contentTv.setTextColor(context.getResources().getColor(R.color.black));
+		contentTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+		         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		layoutParams.setMargins(0, 5, 0, 12);
+		contentTv.setLayoutParams(layoutParams);
+		contentLayout.addView(contentTv);
+		System.out.println(contentTv.getText().toString());
+					
+		return convertView;
 	}
 }

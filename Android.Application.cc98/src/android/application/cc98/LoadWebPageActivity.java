@@ -115,7 +115,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 		hideRefreshAnimation();
 		
 		int statusCode = getStatusCode(status);
-
+		//System.out.println("statusCode:" + statusCode);
 		boolean isLoadSucess = false;
 		StringBuilder errorStrBuilder = new StringBuilder();
 
@@ -128,6 +128,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 			errorStrBuilder.append(getErrorMessage(status));
 			break;
 		case 3:
+		case 5:
 			loadPageSucess(status);
 			isLoadSucess = true;
 			isPageLoad = true;
