@@ -15,10 +15,11 @@ import android.widget.Toast;
 
 public abstract class LoadWebPageActivity extends Activity implements GetWebPageInterface {
 	
+	protected MenuItem msgMenuItem = null;
 	protected MenuItem refreshItem = null;
 	protected String cookie = null;
 	private boolean isPageLoad = false; 
-	
+		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,6 +30,8 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.refresh_menu, menu);
 		refreshItem = menu.findItem(R.id.refresh);
+		msgMenuItem = menu.findItem(R.id.message);
+		msgMenuItem.setVisible(false);
 		preLoadPage();
 		return true;
 	}

@@ -3,14 +3,13 @@ package android.application.cc98;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.Activity;
-import android.application.cc98.network.BBSListTask;
 import android.application.cc98.network.LeafBoardTask;
 import android.application.cc98.network.UserInfoUtil;
 import android.application.cc98.view.Utility;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -35,7 +34,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 	private ArrayList<String> globalTopicUrls;
 
 	// variables to record post information
-	private String homePage, serverName, boardUrl, cookie, postUrlName;
+	private String homePage, serverName, boardUrl, postUrlName;
 	private int postCount, pageCount, displayedPage = 0;
 
 	// UI and data
@@ -43,9 +42,9 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 	private SimpleAdapter listItemAdapter;
 	private ArrayList<HashMap<String, String>> displist;
 	
-	//mark status
+	// mark status
 	private boolean firstPageLoadSucess = false;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +60,27 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 		postUrlName = this.getString(R.string.postUrl);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.refresh_menu, menu);
+		refreshItem = menu.findItem(R.id.refresh);
+		msgMenuItem = menu.findItem(R.id.message);
+		msgMenuItem.setIcon(this.getResources().getDrawable(R.drawable.newmblog));
+		msgMenuItem.setVisible(true);
+		
+		msgMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				
+				return true;
+			}
+		});
+		
+		preLoadPage();
+		return true;
+	}
+	
 	@Override
 	public void loadPage() {
 		new LeafBoardTask(this, this.getString(R.string.serverName)).execute(

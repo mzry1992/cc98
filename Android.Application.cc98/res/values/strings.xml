@@ -55,6 +55,10 @@
 	<string name="loadingMorePostText">载入回复中...</string>
 	<string name="noMorePostText">本主题已无更多回复</string>
 
+	<!-- Reply post page string -->
+	<string name="replyFollowup">replyFollowup</string>
+	<string name="replyRootID">replyRootID</string>
+	<string name="replyBoardID">replyBoardID</string>
 	<!-- menu string -->
 	<string name="changeUser">切换用户</string>
 	<string name="aboutUs">关于我们</string>

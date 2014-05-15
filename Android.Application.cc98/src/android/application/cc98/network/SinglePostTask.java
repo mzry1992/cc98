@@ -99,8 +99,11 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	/// outputs:
 	// 0. record the post count + page count + post title
 	// 1. record the post authors
-	// 2. record the post contents
-	// 3. record the post timestamps
+	// 2. record the post references
+	// 3. record the post contents
+	// 4. record the post timestamps
+	// 5. record the replyID
+	// 6. record the raw contents
 	// Currently do not support images. Add this function later one
 	private void parseSinglePostHtml(String singlePostHtml,
 									 ArrayList<ArrayList<String>> outputs) {
@@ -148,11 +151,15 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			ArrayList<String> contents = new ArrayList<String>();
 			ArrayList<String> references = new ArrayList<String>();
 			ArrayList<String> timestamps = new ArrayList<String>();
-			getPostsDetails(tables, authors, references, contents, timestamps);
+			ArrayList<String> replyIDs = new ArrayList<String>();
+			ArrayList<String> rawContents = new ArrayList<String>();
+			getPostsDetails(tables, authors, references, contents, timestamps, replyIDs, rawContents);
 			outputs.add(authors);
 			outputs.add(references);
 			outputs.add(contents);
 			outputs.add(timestamps);
+			outputs.add(replyIDs);
+			outputs.add(rawContents);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -187,7 +194,9 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 								ArrayList<String> authors,
 								ArrayList<String> references,
 								ArrayList<String> contents,
-								ArrayList<String> timestamps) {
+								ArrayList<String> timestamps,
+								ArrayList<String> replyIDs,
+								ArrayList<String> rawContents) {
 		for (Element table : tables) {
 			Element tbody = table.children().first();
 			Element tr1 = tbody.child(0);
@@ -201,8 +210,25 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 				//System.out.println("Author:" + author.text());
 			}
 			
-			{ // content
+			{ // contents
 				Element td2 = tr1.child(1);
+				
+				// replyID
+				Elements urls = td2.select("a[href]"); 
+				for (Element url : urls) {
+					String link = url.attr("href");
+					if (link.contains("replyID")) {
+						int idx = link.indexOf("replyID");
+						int idx1 = link.indexOf('=', idx);
+						int idx2 = link.indexOf('&', idx1);
+						String replyID = link.substring(idx1, idx2);
+						//System.out.println("ReplyID : " + replyID);
+						replyIDs.add(replyID);
+						break;
+					}
+				}
+				
+				// content
 				Element bq = td2.getElementsByTag("blockquote").first();
 				Element td = bq.getElementsByTag("td").first();
 				String title = td.getElementsByTag("b").first().text().trim();
@@ -218,6 +244,8 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 					int idx = text.indexOf("[/quotex]");
 					String referStr = text.substring(0, idx + 8);
 					String contentStr = text.substring(idx + 9);
+					
+					rawContents.add(contentStr);
 					referStr = removeBrackets(referStr);
 					referStr = removeBR(referStr);
 					contentStr = removeBrackets(contentStr);
@@ -228,13 +256,14 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 					references.add(referStr.trim()/* + "\n"*/);
 				}
 				else {
+					rawContents.add(text);
 					text = removeBrackets(text);
 					text = removeBR(text);
 					contentSb.append(text.trim());
 					contents.add(contentSb.toString());
 					references.add("");
 				}
-				
+				//System.out.println("raw Content : " + rawContents.get(rawContents.size() - 1));
 				/*while (true) {
 					String content = span.html().trim();
 					if (content.length() > 0) {
