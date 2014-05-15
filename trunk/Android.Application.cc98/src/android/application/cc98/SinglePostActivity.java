@@ -1,7 +1,6 @@
 package android.application.cc98;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.application.cc98.network.SinglePostTask;
 import android.application.cc98.view.Utility;
@@ -10,15 +9,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class SinglePostActivity extends LoadWebPageActivity implements
@@ -29,13 +28,15 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 	private ArrayList<String> references;
 	private ArrayList<String> contents;
 	private ArrayList<String> timestamps;
-
+	private ArrayList<String> replyIDs;
+	private ArrayList<String> rawContents;
+	
 	// global variables to store data of the topic list
 	private ArrayList<String> postInfo;
 
 	// variables to record post information
 	private int postCount, pageCount, displayedPage = 0;
-	private String cookie, serverName, postTitle, postUrl;
+	private String serverName, postTitle, postUrl;
 
 	// UI and data
 	private Button postMoreBtn;
@@ -56,6 +57,42 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		postUrl = sb.toString();
 
 		serverName = this.getString(R.string.serverName);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.refresh_menu, menu);
+		refreshItem = menu.findItem(R.id.refresh);
+		msgMenuItem = menu.findItem(R.id.message);
+		msgMenuItem.setIcon(this.getResources().getDrawable(R.drawable.toolbar_comment_icon));
+		msgMenuItem.setVisible(true);
+		
+		msgMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				if (replyIDs.size() > 0) {
+					String followup = replyIDs.get(0);
+					System.out.println("PostURL:" +postUrl);
+					int idx1 = postUrl.indexOf("&ID=");
+					int idx2 = postUrl.indexOf('&', idx1 + 1);
+					String rootID = postUrl.substring(idx1 + 4, idx2);
+					idx1 = postUrl.indexOf("boardID=");
+					idx2 = postUrl.indexOf('&', idx1);
+					String boardID = postUrl.substring(idx1 + 8, idx2);
+					
+					Intent intent = new Intent(SinglePostActivity.this, ReplyPostActivity.class);
+					intent.putExtra(getResources().getString(R.string.replyFollowup), followup);
+					intent.putExtra(getResources().getString(R.string.replyRootID), rootID);
+					intent.putExtra(getResources().getString(R.string.replyBoardID), boardID);
+					SinglePostActivity.this.startActivity(intent);
+				}
+				return true;
+			}
+		});
+		
+		preLoadPage();
+		return true;
 	}
 	
 	@Override
@@ -113,7 +150,9 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			references = outputs.get(3);
 			contents = outputs.get(4);
 			timestamps = outputs.get(5);
-
+			replyIDs = outputs.get(6);
+			rawContents = outputs.get(7);
+			
 			// set single post UI
 			setSinglePostUI();
 
@@ -129,7 +168,9 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			references.addAll(outputs.get(3));
 			contents.addAll(outputs.get(4));
 			timestamps.addAll(outputs.get(5));
-
+			replyIDs.addAll(outputs.get(6));
+			rawContents.addAll(outputs.get(7));
+			
 			// update UI for following posts
 			updateSinglePostUI();
 		} 
@@ -262,7 +303,7 @@ class SinglePostAdapter extends BaseAdapter {
 		layoutParams.setMargins(0, 5, 0, 12);
 		contentTv.setLayoutParams(layoutParams);
 		contentLayout.addView(contentTv);
-		System.out.println(contentTv.getText().toString());
+		//System.out.println(contentTv.getText().toString());
 					
 		return convertView;
 	}

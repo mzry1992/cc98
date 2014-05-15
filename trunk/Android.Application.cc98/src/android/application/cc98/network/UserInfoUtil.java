@@ -33,7 +33,11 @@ public class UserInfoUtil {
 			return;
 		Editor userSettingsEditor = activity.getSharedPreferences(activity.getString(R.string.userInfoFileName), Activity.MODE_WORLD_WRITEABLE).edit();  
 		userSettingsEditor.putString(activity.getString(R.string.userNameFile), userName);
-		userSettingsEditor.putString(activity.getString(R.string.passwordFile), pwd);
+		String md5Pwd = Md5Util.getMD5Str(pwd);
+		//System.out.println("UserInfo Util PWD:" +pwd);
+		//System.out.println("UserInfo Util MD5Pwd:" +md5Pwd);
+		userSettingsEditor.putString(activity.getString(R.string.passwordFile), md5Pwd);
+		//System.out.println("UserInfo Util Get password:" + UserInfoUtil.GetPassword(activity));
 		userSettingsEditor.commit();
 	}
 	

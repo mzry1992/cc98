@@ -108,6 +108,7 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 			Elements children = body.children();
 			
 			ArrayList<String> boardInfo = new ArrayList<String>();
+			boardInfo.add("");boardInfo.add("");boardInfo.add("");
 			ArrayList<String> topicTitles = new ArrayList<String>();
 			ArrayList<String> topicUrls = new ArrayList<String>();
 			ArrayList<String> topicAdditions = new ArrayList<String>();
@@ -153,8 +154,8 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 						Elements bs = td.getElementsByTag("b");
 						String pageNumberStr = bs.get(1).text();
 						String topicNumberStr = bs.last().text().trim();
-						boardInfo.add(topicNumberStr);
-						boardInfo.add(pageNumberStr);
+						boardInfo.set(1, topicNumberStr);
+						boardInfo.set(2, pageNumberStr);
 					}
 					else continue;
 				}
@@ -172,7 +173,7 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 						//System.out.println("Test Board name!!!!!");
 						String str = sb.toString();
 						//System.out.println(str);
-						boardInfo.add(str.substring(0, str.length() - 2));
+						boardInfo.set(0, str.substring(0, str.length() - 2));
 					}
 					else continue;
 				}

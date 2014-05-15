@@ -50,6 +50,7 @@ public class SignInTask extends AsyncTask<String, Integer, String[]> {
 		params.put("a", "i");
 		params.put("u", username);
 		params.put("p", Md5Util.getMD5Str(pwd));
+		//System.out.println("Sign in pwd:" + Md5Util.getMD5Str(pwd));
 		params.put("userhidden","2");
 		try {
 			HttpResult response =  SendHttpRequest.sendPost(signURL, null, params, "utf-8");
