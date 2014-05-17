@@ -27,14 +27,13 @@ public class HomePageActivity extends LoadWebPageActivity {
 	private ArrayList<String> defaultBoardNames;
 	private ArrayList<String> defaultBoardUrls;
 
-	private String homePage, serverName, boardUrlName;
+	private String homePage, boardUrlName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		homePage = UserInfoUtil.getHomePageURL(this);
-		serverName = this.getString(R.string.serverName);
 		boardUrlName = this.getString(R.string.boardUrl);
 
 	}
