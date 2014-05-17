@@ -35,7 +35,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class BBSListActivity extends LoadWebPageActivity {
 
-	private String serverName = null, boardUrlName = null;
+	private String boardUrlName = null;
 	private String pageURL = null;
 
 	private String pageTitle = null;
@@ -49,7 +49,6 @@ public class BBSListActivity extends LoadWebPageActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		serverName = this.getString(R.string.serverName);
 		boardUrlName = this.getString(R.string.boardUrl);
 
 		Intent intent = getIntent();
@@ -107,8 +106,8 @@ public class BBSListActivity extends LoadWebPageActivity {
 					int position, long id) {
 				String boardUrl = "http://" + serverName + "/"
 						+ linkArrayList.get(position);
-				/*Toast.makeText(getApplicationContext(), "Url:" + boardUrl,
-						Toast.LENGTH_SHORT).show();*/
+				Toast.makeText(getApplicationContext(), "position:" + String.valueOf(position),
+						Toast.LENGTH_SHORT).show();
 				String titleName = bordTitleArrayList.get(position);
 				Intent intent = null;
 				if (titleName.contains("("))

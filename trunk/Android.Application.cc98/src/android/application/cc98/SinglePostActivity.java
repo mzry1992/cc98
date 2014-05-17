@@ -36,7 +36,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 
 	// variables to record post information
 	private int postCount, pageCount, displayedPage = 0;
-	private String serverName, postTitle, postUrl;
+	private String  postTitle, postUrl;
 
 	// UI and data
 	private Button postMoreBtn;
@@ -55,8 +55,6 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		sb.append(postUrl);
 		sb.append("&star=");
 		postUrl = sb.toString();
-
-		serverName = this.getString(R.string.serverName);
 	}
 	
 	@Override

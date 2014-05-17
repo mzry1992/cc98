@@ -17,7 +17,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 	
 	protected MenuItem msgMenuItem = null;
 	protected MenuItem refreshItem = null;
-	protected String cookie = null;
+	protected String cookie = null, serverName = null;
 	private boolean isPageLoad = false; 
 		
 	@Override
@@ -33,6 +33,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 		msgMenuItem = menu.findItem(R.id.message);
 		msgMenuItem.setVisible(false);
 		preLoadPage();
+		serverName = getString(R.string.serverName);;
 		return true;
 	}
 	

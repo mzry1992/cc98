@@ -34,7 +34,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 	private ArrayList<String> globalTopicUrls;
 
 	// variables to record post information
-	private String homePage, serverName, boardUrl, postUrlName;
+	private String homePage,  boardUrl, postUrlName;
 	private int postCount, pageCount, displayedPage = 0;
 
 	// UI and data
@@ -56,7 +56,6 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 		boardUrl = boardUrl + "&page=";
 
 		homePage = UserInfoUtil.getHomePageURL(this);
-		serverName = this.getString(R.string.serverName);
 		postUrlName = this.getString(R.string.postUrl);
 	}
 
