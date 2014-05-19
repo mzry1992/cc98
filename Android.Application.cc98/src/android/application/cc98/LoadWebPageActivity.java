@@ -23,6 +23,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		serverName = getString(R.string.serverName);;
 	}
 	
 	@Override
@@ -33,7 +34,6 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 		msgMenuItem = menu.findItem(R.id.message);
 		msgMenuItem.setVisible(false);
 		preLoadPage();
-		serverName = getString(R.string.serverName);;
 		return true;
 	}
 	

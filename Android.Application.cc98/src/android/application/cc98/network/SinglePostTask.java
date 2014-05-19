@@ -107,7 +107,6 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	// Currently do not support images. Add this function later one
 	private void parseSinglePostHtml(String singlePostHtml,
 									 ArrayList<ArrayList<String>> outputs) {
-		try {
 			/*int idx = 0, brCnt = 0;
 			while (true) {
 				idx = singlePostHtml.indexOf("<br>", idx + 1);
@@ -118,8 +117,8 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			
 			singlePostHtml = singlePostHtml.replace("<br>", "\n");
 			singlePostHtml = singlePostHtml.replace("\n\n", "\n");*/
-			InputStream instr = new ByteArrayInputStream(singlePostHtml.getBytes());
-			Document httpDoc = Jsoup.parse(instr, "UTF-8", serverName);
+			//InputStream instr = new ByteArrayInputStream(singlePostHtml.getBytes());
+			Document httpDoc = Jsoup.parse(singlePostHtml);
 			Element body = httpDoc.body();
 			Elements children = body.children();
 			
@@ -160,10 +159,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			outputs.add(timestamps);
 			outputs.add(replyIDs);
 			outputs.add(rawContents);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	// get post count

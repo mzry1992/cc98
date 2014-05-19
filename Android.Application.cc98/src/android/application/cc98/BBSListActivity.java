@@ -104,11 +104,13 @@ public class BBSListActivity extends LoadWebPageActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				if (position < 1)
+					return;
 				String boardUrl = "http://" + serverName + "/"
-						+ linkArrayList.get(position);
-				Toast.makeText(getApplicationContext(), "position:" + String.valueOf(position),
+						+ linkArrayList.get(position-1);
+				Toast.makeText(getApplicationContext(), "URL:" + boardUrl,
 						Toast.LENGTH_SHORT).show();
-				String titleName = bordTitleArrayList.get(position);
+				String titleName = bordTitleArrayList.get(position - 1);
 				Intent intent = null;
 				if (titleName.contains("("))
 					intent = new Intent(BBSListActivity.this,
