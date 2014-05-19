@@ -59,6 +59,8 @@
 	<string name="replyFollowup">replyFollowup</string>
 	<string name="replyRootID">replyRootID</string>
 	<string name="replyBoardID">replyBoardID</string>
+	<string name="replyReferer">replyReferer</string>
+	
 	<!-- menu string -->
 	<string name="changeUser">切换用户</string>
 	<string name="aboutUs">关于我们</string>

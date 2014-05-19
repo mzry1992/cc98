@@ -45,7 +45,12 @@ private GetWebPageInterface activity = null;
 		String content = inputs[4];
 		String followup = inputs[5];
 		String rootID = inputs[6];
-		//String cookie = inputs[7];
+		String referer = inputs[7];
+		String cookie = inputs[8];
+		StringBuilder cookieSb = new StringBuilder();
+		cookieSb.append("BoardList=BoardID=Show; owaenabled=True; autoplay=True; ");
+		cookieSb.append(cookie);
+		cookie = cookieSb.toString();
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("Content", content);
@@ -61,11 +66,36 @@ private GetWebPageInterface activity = null;
 		//params.put("upfilerename", "");
 		params.put("UserName", username);
 		
-		//HashMap<String, String> header = new HashMap<String, String>();
-		//header.put("Cookie", cookie);
-        
+		StringBuilder contentSb = new StringBuilder();
+		contentSb.append("followup="); contentSb.append(followup); contentSb.append('&');
+		contentSb.append("RootID="); contentSb.append(rootID); contentSb.append('&');
+		contentSb.append("star="); contentSb.append("1"); contentSb.append('&');
+		contentSb.append("UserName="); contentSb.append(username); contentSb.append('&');
+		contentSb.append("passwd="); contentSb.append(pwd); contentSb.append('&');
+		contentSb.append("Expression="); contentSb.append("face1.gif"); contentSb.append('&');
+		contentSb.append("Content="); contentSb.append(content); contentSb.append('&');
+		contentSb.append("signflag="); contentSb.append("yes");
+		
+		HashMap<String, String> header = new HashMap<String, String>();
+		header.put("Cookie", cookie);
+		header.put("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
+		header.put("Accept-Language", "zh-CN");
+		header.put("Accept", "text/html, application/xhtml+xml, */*");
+		header.put("Accept-Encoding", "gzip, deflate");
+		header.put("Content-Type","application/x-www-form-urlencoded");
+		header.put("Referer", referer);
+		header.put("Host", "www.cc98.org");
+		
+		System.out.println("PostURL:" + postUrl);
+		System.out.println("Content:" + content);
+		System.out.println("followup:" + followup);
+		System.out.println("passwd:" + pwd);
+		System.out.println("UserName:" + username);
+		System.out.println("Cookie:" + cookie);
+		System.out.println("Referer:" + referer);
+		
 		try {
-			HttpResult response =  SendHttpRequest.sendPost(postUrl, null, params, "utf-8");
+			HttpResult response =  SendHttpRequest.sendPost(postUrl, header, params, "UTF-8");
 			if (response.getStatusCode() == 200) {
 				resultList[0] = "3";
 				resultList[1] = EntityUtils.toString(response.getHttpEntity());
