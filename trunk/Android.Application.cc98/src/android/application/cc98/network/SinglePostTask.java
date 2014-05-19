@@ -221,7 +221,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 						int idx = link.indexOf("replyID");
 						int idx1 = link.indexOf('=', idx);
 						int idx2 = link.indexOf('&', idx1);
-						String replyID = link.substring(idx1, idx2);
+						String replyID = link.substring(idx1 + 1, idx2);
 						//System.out.println("ReplyID : " + replyID);
 						replyIDs.add(replyID);
 						break;

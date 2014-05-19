@@ -71,7 +71,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			public boolean onMenuItemClick(MenuItem item) {
 				if (replyIDs.size() > 0) {
 					String followup = replyIDs.get(0);
-					System.out.println("PostURL:" +postUrl);
+					//System.out.println("PostURL:" +postUrl);
 					int idx1 = postUrl.indexOf("&ID=");
 					int idx2 = postUrl.indexOf('&', idx1 + 1);
 					String rootID = postUrl.substring(idx1 + 4, idx2);
@@ -80,6 +80,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 					String boardID = postUrl.substring(idx1 + 8, idx2);
 					
 					Intent intent = new Intent(SinglePostActivity.this, ReplyPostActivity.class);
+					intent.putExtra(getResources().getString(R.string.replyReferer), postUrl);
 					intent.putExtra(getResources().getString(R.string.replyFollowup), followup);
 					intent.putExtra(getResources().getString(R.string.replyRootID), rootID);
 					intent.putExtra(getResources().getString(R.string.replyBoardID), boardID);

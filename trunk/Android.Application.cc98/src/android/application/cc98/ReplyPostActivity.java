@@ -33,6 +33,7 @@ public class ReplyPostActivity extends Activity implements OnClickListener, GetW
             String boardID = intent.getStringExtra(this.getString(R.string.replyBoardID));
     		String followup = intent.getStringExtra(this.getString(R.string.replyFollowup));
             String rootID = intent.getStringExtra(this.getString(R.string.replyRootID));
+            String referer = intent.getStringExtra(this.getString(R.string.replyReferer));
             String subject = replySubjectET.getText().toString();
             String content = replyContentET.getText().toString();
             String cookie = UserInfoUtil.GetCookieInfo(this);
@@ -47,7 +48,7 @@ public class ReplyPostActivity extends Activity implements OnClickListener, GetW
             postUrl.append(boardID);
 
             new ReplyPostTask(this).execute(postUrl.toString(), username, pwd,
-            								subject, content, followup, rootID, cookie);
+            								subject, content, followup, rootID, referer, cookie);
             break;
     	}
 	}
@@ -63,8 +64,8 @@ public class ReplyPostActivity extends Activity implements OnClickListener, GetW
 		switch (statusCode) {
 		case 3:
 			Toast.makeText(this, "»Ø¸´³É¹¦£¡", Toast.LENGTH_LONG).show();
-			System.out.println("Entity:" +status[1]);
 			System.out.println("Cookie:" +status[2]);
+			System.out.println("Entity:" +status[1]);
 			this.finish();
 			break;
 		case 2:
