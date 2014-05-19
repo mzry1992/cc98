@@ -97,9 +97,7 @@ public class HomePageTask extends AsyncTask<String, Integer, ArrayList<ArrayList
 	}
 	
 	private void parseHomePageHtml(String homePageHtml, ArrayList<ArrayList<String>> outputs) {
-		try {
-			InputStream instr = new ByteArrayInputStream(homePageHtml.getBytes());
-			Document httpDoc = Jsoup.parse(instr, "UTF-8", serverName);
+			Document httpDoc = Jsoup.parse(homePageHtml);
 			Element body = httpDoc.body();
 			Elements children = body.children();
 			
@@ -132,10 +130,6 @@ public class HomePageTask extends AsyncTask<String, Integer, ArrayList<ArrayList
 			outputs.add(customBoardDescripts);
 			outputs.add(defaultBoardNames);
 			outputs.add(defaultBoardUrls);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void getCustomBoardNames(Element table, 
