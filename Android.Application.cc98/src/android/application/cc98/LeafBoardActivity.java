@@ -71,7 +71,13 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 		msgMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				
+				int idx1 = boardUrl.toLowerCase().indexOf("boardid=");
+				int idx2 = boardUrl.indexOf('&', idx1);
+				String boardID = boardUrl.substring(idx1 + 8, idx2);
+
+				Intent intent = new Intent(LeafBoardActivity.this, NewPostActivity.class);
+				intent.putExtra(getResources().getString(R.string.newPostBoardID), boardID);
+				LeafBoardActivity.this.startActivity(intent);
 				return true;
 			}
 		});
@@ -82,6 +88,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 	
 	@Override
 	public void loadPage() {
+		msgMenuItem.setEnabled(false);
 		new LeafBoardTask(this, this.getString(R.string.serverName)).execute(
 				cookie, boardUrl + "1");
 	}
@@ -97,6 +104,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 			setContentView(R.layout.leaf_board);
 			pageMoreBtn = (Button) this.findViewById(R.id.leafBoardMoreButton);
 			pageMoreBtn.setOnClickListener(this);
+			msgMenuItem.setEnabled(true);
 		}
 
 		fillContent(output);
@@ -206,7 +214,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 		topicLv.setAdapter(listItemAdapter);
 		Utility.setListViewHeightBasedOnChildren(topicLv);
 
-		// set view
+		// listen items
 		topicLv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -214,6 +222,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 				String postUrl = homePage + globalTopicUrls.get(position);
 				/*Toast.makeText(getApplicationContext(), "Url:" + postUrl,
 						Toast.LENGTH_LONG).show();*/
+				System.out.println("Post Url: " + postUrl);
 				Intent intent = new Intent(LeafBoardActivity.this,
 						SinglePostActivity.class);
 				intent.putExtra(postUrlName, postUrl);
@@ -260,6 +269,17 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 						followingPageUrl);
 			}
 			break;
+		}
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		// ÍË³ö
+		if ((Intent.FLAG_ACTIVITY_CLEAR_TOP & intent.getFlags()) != 0) {
+			setContentView(R.layout.loading);
+			preLoadPage();
 		}
 	}
 }

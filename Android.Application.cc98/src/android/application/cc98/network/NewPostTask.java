@@ -9,11 +9,11 @@ import org.apache.http.util.EntityUtils;
 import android.application.cc98.GetWebPageInterface;
 import android.os.AsyncTask;
 
-public class ReplyPostTask extends AsyncTask<String, Integer, String[]>{
+public class NewPostTask extends AsyncTask<String, Integer, String[]>{
 
-private GetWebPageInterface activity = null;
+	private GetWebPageInterface activity = null;
 	
-	public ReplyPostTask(GetWebPageInterface activity) {
+	public NewPostTask(GetWebPageInterface activity) {
 		if (null == activity)
 			return;
 		this.activity = activity;
@@ -25,7 +25,7 @@ private GetWebPageInterface activity = null;
 		this.activity.getWebPagePreProgress();
 		
 	}
-	
+
 	////////////////////////////////////////
 	// single post reply
 	//return value is status code
@@ -43,10 +43,8 @@ private GetWebPageInterface activity = null;
 		String pwd = inputs[2];
 		String subject = inputs[3];
 		String content = inputs[4];
-		String followup = inputs[5];
-		String rootID = inputs[6];
-		String referer = inputs[7];
-		String cookie = inputs[8];
+		String referer = inputs[5];
+		String cookie = inputs[6];
 		StringBuilder cookieSb = new StringBuilder();
 		cookieSb.append("BoardList=BoardID=Show; owaenabled=True; autoplay=True; ");
 		cookieSb.append(cookie);
@@ -56,14 +54,9 @@ private GetWebPageInterface activity = null;
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("Content", content);
 		params.put("Expression", "face7.gif");
-		params.put("followup", followup);
 		params.put("passwd", pwd);
-		params.put("ReplyId", followup);
-		params.put("RootID",rootID);
 		params.put("signflag", "yes");
-		params.put("star", "1");
 		params.put("subject", subject);
-		params.put("TotalUseTable", "bbs5");
 		params.put("upfilerename", "");
 		params.put("UserName", username);
 				
@@ -78,10 +71,8 @@ private GetWebPageInterface activity = null;
 		header.put("Host", "www.cc98.org");
 		header.put("Cookie", cookie);
 		
-/*		System.out.println("PostURL:" + postUrl);
+		/*System.out.println("PostURL:" + postUrl);
 		System.out.println("Content:" + content);
-		System.out.println("followup:" + followup);
-		System.out.println("RootID:" + rootID);
 		System.out.println("subject:" + subject);
 		System.out.println("passwd:" + pwd);
 		System.out.println("UserName:" + username);
@@ -94,7 +85,7 @@ private GetWebPageInterface activity = null;
 				resultList[0] = "3";
 				resultList[1] = EntityUtils.toString(response.getHttpEntity());
 				resultList[2] = response.getCookie();
-				if (!resultList[1].contains("回复帖子成功"))
+				if (!resultList[1].contains("发表帖子成功"))
 					resultList[0] = "4";
 			}
 			else {
@@ -127,5 +118,5 @@ private GetWebPageInterface activity = null;
 	protected void onPostExecute(String[] results) {
 		super.onPostExecute(results);
 		this.activity.getWebPagePostProgress(results);
-	}
+	}	
 }

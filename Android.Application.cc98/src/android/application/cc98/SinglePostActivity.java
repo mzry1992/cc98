@@ -2,9 +2,12 @@ package android.application.cc98;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.application.cc98.network.SinglePostTask;
 import android.application.cc98.view.Utility;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -14,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -44,7 +49,10 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 	
 	//mark status
 	private boolean firstPageLoadSucess = false;
-
+	
+	// reference
+	private int referPos = -1;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,20 +79,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			public boolean onMenuItemClick(MenuItem item) {
 				if (replyIDs.size() > 0) {
 					String followup = replyIDs.get(0);
-					//System.out.println("PostURL:" +postUrl);
-					int idx1 = postUrl.indexOf("&ID=");
-					int idx2 = postUrl.indexOf('&', idx1 + 1);
-					String rootID = postUrl.substring(idx1 + 4, idx2);
-					idx1 = postUrl.indexOf("boardID=");
-					idx2 = postUrl.indexOf('&', idx1);
-					String boardID = postUrl.substring(idx1 + 8, idx2);
-					
-					Intent intent = new Intent(SinglePostActivity.this, ReplyPostActivity.class);
-					intent.putExtra(getResources().getString(R.string.replyReferer), postUrl);
-					intent.putExtra(getResources().getString(R.string.replyFollowup), followup);
-					intent.putExtra(getResources().getString(R.string.replyRootID), rootID);
-					intent.putExtra(getResources().getString(R.string.replyBoardID), boardID);
-					SinglePostActivity.this.startActivity(intent);
+					startReply(followup, null, null, null);
 				}
 				return true;
 			}
@@ -96,6 +91,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 	
 	@Override
 	public void loadPage() {
+		msgMenuItem.setEnabled(false);
 		new SinglePostTask(this, serverName).execute(cookie, postUrl + "1");
 	}
 
@@ -109,6 +105,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			setContentView(R.layout.single_post);
 			postMoreBtn = (Button) this.findViewById(R.id.singlePostMoreButton);
 			postMoreBtn.setOnClickListener(this);
+			msgMenuItem.setEnabled(true);
 		}
 
 		fillContent(output);
@@ -193,6 +190,18 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		listAdapter.setData(authors, references, contents, timestamps);
 		postLv.setAdapter(listAdapter);
 		Utility.setListViewHeightBasedOnChildren(postLv);
+		
+		// listen items
+		postLv.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				System.out.println("Long Click item:" + position);
+				referPos = position;
+				referDialog();
+				return true;
+			}
+		});
 	}
 
 	private void updateSinglePostUI() {
@@ -222,6 +231,63 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 						followingPostUrl);
 			}
 			break;
+		}
+	}
+	
+	private void referDialog() {
+		AlertDialog.Builder builder = new Builder(this);
+		builder.setMessage("确认引用此发言并回复？");
+		builder.setTitle("提示");
+		builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				assert(referPos >= 0);
+				String referAuthor = authors.get(referPos);
+				String referTimestamp = timestamps.get(referPos);
+				String referContent = rawContents.get(referPos);
+				String followup = replyIDs.get(referPos);
+				startReply(followup, referContent, referAuthor, referTimestamp);
+
+				//this.finish();
+			}
+		});
+		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+			dialog.dismiss();
+			}
+		});
+		builder.show();
+	}
+	
+	private void startReply(String followup, String referContent, String referAuthor, String referTimestamp) {
+		int idx1 = postUrl.indexOf("&ID=");
+		int idx2 = postUrl.indexOf('&', idx1 + 1);
+		String rootID = postUrl.substring(idx1 + 4, idx2);
+		idx1 = postUrl.indexOf("boardID=");
+		idx2 = postUrl.indexOf('&', idx1);
+		String boardID = postUrl.substring(idx1 + 8, idx2);
+		
+		Intent intent = new Intent(SinglePostActivity.this, ReplyPostActivity.class);
+		intent.putExtra(getResources().getString(R.string.replyReferer), postUrl);
+		intent.putExtra(getResources().getString(R.string.replyFollowup), followup);
+		intent.putExtra(getResources().getString(R.string.replyRootID), rootID);
+		intent.putExtra(getResources().getString(R.string.replyBoardID), boardID);
+		intent.putExtra(getResources().getString(R.string.replyReferContent), referContent);
+		intent.putExtra(getResources().getString(R.string.replyReferAuthor), referAuthor);
+		intent.putExtra(getResources().getString(R.string.replyReferTimestamp), referTimestamp);
+		SinglePostActivity.this.startActivity(intent);
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		// 退出
+		if ((Intent.FLAG_ACTIVITY_CLEAR_TOP & intent.getFlags()) != 0) {
+			setContentView(R.layout.loading);
+			preLoadPage();
 		}
 	}
 }
