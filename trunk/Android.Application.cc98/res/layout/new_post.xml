@@ -9,7 +9,7 @@
    		android:layout_width = "fill_parent"
 	    android:layout_height="wrap_content"
 	    android:background="@color/lightBlue"
-	    android:text="回复帖子"
+	    android:text="发表新帖子"
 	    android:textSize="20sp"
 	    android:layout_gravity="center"
 	    android:gravity="center">	
@@ -17,11 +17,11 @@
 	</TextView> 
 	<EditText
 	    android:background="@drawable/textbox_style"
-	    android:id="@+id/replySubjectEditText"
+	    android:id="@+id/newPostSubjectEditText"
 	    android:layout_width = "fill_parent"
 	    android:layout_height="wrap_content"
 	    android:maxLines="1"
-		android:hint="回复主题："
+		android:hint="发表主题："
 		android:textSize="16sp"
 		android:layout_gravity="top"
 		android:layout_marginLeft="10dp"
@@ -31,12 +31,12 @@
 	</EditText>
 	<EditText
 	    android:background="@drawable/textbox_style"
-	    android:id="@+id/replyContentEditText"
+	    android:id="@+id/newPostContentEditText"
 	    android:layout_width = "fill_parent"
 	    android:layout_height="wrap_content"
 	    android:lines="15"
 	    android:scrollbars = "vertical"
-		android:hint="回复内容："
+		android:hint="发表内容："
 		android:textSize="15sp"
 		android:layout_gravity="top"
 		android:gravity="top"
@@ -50,10 +50,10 @@
 	</EditText>
 	
 	<Button
-	    android:id="@+id/replySubmitButton"
+	    android:id="@+id/newPostSubmitButton"
 	    android:layout_width = "wrap_content"
 	    android:layout_height="wrap_content"
-	    android:text="提交回复"
+	    android:text="提交新帖"
 	    android:layout_marginTop="10dp"
 		android:layout_marginBottom="10dp">
 	</Button>

@@ -14,12 +14,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 public class SendHttpRequest {
@@ -75,8 +72,6 @@ public class SendHttpRequest {
 		if(null!=headers)post.setHeaders(assemblyHeader(headers));
 		//post.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=gbk"); 
 
-		HttpProtocolParams.setUserAgent(client.getParams(), "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0");
-		
 		//实行请求并返回
 		HttpResponse response = client.execute(post);
 		HttpEntity  entity = response.getEntity();
@@ -93,43 +88,7 @@ public class SendHttpRequest {
 		result.setHttpEntity(entity);
 		return result ;
 	}
-	
 
-	//这是模拟post请求
-	public static HttpResult sendPost(String url,Map<String,String> headers, String params,String encoding) throws ClientProtocolException, IOException{
-		//实例化一个Httpclient的
-		DefaultHttpClient client = new DefaultHttpClient();
-		//实例化一个post请求
-		HttpPost post = new HttpPost(url);
-		
-		//设置需要提交的参数
-		StringEntity reqEntity = new StringEntity(params);
-		reqEntity.setContentEncoding(HTTP.UTF_8);
-		//reqEntity.setContentType("application/x-www-form-urlencoded");	
-		post.setEntity(reqEntity);
-		System.out.println("Post Data:" + EntityUtils.toString(post.getEntity()));
-		
-		//设置头部
-		if(null!=headers)post.setHeaders(assemblyHeader(headers));
-		
-		
-		//实行请求并返回
-		HttpResponse response = client.execute(post);
-		HttpEntity  entity = response.getEntity();
-		
-		//封装返回的参数
-		HttpResult result = new HttpResult();
-        //设置返回状态代码
-        result.setStatusCode(response.getStatusLine().getStatusCode());
-        //设置返回的头部信息
-        result.setHeaders(response.getAllHeaders());
-        //设置返回的cookie信心
-		result.setCookie(assemblyCookie(client.getCookieStore().getCookies()));
-		//设置返回到信息
-		result.setHttpEntity(entity);
-		return result ;
-	}
-	
 	//这是组装头部
 	public static Header[] assemblyHeader(Map<String,String> headers){
 		Header[] allHeader= new BasicHeader[headers.size()];
