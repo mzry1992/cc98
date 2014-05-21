@@ -71,7 +71,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		getMenuInflater().inflate(R.menu.refresh_menu, menu);
 		refreshItem = menu.findItem(R.id.refresh);
 		msgMenuItem = menu.findItem(R.id.message);
-		msgMenuItem.setIcon(this.getResources().getDrawable(R.drawable.toolbar_comment_icon));
+		msgMenuItem.setIcon(this.getResources().getDrawable(R.drawable.ic_action_message));
 		msgMenuItem.setVisible(true);
 		
 		msgMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {

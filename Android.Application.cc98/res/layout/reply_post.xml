@@ -5,29 +5,58 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:gravity="top" >
-    	<TextView
-   		android:layout_width = "fill_parent"
-	    android:layout_height="wrap_content"
-	    android:background="@color/lightBlue"
-	    android:text="回复帖子"
-	    android:textSize="20sp"
-	    android:layout_gravity="center"
-	    android:gravity="center">	
-	        
-	</TextView> 
+    
+        <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:stretchColumns="1"
+        android:background="@color/purple"
+        android:layout_gravity="center"
+        android:gravity="center">
+        <TableRow>
+        	<ImageView
+                  android:layout_column="0"
+		          android:layout_width="wrap_content"
+		          android:layout_height="25dp"
+		          android:maxHeight="25dp"
+		          android:id="@+id/replyBackButton"
+		          android:src="@drawable/back"
+		          android:layout_gravity="center" />
+	      	<TextView
+	          	android:layout_column="1"
+		   		android:layout_width = "fill_parent"
+			    android:layout_height="wrap_content"
+			    android:text="回复帖子"
+			    android:textSize="22sp"
+			    android:textColor="@color/white"
+			    android:layout_gravity="center"
+			    android:gravity="center" />
+	     	<ImageView
+	         	android:layout_column="2"
+	         	android:maxHeight="25dp"
+	          	android:layout_width="wrap_content"
+	          	android:layout_height="25dp"
+	          	android:id="@+id/replySubmitButton"
+	          	android:src="@drawable/paper_plane"
+	          	android:layout_gravity="center" />
+     	</TableRow>
+    </TableLayout>
+	    
+        
 	<EditText
 	    android:background="@drawable/textbox_style"
 	    android:id="@+id/replySubjectEditText"
 	    android:layout_width = "fill_parent"
 	    android:layout_height="wrap_content"
+	    android:minHeight="32dp"
 	    android:maxLines="1"
 		android:hint="回复主题："
-		android:textSize="16sp"
+		android:textSize="20sp"
 		android:layout_gravity="top"
-		android:layout_marginLeft="10dp"
-		android:layout_marginRight="10dp"
-		android:layout_marginTop="50dp"
-		android:layout_marginBottom="10dp">
+		android:layout_marginLeft="0dp"
+		android:layout_marginRight="0dp"
+		android:layout_marginTop="0dp"
+		android:layout_marginBottom="0dp">
 	</EditText>
 	<EditText
 	    android:background="@drawable/textbox_style"
@@ -37,24 +66,26 @@
 	    android:lines="15"
 	    android:scrollbars = "vertical"
 		android:hint="回复内容："
-		android:textSize="15sp"
+		android:textSize="18sp"
 		android:layout_gravity="top"
 		android:gravity="top"
-		android:layout_marginLeft="10dp"
-		android:layout_marginRight="10dp"
-		android:layout_marginTop="10dp"
-		android:layout_marginBottom="50dp">
+		android:layout_marginLeft="0dp"
+		android:layout_marginRight="0dp"
+		android:layout_marginTop="0dp"
+		android:layout_marginBottom="0dp">
 		
 	    <requestFocus />
 	    
 	</EditText>
 	
-	<Button
-	    android:id="@+id/replySubmitButton"
-	    android:layout_width = "wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="提交回复"
-	    android:layout_marginTop="10dp"
-		android:layout_marginBottom="10dp">
-	</Button>
+	<GridView
+        	android:id="@+id/replyGridView"
+        	android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:numColumns="6"
+            android:background="@color/white">
+	</GridView>
 </LinearLayout>

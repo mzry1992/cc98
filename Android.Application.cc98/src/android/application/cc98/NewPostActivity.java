@@ -7,14 +7,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class NewPostActivity extends Activity implements OnClickListener, GetWebPageInterface {
 	private EditText newPostSubjectET, newPostContentET;
-	private Button submitButton;
-
+	private ImageView backButton, submitButton;
+	private GridView gridView;
+    
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,8 +26,24 @@ public class NewPostActivity extends Activity implements OnClickListener, GetWeb
 		
         newPostSubjectET = (EditText)this.findViewById(R.id.newPostSubjectEditText);
         newPostContentET = (EditText)this.findViewById(R.id.newPostContentEditText);
-        submitButton = (Button)this.findViewById(R.id.newPostSubmitButton);
+        backButton = (ImageView)this.findViewById(R.id.newPostBackButton);
+        submitButton = (ImageView)this.findViewById(R.id.newPostSubmitButton);
+        backButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
+        
+        gridView = (GridView)this.findViewById(R.id.newPostGridView);
+        gridView.setAdapter(new ExpressionAdapter(this));
+        gridView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                //Toast.makeText(NewPostActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+            	StringBuilder sb= new StringBuilder();
+            	sb.append("[em");
+            	if (position < 10) sb.append('0');
+            	sb.append(position);
+            	sb.append(']');
+            	newPostContentET.append(sb.toString());
+            }
+        });
 	}
 	
 	public void onClick(View v){
@@ -61,6 +81,9 @@ public class NewPostActivity extends Activity implements OnClickListener, GetWeb
             								subject, content, referer.toString(), cookie);
             break;
 
+    	case R.id.newPostBackButton:
+    		this.finish();
+    		break;
     	}
 	}
 	
@@ -101,3 +124,4 @@ public class NewPostActivity extends Activity implements OnClickListener, GetWeb
 		
 	}
 }
+

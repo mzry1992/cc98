@@ -15,7 +15,6 @@
                 android:layout_height="wrap_content" 
                 android:layout_width="wrap_content" 
                 android:id="@+id/defaultItemImage"
-                android:src="@drawable/cc98_small"
                 android:gravity="center" 
                 android:layout_marginBottom="3dp">
                 <!-- android:scaleType="centerInside" -->

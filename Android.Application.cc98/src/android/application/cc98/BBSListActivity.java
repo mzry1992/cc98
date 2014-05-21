@@ -108,8 +108,8 @@ public class BBSListActivity extends LoadWebPageActivity {
 					return;
 				String boardUrl = "http://" + serverName + "/"
 						+ linkArrayList.get(position-1);
-				Toast.makeText(getApplicationContext(), "URL:" + boardUrl,
-						Toast.LENGTH_SHORT).show();
+				/*Toast.makeText(getApplicationContext(), "URL:" + boardUrl,
+						Toast.LENGTH_SHORT).show();*/
 				String titleName = bordTitleArrayList.get(position - 1);
 				Intent intent = null;
 				if (titleName.contains("("))

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -156,11 +157,13 @@ public class HomePageActivity extends LoadWebPageActivity {
 
 	private void setDefaultBoard() {
 		// set data
-		ArrayList<HashMap<String, String>> displist = new ArrayList<HashMap<String, String>>();
+		ArrayList<HashMap<String, Object>> displist = new ArrayList<HashMap<String, Object>>();
 		for (int i = 0; i < defaultBoardNames.size(); i++) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put(this.getString(R.string.defaultItemTitle),
-					defaultBoardNames.get(i));
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			String boardName = defaultBoardNames.get(i).trim();
+			int imageID = getBoardImageID(boardName);
+			map.put(this.getString(R.string.defaultItemTitle), boardName);
+			map.put(this.getString(R.string.defaultItemImage), imageID);
 			displist.add(map);
 		}
 		// Toast.makeText(this, "Custom List count:" + displist.size(),
@@ -168,12 +171,13 @@ public class HomePageActivity extends LoadWebPageActivity {
 
 		SimpleAdapter mSchedule = new SimpleAdapter(this, displist,
 				R.layout.home_default_list_item, // ListItem XML implementation
-				new String[] { this.getString(R.string.defaultItemTitle) }, // dynamic
+				new String[] { 	this.getString(R.string.defaultItemTitle),
+								this.getString(R.string.defaultItemImage)}, // dynamic
 																			// array
 																			// and
 																			// ListItem
 																			// correspondings
-				new int[] { R.id.defaultItemTitle }); // ListItem XML's two
+				new int[] { R.id.defaultItemTitle, R.id.defaultItemImage }); // ListItem XML's two
 														// TextView ID
 
 		// set custom list view and listener
@@ -198,6 +202,29 @@ public class HomePageActivity extends LoadWebPageActivity {
 		});
 	}
 
+	private int getBoardImageID(String boardName) {
+		if (boardName.equals("教师答疑")) return R.drawable.teacher1;
+		if (boardName.equals("学习天地")) return R.drawable.book3;
+		if (boardName.equals("校园动态")) return R.drawable.news2;
+		if (boardName.equals("信息资讯")) return R.drawable.network1;
+		if (boardName.equals("个性生活")) return R.drawable.coffee;
+		if (boardName.equals("休闲娱乐")) return R.drawable.ice_cream;
+		if (boardName.equals("体育运动")) return R.drawable.sport;
+		if (boardName.equals("影音无限")) return R.drawable.movie1;
+		if (boardName.equals("电脑技术")) return R.drawable.computer1;
+		if (boardName.equals("社科学术")) return R.drawable.science1;
+		if (boardName.equals("游戏广场")) return R.drawable.game1;
+		if (boardName.equals("动漫天地")) return R.drawable.mickey;
+		if (boardName.equals("感性空间")) return R.drawable.love;
+		if (boardName.equals("瞬间永恒")) return R.drawable.time1;
+		if (boardName.equals("交易代理")) return R.drawable.sale;
+		if (boardName.equals("论坛管理")) return R.drawable.management;
+		if (boardName.equals("院系交流")) return R.drawable.communication;
+		if (boardName.equals("社团风采")) return R.drawable.people;
+		if (boardName.equals("天下一家")) return R.drawable.world;
+		return R.drawable.cc98_smallest;
+	}
+	
 	// Override
 	protected void onNewIntent(Intent intent) {
 		// TODO Auto-generated method stub
@@ -209,7 +236,6 @@ public class HomePageActivity extends LoadWebPageActivity {
 				finish();
 			else
 				preLoadPage();
-				
 		}
 	}
 
