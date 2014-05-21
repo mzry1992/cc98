@@ -195,17 +195,24 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			Element tr1 = tbody.child(0);
 			Element tr2 = tbody.children().last();
 			
-			{ // author name
-				Element td1 = tr1.child(0);
+			// author name
+			Element td1 = tr1.child(0);
+			{ 
 				Element name = td1.select("a[name]").first();
+				if (name != null) {
 				Element author = name.getElementsByTag("b").first();
 				authors.add(author.text());
-				//System.out.println("Author:" + author.text());
+				}
+				else {
+					Element span1 = td1.getElementsByTag("span").first();
+					Element author = span1.getElementsByTag("b").first();
+					authors.add(author.text());
+				}
 			}
 			
-			{ // contents
-				Element td2 = tr1.child(1);
-				
+			// contents
+			Element td2 = tr1.child(1);
+			{ 
 				// replyID
 				Elements urls = td2.select("a[href]"); 
 				for (Element url : urls) {
@@ -256,42 +263,10 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 					contents.add(contentSb.toString());
 					references.add("");
 				}
-				//System.out.println("raw Content : " + rawContents.get(rawContents.size() - 1));
-				/*while (true) {
-					String content = span.html().trim();
-					if (content.length() > 0) {
-						sb.append(content);
-						//sb.append("\n");
-					}
-					if (span.children().size() != 0)
-						span = span.child(0);
-					else break;
-				}
-				String contentStr = removeBrackets(sb.toString());
-				contents.add(contentStr);
-				System.out.println("Post Content:" + contentStr);
-				
-				// reference
-				StringBuilder sb1 = new StringBuilder();
-				Element div = span.getElementsByTag("div").first();
-				if (div != null) {
-					System.out.println("div not null!!!!");
-					sb1.append(div.html().trim());
-				}
-				while (div != null) {
-					String content = div.html().trim();
-					if (content.length() > 0)
-						sb1.append(content);
-					if (div.children().size() != 0)
-						div = div.child(0);
-					else break;
-				}
-				String referStr = removeBrackets(sb1.toString());
-				references.add(referStr);
-				System.out.println("Post Reference:" + referStr);*/
 			}		
 			
-			{ // time post
+			// time post
+			{ 
 				Element td = tr2.children().first();
 				String timestamp = td.text().trim();
 				timestamps.add(timestamp);

@@ -5,23 +5,12 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_gravity="center"
-    android:background="#FFA7D5FA">
-
-	<TextView
-	    android:id="@+id/loginTextView"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="@string/loginText"
-	    android:fontFamily="@string/textStyle"
-	    android:textColor="#FF000000"
-	    android:textSize="25sp"
-	    android:layout_marginBottom="20dp" />
+    android:background="@drawable/login_background">"
 	    
 	<TableLayout
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 		android:layout_marginBottom="20dp">
-		"
 		<TableRow>
 		    <TextView
 		        android:id="@+id/usernameTextView"
@@ -30,7 +19,7 @@
 		        android:layout_height="wrap_content"
 		        android:text="@string/username"
 		        android:fontFamily="@string/textStyle"
-		        android:textColor="#FF344F8D"
+		        android:textColor="@color/white"
 		        android:textSize="20sp"
 		        android:layout_gravity="left"
 		        android:padding="3dp"
@@ -43,6 +32,7 @@
 				android:layout_height="wrap_content" 
 				android:width="200dp"
 				android:singleLine="true"
+				android:textColor="@color/white"
 				android:layout_gravity="right"
 				android:lines="1"
 				android:textSize="18sp" />
@@ -55,8 +45,8 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:text="@string/password"
+		        android:textColor="@color/white"
 		        android:fontFamily="@string/textStyle"
-		        android:textColor="#FF344F8D"
 		        android:layout_gravity="left"
 		        android:textSize="20sp"
 		        android:padding="3dp"
@@ -68,6 +58,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" 
 				android:width="200dp"
+				android:textColor="@color/white"
 				android:singleLine="true"
 				android:layout_gravity="right"
 				android:lines="1"
@@ -82,9 +73,11 @@
 			    android:layout_height="wrap_content"
 			    android:text="@string/loginButton"
 			    android:fontFamily="@string/textStyle"
-			    android:textColor="#FF344F8D"
-			    android:textSize="20sp" 
-			    android:layout_marginLeft="10dp"/>
+			    android:textColor="@color/white"
+			    android:textSize="20sp"
+			    android:background="#44FFEE00"
+			    android:layout_marginTop="20dp"
+			    android:layout_marginLeft="0dp"/>
 		</TableRow>
 		<TableRow>
 			<TextView
@@ -92,11 +85,11 @@
 			    android:layout_span="2"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:textColor="#FFF05654"
+			    android:textColor="@color/orange"
 			    android:layout_gravity="left"
-			    android:textSize="10sp"
+			    android:textSize="12sp"
 			    android:padding="3dp"
-			    android:layout_marginBottom="10dp" />
+			    android:layout_marginBottom="0dp" />
 		</TableRow>
 	</TableLayout>
 </LinearLayout>

@@ -7,14 +7,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class ReplyPostActivity extends Activity implements OnClickListener, GetWebPageInterface {
 
 	private EditText replySubjectET, replyContentET;
-	private Button submitButton;
+	private ImageView backButton, submitButton;
+	private GridView gridView;
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,8 +42,24 @@ public class ReplyPostActivity extends Activity implements OnClickListener, GetW
         replySubjectET = (EditText)this.findViewById(R.id.replySubjectEditText);
         replyContentET = (EditText)this.findViewById(R.id.replyContentEditText);
         replyContentET.setText(content.toString());
-        submitButton = (Button)this.findViewById(R.id.replySubmitButton);
+        backButton = (ImageView)this.findViewById(R.id.replyBackButton);
+        submitButton = (ImageView)this.findViewById(R.id.replySubmitButton);
+        backButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
+        
+        gridView = (GridView)this.findViewById(R.id.replyGridView);
+        gridView.setAdapter(new ExpressionAdapter(this));
+        gridView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                //Toast.makeText(NewPostActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+            	StringBuilder sb= new StringBuilder();
+            	sb.append("[em");
+            	if (position < 10) sb.append('0');
+            	sb.append(position);
+            	sb.append(']');
+            	replyContentET.append(sb.toString());
+            }
+        });
 	}
 	
 	public void onClick(View v){
@@ -82,6 +103,10 @@ public class ReplyPostActivity extends Activity implements OnClickListener, GetW
             new ReplyPostTask(this).execute(postUrl.toString(), username, pwd,
             								subject, content, followup, rootID, referer.toString(), cookie);
             break;
+            
+    	case R.id.replyBackButton:
+    		this.finish();
+    		break;
     	}
 	}
 	
