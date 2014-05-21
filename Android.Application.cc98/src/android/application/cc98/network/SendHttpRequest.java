@@ -13,6 +13,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
@@ -25,12 +26,14 @@ public class SendHttpRequest {
 	public static HttpResult sendGet(String url,Map<String,String> headers,Map<String,String>  params,String encoding,boolean duan) throws ClientProtocolException, IOException{
 	//实例化一个Httpclient的
 		DefaultHttpClient client = new DefaultHttpClient();
+		//client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
 		//如果有参数的就拼装起来
 		url = url+(null==params?"":assemblyParameter(params));
 		//这是实例化一个get请求
 		HttpGet hp = new HttpGet(url);
 		//如果需要头部就组装起来
 		if(null!=headers)hp.setHeaders(assemblyHeader(headers));
+
 		//执行请求后返回一个HttpResponse
 		HttpResponse response = client.execute(hp);
 		//如果为true则断掉这个get请求

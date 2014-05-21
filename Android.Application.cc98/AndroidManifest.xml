@@ -62,6 +62,15 @@
             android:label="@string/about_title"
 			android:theme="@android:style/Theme.Dialog">
         </activity>
+        <activity
+            android:name="android.application.cc98.HotPostActivity"
+            android:label="@string/app_name" >
+        </activity>
+          <activity
+            android:name="android.application.cc98.FragmentHomeActivity"
+            android:launchMode="singleTop" 
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>
