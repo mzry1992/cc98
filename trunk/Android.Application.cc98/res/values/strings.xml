@@ -81,4 +81,8 @@
 	
 	<!-- loading string -->
 	<string name="loading_str">努力求是中，请稍后......</string>
+	
+	<!-- hot post fragment -->
+	<string name="hotpost_page_url">http://www.cc98.org/hottopic.asp</string>
+	<string name="hotPostTitleText">24小时热门话题</string>
 </resources>

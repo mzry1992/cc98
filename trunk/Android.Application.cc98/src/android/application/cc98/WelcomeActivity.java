@@ -27,7 +27,7 @@ public class WelcomeActivity extends Activity{
     }
 	
 	private void jumpToHomePage() {
-		Intent welcomeIntent = new Intent(WelcomeActivity.this, HomePageActivity.class);
+		Intent welcomeIntent = new Intent(WelcomeActivity.this, FragmentHomeActivity.class);
 		WelcomeActivity.this.startActivity(welcomeIntent);
 		WelcomeActivity.this.finish();
 	}

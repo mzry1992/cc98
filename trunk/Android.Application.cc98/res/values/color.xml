@@ -11,4 +11,6 @@
     <color name="lightPurple">#88A2BEFF</color>
     <color name="black">#000000</color>
     <color name="lightBlue">#EEF7FD</color>
+    <color name="info_panel_bg">#ffeeeeee</color>
+
 </resources>

@@ -23,7 +23,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		serverName = getString(R.string.serverName);;
+		serverName = getString(R.string.serverName);
 	}
 	
 	@Override
@@ -172,7 +172,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 	
 	private void exitProgram() {
 		Intent intent = new Intent(); 
-		intent.setClass(this, HomePageActivity.class);
+		intent.setClass(this, FragmentHomeActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra("exit_code", "true");
 		startActivity(intent);
