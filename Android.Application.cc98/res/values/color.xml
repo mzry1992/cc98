@@ -12,5 +12,6 @@
     <color name="black">#000000</color>
     <color name="lightBlue">#EEF7FD</color>
     <color name="info_panel_bg">#ffeeeeee</color>
+    <color name="grid_line">#ffeeeeee</color>
 
 </resources>

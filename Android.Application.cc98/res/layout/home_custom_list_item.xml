@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-        
-        xmlns:android="http://schemas.android.com/apk/res/android" 
-        android:orientation="vertical"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent" 
-        android:id="@+id/customListItem" 
-        android:paddingBottom="5dp" 
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-        <TextView 
-                android:layout_height="wrap_content" 
-                android:layout_width="fill_parent" 
-                android:id="@+id/customItemTitle" 
-                android:textSize="18sp"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="3dp">
-        </TextView>
-        <TextView 
-                android:layout_height="wrap_content" 
-                android:layout_width="fill_parent" 
-                android:id="@+id/customItemText"
-                android:textSize="12sp"
-                android:textColor="@color/grey" >
-        </TextView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/customListItem"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/shape_bg"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
+
+    <TextView
+        android:id="@+id/customItemTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:textSize="16sp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/customItemText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey"
+        android:textSize="12sp" >
+    </TextView>
+
 </LinearLayout>
