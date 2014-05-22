@@ -62,6 +62,8 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 	private HomePageManager homePageManager = null;
 
 	private FragmentManager fragmentManager;
+	
+	private Fragment globalFragment = null;
 
 	public FragmentHomeActivity() {
 		// TODO Auto-generated constructor stub
@@ -168,9 +170,16 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 		hideFragments(transaction);
 		if (currFragment != null) {
 			transaction.show(currFragment);
+			globalFragment = currFragment;
 		}
 		transaction.commit();
-
+		if (globalFragment == hotPostFragment) {
+			hotPostFragment.restoreScrollPosition();
+		}
+		else if (globalFragment == custimizationFragment)
+			custimizationFragment.restoreScrollPosition();
+		else if (globalFragment == boardFragment)
+			boardFragment.restoreScrollPosition();
 	}
 
 	private void clearSelection() {
@@ -181,6 +190,12 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 	}
 
 	private void hideFragments(FragmentTransaction transaction) {
+		if (globalFragment == hotPostFragment)
+			hotPostFragment.recordScrollPosition();
+		else if (globalFragment == custimizationFragment)
+			custimizationFragment.recordScrollPosition();
+		else if (globalFragment == boardFragment)
+			boardFragment.recordScrollPosition();
 		for (int i = 0; i < fragmentArray.size(); ++i)
 			transaction.hide(fragmentArray.get(i));
 	}
