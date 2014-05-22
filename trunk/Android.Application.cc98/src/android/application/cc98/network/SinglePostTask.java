@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
@@ -241,8 +242,14 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 				String text = span.html().trim();
 				
 				if (text.startsWith("[quotex]")) {
+					//System.out.println("Reference:" + text);
 					int idx = text.indexOf("[/quotex]");
-					String referStr = text.substring(0, idx + 8);
+					int idx1 = text.indexOf("[/b]");
+					StringBuilder referStrSb = new StringBuilder();
+					referStrSb.append(text.substring(0, idx1 - 1));
+					referStrSb.append('\n');
+					referStrSb.append(text.substring(idx1 + 4, idx - 1));
+					String referStr = referStrSb.toString();
 					String contentStr = text.substring(idx + 9);
 					
 					rawContents.add(contentStr);
@@ -273,33 +280,11 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	}
 
 	private String adjustText(String text) {
-		text = replaceCharset(text);
-		text = removeBrackets(text);
 		text = removeBR(text);
+		text = StringEscapeUtils.unescapeHtml4(text);
+		text = removeBrackets(text);
+		//text = removeBR(text);
 		return text;
-	}
-	
-	private String replaceCharset(String text) {
-		StringBuilder sb = new StringBuilder();
-		int i = 0;
-		//int cnt = 0;
-		while (i < text.length()) {
-			if (text.charAt(i) == '&') {
-				int idx = text.indexOf(';', i);
-				if (idx == -1 || idx - i > 7 || idx == i + 1)
-					sb.append(text.charAt(i++));
-				else {
-					String symbol = text.substring(i + 1, idx - 1);
-					char ch = getCharFromCharset(symbol);
-					sb.append(ch);
-					i = idx + 1;
-				}
-			}
-			else
-				sb.append(text.charAt(i++));
-		}
-		String str = sb.toString();
-		return str;
 	}
 	
 	private String removeBrackets(String text) {
@@ -312,13 +297,30 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 					&& i + 2 < text.length() && text.charAt(i + 2) == 'm')
 					sb.append(text.charAt(i++));
 				else {
-					while ( i < text.length() &&
-							text.charAt(i++) != ']');
+					int idx = text.indexOf(']', i);
+					if (idx != -1 && idx > i + 1) {
+						i = idx + 1;
+						continue;
+					}
+				}
+			}
+			else if (text.charAt(i) == '<') {
+				int idx = text.indexOf('>', i);
+				if (idx != -1 && idx > i + 1) {
+/*					CharSequence charset = text.subSequence(i + 1, idx - 1);
+					boolean allChar = true;
+					for (int k = 0; k < charset.length(); k++) {
+						if (charset.charAt(k) > 128) {
+							allChar = false;
+							break;
+						}
+					}
+					if (allChar) {*/
+					i = idx + 1;
 					continue;
 				}
 			}
-			else
-				sb.append(text.charAt(i++));
+			sb.append(text.charAt(i++));
 		}
 		String str = sb.toString();
 		return str;
@@ -351,79 +353,4 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 		return str;
 	}
 	
-	private char getCharFromCharset(String str) {
-		if (str.equals("quot")) return '“';
-		if (str.equals("amp")) return '&';
-		if (str.equals("lt")) return '<';
-		if (str.equals("gt")) return '>';
-		if (str.equals("nbsp")) return ' ';
-		//if (str.equals("iquest")) return '';
-		if (str.equals("laquo")) return '«';
-		if (str.equals("raquo")) return '»';
-		if (str.equals("lsquo")) return '‘';
-		if (str.equals("rsquo")) return '’';
-		if (str.equals("ldquo")) return '“';
-		if (str.equals("rdquo")) return '”';
-		if (str.equals("para")) return '\n';
-		if (str.equals("sect")) return '§';
-		if (str.equals("copy")) return '©';
-		if (str.equals("reg")) return '®';
-		if (str.equals("trade")) return '™';
-		if (str.equals("euro")) return '€';
-		if (str.equals("cent")) return '¢';
-		if (str.equals("pound")) return '£';
-		if (str.equals("yen")) return '¥';
-		if (str.equals("hellip")) return '…';
-		if (str.equals("oplus")) return '⊕';
-		if (str.equals("nabla")) return '∇';
-		if (str.equals("times")) return '×';
-		if (str.equals("divide")) return '÷';
-		if (str.equals("plusmn")) return '±';
-		//if (str.equals("fnof")) return '';
-		if (str.equals("radic")) return '√';
-		if (str.equals("infin")) return '∞';
-		if (str.equals("ang")) return '∠';
-		if (str.equals("int")) return '∫';
-		if (str.equals("deg")) return '°';
-		if (str.equals("ne")) return '≠';
-		if (str.equals("equiv")) return '≡';
-		if (str.equals("le")) return '≤';
-		if (str.equals("ge")) return '≥';
-		if (str.equals("perp")) return '⊥';
-		//if (str.equals("frac12")) return '';
-		//if (str.equals("frac14")) return '';
-		//if (str.equals("frac34")) return '';
-		if (str.equals("permil")) return '%';
-		if (str.equals("there4")) return '∴';
-		if (str.equals("pi")) return 'π';
-		if (str.equals("sup1")) return '¹';
-		if (str.equals("sup2")) return '²';
-		if (str.equals("sup3")) return '³';
-		if (str.equals("crarr")) return '↵';
-		if (str.equals("larr")) return '←';
-		if (str.equals("uarr")) return '↑';
-		if (str.equals("rarr")) return '→';
-		if (str.equals("darr")) return '↓';
-		if (str.equals("harr")) return '↔';
-		if (str.equals("lArr")) return '⇐';
-		if (str.equals("uArr")) return '⇑';
-		if (str.equals("rArr")) return '⇒';
-		if (str.equals("dArr")) return '⇓';
-		if (str.equals("hArr")) return '⇔';
-		if (str.equals("spades")) return '♠';
-		if (str.equals("clubs")) return '♣';
-		if (str.equals("hearts")) return '♥';
-		if (str.equals("diams")) return '♣';
-		if (str.equals("alpha")) return 'α';
-		if (str.equals("beta")) return 'β';
-		if (str.equals("gamma")) return 'γ';
-		if (str.equals("Delta")) return 'Δ';
-		if (str.equals("theta")) return 'θ';
-		if (str.equals("lambda")) return 'λ';
-		if (str.equals("Sigma")) return 'Σ';
-		if (str.equals("tau")) return 'τ';
-		if (str.equals("omega")) return 'ω';
-		if (str.equals("Omega")) return 'Ω';
-		return ' ';
-	}
 }

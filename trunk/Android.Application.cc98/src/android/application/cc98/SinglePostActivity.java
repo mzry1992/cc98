@@ -9,11 +9,17 @@ import android.application.cc98.view.Utility;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -46,9 +52,6 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 	// UI and data
 	private Button postMoreBtn;
 	private SinglePostAdapter listAdapter;
-	
-	//mark status
-	private boolean firstPageLoadSucess = false;
 	
 	// reference
 	private int referPos = -1;
@@ -134,8 +137,6 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		// first post page loading finish
 		if (status.get(0).equals("3")) {
 
-			firstPageLoadSucess = true;
-			
 			postInfo = outputs.get(1);
 
 			postCount = Integer.parseInt(postInfo.get(0));
@@ -291,6 +292,14 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			preLoadPage();
 		}
 	}
+
+	public void jumpToWebView(String url) {
+        Intent intent = new Intent(SinglePostActivity.this, WebViewActivity.class);
+        intent.putExtra(this.getString(R.string.webViewHyperlink), url);
+        intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+        System.out.println("Open url:" + url);
+        this.startActivity(intent);
+	}
 }
 
 class SinglePostAdapter extends BaseAdapter {
@@ -352,6 +361,9 @@ class SinglePostAdapter extends BaseAdapter {
 			referenceTv.setTextColor(context.getResources().getColor(R.color.darkgrey));
 			referenceTv.setBackgroundColor(context.getResources().getColor(R.color.thingrey));
 			referenceTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+			referenceTv.setAutoLinkMask(Linkify.WEB_URLS);
+			referenceTv.setLinksClickable(true);
+			referenceTv.setMovementMethod(CustomLinkMovementMethod.getInstance());
 			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 			         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			layoutParams.setMargins(5, 5, 5, 5);
@@ -364,6 +376,9 @@ class SinglePostAdapter extends BaseAdapter {
 		contentTv.setText(contents.get(i));
 		contentTv.setTextColor(context.getResources().getColor(R.color.black));
 		contentTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+		contentTv.setAutoLinkMask(Linkify.WEB_URLS);
+		contentTv.setLinksClickable(true);
+		contentTv.setMovementMethod(CustomLinkMovementMethod.getInstance());
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 		         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(0, 5, 0, 12);
@@ -372,5 +387,62 @@ class SinglePostAdapter extends BaseAdapter {
 		//System.out.println(contentTv.getText().toString());
 					
 		return convertView;
+	}
+}
+
+class CustomLinkMovementMethod extends LinkMovementMethod
+{
+	private static Context movementContext;
+	private static CustomLinkMovementMethod linkMovementMethod = new CustomLinkMovementMethod();
+
+	public boolean onTouchEvent(android.widget.TextView widget, android.text.Spannable buffer, android.view.MotionEvent event)
+	{
+	    int action = event.getAction();
+	
+	    if (action == MotionEvent.ACTION_UP)
+	    {
+	        int x = (int) event.getX();
+	        int y = (int) event.getY();
+	
+	        x -= widget.getTotalPaddingLeft();
+	        y -= widget.getTotalPaddingTop();
+	
+	        x += widget.getScrollX();
+	        y += widget.getScrollY();
+	
+	        Layout layout = widget.getLayout();
+	        int line = layout.getLineForVertical(y);
+	        int off = layout.getOffsetForHorizontal(line, x);
+	
+	        URLSpan[] link = buffer.getSpans(off, off, URLSpan.class);
+	        if (link.length != 0)
+	        {
+	            String url = link[0].getURL();
+	            SinglePostActivity activity = (SinglePostActivity)movementContext;
+	            activity.jumpToWebView(url);
+	            /*if (url.contains("https"))
+	            {
+	                Log.d("Link", url);
+	                Toast.makeText(movementContext, "Link was clicked", Toast.LENGTH_LONG).show();
+	            } else if (url.contains("tel"))
+	            {
+	                Log.d("Link", url);
+	                Toast.makeText(movementContext, "Tel was clicked", Toast.LENGTH_LONG).show();
+	            } else if (url.contains("mailto"))
+	            {
+	                Log.d("Link", url);
+	                Toast.makeText(movementContext, "Mail link was clicked", Toast.LENGTH_LONG).show();
+	            }*/
+	            return true;
+	        }
+	    }
+	
+	    return super.onTouchEvent(widget, buffer, event);
+	}
+
+	public static android.text.method.MovementMethod getInstance(Context c)
+	{
+	    movementContext = c;
+	    return linkMovementMethod;
 	}
 }
