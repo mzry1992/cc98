@@ -168,6 +168,7 @@ public class LeafBoardTask extends AsyncTask<String, Integer, ArrayList<ArrayLis
 						for (Element link : links) {
 							String str = link.text();
 							if (str.contains("Ìû×ÓÁÐ±í")) break;
+							if (str.equals("www.cc98.org")) continue;
 							sb.append(str + " ¡ú ");
 						}
 						//System.out.println("Test Board name!!!!!");

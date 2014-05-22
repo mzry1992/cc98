@@ -54,7 +54,9 @@
 	<string name="morePostText">更多回复</string>
 	<string name="loadingMorePostText">载入回复中...</string>
 	<string name="noMorePostText">本主题已无更多回复</string>
-
+	<string name="singlePostTitleStr">帖子主题：</string>
+	<string name="webViewHyperlink">webViewHyperlink</string>
+	
 	<!-- Reply post page string -->
 	<string name="replyFollowup">replyFollowup</string>
 	<string name="replyRootID">replyRootID</string>
