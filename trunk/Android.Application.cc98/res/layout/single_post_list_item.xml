@@ -60,6 +60,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:minHeight="20dp"
+        android:layout_gravity="left"
+        android:gravity="left"
         android:id="@+id/singlePostContentItem">
     	<!-- <TextView
     	    android:layout_height="wrap_content" 

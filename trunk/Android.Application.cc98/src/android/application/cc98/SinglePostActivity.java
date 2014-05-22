@@ -1,6 +1,8 @@
 package android.application.cc98;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -9,17 +11,14 @@ import android.application.cc98.view.Utility;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.Layout;
-import android.text.method.LinkMovementMethod;
-import android.text.style.URLSpan;
-import android.text.util.Linkify;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -27,6 +26,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -188,7 +189,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			postMoreBtn.setText(this.getString(R.string.noMorePostText));
 		
 		ListView postLv = (ListView) this.findViewById(R.id.singlePostList);
-		listAdapter = new SinglePostAdapter(getApplicationContext());
+		listAdapter = new SinglePostAdapter(getApplicationContext(), SinglePostActivity.this);
 		listAdapter.setData(authors, references, contents, timestamps);
 		postLv.setAdapter(listAdapter);
 		Utility.setListViewHeightBasedOnChildren(postLv);
@@ -296,7 +297,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 	public void jumpToWebView(String url) {
         Intent intent = new Intent(SinglePostActivity.this, WebViewActivity.class);
         intent.putExtra(this.getString(R.string.webViewHyperlink), url);
-        intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
         System.out.println("Open url:" + url);
         this.startActivity(intent);
 	}
@@ -305,13 +306,15 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 class SinglePostAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	private Context context;
+	private SinglePostActivity activity;
 	private ArrayList<String> authors;
 	private ArrayList<String> references;
 	private ArrayList<String> contents;
 	private ArrayList<String> timestamps;
 	
-	public SinglePostAdapter(Context context) {
+	public SinglePostAdapter(Context context, SinglePostActivity activity) {
 		this.context = context;
+		this.activity = activity;
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
@@ -346,8 +349,8 @@ class SinglePostAdapter extends BaseAdapter {
 		TextView floorTv = (TextView) convertView.findViewById(R.id.postFloorText);
 		TextView authorTv = (TextView) convertView.findViewById(R.id.postAuthorText);
 		TextView timestampTv = (TextView) convertView.findViewById(R.id.postTimestampText);
-		LinearLayout contentLayout = (LinearLayout)convertView.findViewById(R.id.singlePostContentItem);
-		contentLayout.removeAllViews();
+		LinearLayout layout = (LinearLayout)convertView.findViewById(R.id.singlePostContentItem);
+		layout.removeAllViews();
 		
 		int i = position;
 		floorTv.setText(" " + i + "F ");
@@ -356,93 +359,190 @@ class SinglePostAdapter extends BaseAdapter {
 		
 		// add reference	
 		if (references.get(i).length() > 0) {
-			TextView referenceTv = new TextView(context.getApplicationContext());
-			referenceTv.setText(references.get(i));
-			referenceTv.setTextColor(context.getResources().getColor(R.color.darkgrey));
-			referenceTv.setBackgroundColor(context.getResources().getColor(R.color.thingrey));
-			referenceTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-			referenceTv.setAutoLinkMask(Linkify.WEB_URLS);
-			referenceTv.setLinksClickable(true);
-			referenceTv.setMovementMethod(CustomLinkMovementMethod.getInstance());
-			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-			         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			layoutParams.setMargins(5, 5, 5, 5);
-			referenceTv.setLayoutParams(layoutParams);
-			contentLayout.addView(referenceTv);
+			String referText = references.get(i);
+			setContentLayout(layout, referText, 5, 5, 5, 5, 
+					13, R.color.darkgrey, R.color.thingrey, R.color.blue);
 		}
 		
 		// add text content
-		TextView contentTv = new TextView(context.getApplicationContext());
-		contentTv.setText(contents.get(i));
-		contentTv.setTextColor(context.getResources().getColor(R.color.black));
-		contentTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-		contentTv.setAutoLinkMask(Linkify.WEB_URLS);
-		contentTv.setLinksClickable(true);
-		contentTv.setMovementMethod(CustomLinkMovementMethod.getInstance());
-		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-		         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-		layoutParams.setMargins(0, 5, 0, 12);
-		contentTv.setLayoutParams(layoutParams);
-		contentLayout.addView(contentTv);
-		//System.out.println(contentTv.getText().toString());
-					
+		{
+			String contentText = contents.get(i);
+			setContentLayout(layout, contentText, 0, 5, 0, 12, 
+					16, R.color.black, R.color.white, R.color.blue);
+		}			
 		return convertView;
 	}
-}
 
-class CustomLinkMovementMethod extends LinkMovementMethod
-{
-	private static Context movementContext;
-	private static CustomLinkMovementMethod linkMovementMethod = new CustomLinkMovementMethod();
-
-	public boolean onTouchEvent(android.widget.TextView widget, android.text.Spannable buffer, android.view.MotionEvent event)
-	{
-	    int action = event.getAction();
-	
-	    if (action == MotionEvent.ACTION_UP)
-	    {
-	        int x = (int) event.getX();
-	        int y = (int) event.getY();
-	
-	        x -= widget.getTotalPaddingLeft();
-	        y -= widget.getTotalPaddingTop();
-	
-	        x += widget.getScrollX();
-	        y += widget.getScrollY();
-	
-	        Layout layout = widget.getLayout();
-	        int line = layout.getLineForVertical(y);
-	        int off = layout.getOffsetForHorizontal(line, x);
-	
-	        URLSpan[] link = buffer.getSpans(off, off, URLSpan.class);
-	        if (link.length != 0)
-	        {
-	            String url = link[0].getURL();
-	            SinglePostActivity activity = (SinglePostActivity)movementContext;
-	            activity.jumpToWebView(url);
-	            /*if (url.contains("https"))
-	            {
-	                Log.d("Link", url);
-	                Toast.makeText(movementContext, "Link was clicked", Toast.LENGTH_LONG).show();
-	            } else if (url.contains("tel"))
-	            {
-	                Log.d("Link", url);
-	                Toast.makeText(movementContext, "Tel was clicked", Toast.LENGTH_LONG).show();
-	            } else if (url.contains("mailto"))
-	            {
-	                Log.d("Link", url);
-	                Toast.makeText(movementContext, "Mail link was clicked", Toast.LENGTH_LONG).show();
-	            }*/
-	            return true;
-	        }
-	    }
-	
-	    return super.onTouchEvent(widget, buffer, event);
+	private void setContentLayout(LinearLayout layout, String contentText,
+									int left, int top, int right, int bottom,
+									int size, int textColor, int bgColor, int linkColor) {
+		LinearLayout contentLayout = new LinearLayout(context.getApplicationContext());
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+		         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		layoutParams.setMargins(left, top, right, bottom);
+		layoutParams.gravity = Gravity.LEFT;
+		contentLayout.setLayoutParams(layoutParams);
+		contentLayout.setGravity(Gravity.LEFT);
+		contentLayout.setOrientation(LinearLayout.VERTICAL);
+		
+		// Pattern for recognizing a URL, based off RFC 3986
+		Pattern urlPattern = Pattern.compile(
+		        "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+		                + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
+		                + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+		        Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+		Matcher urlMatcher = urlPattern.matcher(contentText);
+		/*while (urlMatcher.find()) {
+			int matchStart = urlMatcher.start();
+		    int matchEnd = urlMatcher.end();
+		    System.out.println("Link:" + contentText.substring(matchStart, matchEnd));
+		    // now you have the offsets of a URL match
+		}*/
+		
+		Pattern expPattern = Pattern.compile("\\[em[0-1][0-9]\\]");
+		Matcher expMatcher = expPattern.matcher(contentText);
+		/*while (expMatcher.find()) {
+			int matchStart = expMatcher.start();
+		    int matchEnd = expMatcher.end();
+		    System.out.println("Exp:" + contentText.substring(matchStart, matchEnd));
+		}*/
+		
+		int startIndex = 0, endIndex = contentText.length();
+		boolean hasUrl = urlMatcher.find();
+		boolean hasExp = expMatcher.find();
+		while (startIndex < endIndex) {
+			if (!hasUrl && !hasExp) {
+				TextView tv = makeTextView(contentText.substring(startIndex, endIndex), size, textColor, bgColor);
+				contentLayout.addView(tv);
+				break;
+			}
+			
+			int urlStart = (hasUrl)? urlMatcher.start() : endIndex;
+			int expStart = (hasExp)? expMatcher.start() : endIndex;
+			if (urlStart < expStart) {
+				// before textview
+				TextView tv = makeTextView(contentText.substring(startIndex, urlStart), size, textColor, bgColor);
+				contentLayout.addView(tv);
+				// hyperlink
+				int urlEnd = urlMatcher.end();
+				TextView linkTv = makeTextView(contentText.substring(urlStart, urlEnd), size, linkColor, bgColor);
+				contentLayout.addView(linkTv);
+				System.out.println("link:" + contentText.substring(urlStart, urlEnd));
+				linkTv.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						TextView urlTv = (TextView)v;
+						System.out.println("Jump to url:" + urlTv.getText().toString());
+						activity.jumpToWebView(urlTv.getText().toString());
+					}
+				});
+				// update index and matcher
+				startIndex = urlEnd;
+				hasUrl = urlMatcher.find();
+			}
+			else {
+				// before textview
+				TextView tv = makeTextView(contentText.substring(startIndex, expStart), size, textColor, bgColor);
+				contentLayout.addView(tv);
+				// expression
+				int expEnd = expMatcher.end();
+				ImageView imgView = makeExpression(contentText.substring(expStart + 1, expEnd - 1));
+				contentLayout.addView(imgView);
+				System.out.println("exp:" + contentText.substring(expStart, expEnd));
+				// update index and matcher
+				startIndex = expEnd;
+				hasExp = expMatcher.find();
+			}
+		}
+		/*
+		while (true) {
+			// get expression and link index
+			int length = contentText.length();
+			int expIdx = contentText.indexOf("[em");
+			int expIdx1 = contentText.indexOf(']', expIdx);
+			if (expIdx == -1 || expIdx1 - expIdx != 5) expIdx = length;
+			if (expIdx1 - expIdx == 5) {
+				String exp = contentText.substring(expIdx + 1, expIdx1);
+				boolean isExp = (exp.charAt(2) == '0' && exp.charAt(3) >= '0' && exp.charAt(3) <= '9') ||
+								(exp.charAt(2) == '1' && exp.charAt(3) >= '0' && exp.charAt(3) <= '1');
+				if (!isExp) expIdx = length;
+			}
+			int linkIdx = contentText.indexOf("http://");
+			if (linkIdx == -1) linkIdx = length;
+			
+			// set textview
+			if (expIdx == length && linkIdx == length) {
+				TextView tv = makeTextView(contentText, size, textColor, bgColor);
+				contentLayout.addView(tv);
+				break;
+			}
+			// set expression
+			else if (expIdx < linkIdx) {
+				// before text
+				TextView tv = makeTextView(contentText.substring(0, expIdx), size, textColor, bgColor);
+				contentLayout.addView(tv);
+				// expression
+				System.out.println("expIdx:" + (expIdx) + " expIdx1:" + (expIdx1));
+				System.out.println("Exp:" + contentText.substring(expIdx + 1, expIdx1));
+				String exp = contentText.substring(expIdx + 1, expIdx1);
+				ImageView imgView = makeExpression(exp);
+				contentLayout.addView(imgView);
+				contentText = contentText.substring(expIdx1 + 1);
+			}
+			// set hyperlink
+			else { // linkIdx < expIdx
+				// before text
+				TextView tv = makeTextView(contentText.substring(0, linkIdx), size, textColor, bgColor);
+				contentLayout.addView(tv);
+				// hyperlink
+				int endIdx0 = contentText.indexOf(' ', linkIdx);
+				int endIdx1 = contentText.indexOf('\t', linkIdx);
+				int endIdx2 = contentText.indexOf('\n', linkIdx);
+				int endIdx = Math.min(endIdx0, Math.min(endIdx1, endIdx2));
+				if (endIdx <= linkIdx) endIdx = length;
+				System.out.println("linkIdx:" + linkIdx + " endIdx:" + endIdx);
+				System.out.println("Link:" + contentText.substring(linkIdx, endIdx));
+				TextView linkTv = makeTextView(contentText.substring(linkIdx, endIdx), size, linkColor, bgColor);
+				contentLayout.addView(linkTv);
+				contentText = contentText.substring(endIdx);
+			}
+		}
+		*/
+		layout.addView(contentLayout);
 	}
-
-	public static android.text.method.MovementMethod getInstance(Context c)
-	{
-	    movementContext = c;
-	    return linkMovementMethod;
+	
+	private TextView makeTextView(String text, int size, int textColor, int bgColor) {
+		TextView tv = new TextView(context.getApplicationContext());
+		tv.setText(text);
+		tv.setTextColor(context.getResources().getColor(textColor));
+		tv.setBackgroundColor(context.getResources().getColor(bgColor));
+		tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+		tv.setGravity(Gravity.LEFT);
+		return tv;
+	}
+	
+	private ImageView makeExpression(String exp) {
+		int expDrawable = -1;
+		int num = Integer.parseInt(exp.substring(2));
+		switch (num) {
+			case 0: expDrawable = R.drawable.em00; break;
+			case 1: expDrawable = R.drawable.em01; break;
+			case 2: expDrawable = R.drawable.em02; break;
+			case 3: expDrawable = R.drawable.em03; break;
+			case 4: expDrawable = R.drawable.em04; break;
+			case 5: expDrawable = R.drawable.em05; break;
+			case 6: expDrawable = R.drawable.em06; break;
+			case 7: expDrawable = R.drawable.em07; break;
+			case 8: expDrawable = R.drawable.em08; break;
+			case 9: expDrawable = R.drawable.em09; break;
+			case 10: expDrawable = R.drawable.em10; break;
+			case 11: expDrawable = R.drawable.em11; break;
+			default: expDrawable = -1; break;
+		}
+		ImageView imgView = new ImageView(context.getApplicationContext());
+		Bitmap bm = BitmapFactory.decodeResource(context.getResources(), expDrawable);
+		imgView.setImageBitmap(bm);
+		//imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		return imgView;
 	}
 }
