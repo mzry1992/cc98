@@ -11,7 +11,7 @@
 	
     <application
         android:allowBackup="true"
-        android:icon="@drawable/cc98_box"
+        android:icon="@drawable/cc98logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
