@@ -246,9 +246,9 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 					int idx = text.indexOf("[/quotex]");
 					int idx1 = text.indexOf("[/b]");
 					StringBuilder referStrSb = new StringBuilder();
-					referStrSb.append(text.substring(0, idx1 - 1));
+					referStrSb.append(text.substring(0, idx1));
 					referStrSb.append('\n');
-					referStrSb.append(text.substring(idx1 + 4, idx - 1));
+					referStrSb.append(text.substring(idx1 + 4, idx));
 					String referStr = referStrSb.toString();
 					String contentStr = text.substring(idx + 9);
 					
