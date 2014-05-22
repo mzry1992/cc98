@@ -11,7 +11,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.application.cc98.GetMultiWebPageInterface;
 import android.application.cc98.GetWebPageInterface;
 import android.application.cc98.view.Utility;
 import android.os.AsyncTask;
