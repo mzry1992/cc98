@@ -80,7 +80,7 @@ public class BoardFragment extends Fragment {
 		GrapeGridView defaultGv = (GrapeGridView) boardLayout
 				.findViewById(R.id.homePageDefaultGrid);
 		defaultGv.setAdapter(mSchedule);
-		Utility.setGridViewHeightBasedOnChildren(defaultGv);
+		Utility.getGridViewHeightBasedOnChildren(defaultGv,4);
 
 		// set view
 		defaultGv.setOnItemClickListener(new OnItemClickListener() {
