@@ -18,12 +18,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class CustomizationFragment extends Fragment {
 
+	private int lastX = 0, lastY = 0;
+
+	private ScrollView scrollView = null;
+	
 	private View customizationLayout = null;
 	
 	private ArrayList<String> customBoardNames = null;
@@ -43,9 +48,18 @@ public class CustomizationFragment extends Fragment {
 				container, false);	
 		homePage = UserInfoUtil.getHomePageURL(getActivity());
 		boardUrlName = getActivity().getString(R.string.boardUrl);
+		scrollView = (ScrollView)customizationLayout.findViewById(R.id.customizationScrollView);
 		return customizationLayout;
 	}
 	
+	public void recordScrollPosition() {
+		lastX = scrollView.getScrollX();
+		lastY = scrollView.getScrollY();
+	}
+	
+	public void restoreScrollPosition() {
+		scrollView.smoothScrollTo(lastX, lastY);
+	}
 	
 	public void fillContent(Object outputRes) {
 		

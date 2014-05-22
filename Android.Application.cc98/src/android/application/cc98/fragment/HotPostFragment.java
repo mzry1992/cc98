@@ -23,12 +23,19 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class HotPostFragment extends Fragment implements GetWebPageInterface,
 		OnClickListener {
+
+	private int lastX = 0, lastY = 0;
+
+	private ScrollView scrollView = null;
+	
+	private View linearLayout = null;
 
 	private boolean isNetworkRequest = false;
 
@@ -67,11 +74,22 @@ public class HotPostFragment extends Fragment implements GetWebPageInterface,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		hotPostLayout = inflater.inflate(R.layout.hotpost, container, false);
+		scrollView = (ScrollView)hotPostLayout.findViewById(R.id.hotpostScrollView);
+		linearLayout = hotPostLayout.findViewById(R.id.hotpostLinearLayout);
 		lv = (ListView) hotPostLayout.findViewById(R.id.hotpostlistView);
 		refreshButton = (Button) hotPostLayout
 				.findViewById(R.id.hotPostFragmentRefreshButton);
 		refreshButton.setOnClickListener(this);
 		return hotPostLayout;
+	}
+	
+	public void recordScrollPosition() {
+		lastX = scrollView.getScrollX();
+		lastY = scrollView.getScrollY();
+	}
+	
+	public void restoreScrollPosition() {
+		scrollView.smoothScrollTo(lastX, lastY);
 	}
 
 	public void loadData() {

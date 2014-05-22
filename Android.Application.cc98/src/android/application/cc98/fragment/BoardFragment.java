@@ -16,11 +16,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class BoardFragment extends Fragment {
 
+	private int lastX = 0, lastY = 0;
+
+	private ScrollView scrollView = null;
+	
 	private View boardLayout = null;
 
 	private ArrayList<String> defaultBoardNames = null;
@@ -38,7 +43,17 @@ public class BoardFragment extends Fragment {
 		boardLayout = inflater.inflate(R.layout.board, container, false);
 		homePage = UserInfoUtil.getHomePageURL(getActivity());
 		boardUrlName = getActivity().getString(R.string.boardUrl);
+		scrollView = (ScrollView)boardLayout.findViewById(R.id.boardScrollView);
 		return boardLayout;
+	}
+	
+	public void recordScrollPosition() {
+		lastX = scrollView.getScrollX();
+		lastY = scrollView.getScrollY();
+	}
+	
+	public void restoreScrollPosition() {
+		scrollView.smoothScrollTo(lastX, lastY);
 	}
 
 	public void fillContent(Object outputRes) {
