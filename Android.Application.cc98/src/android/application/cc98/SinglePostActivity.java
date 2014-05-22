@@ -73,6 +73,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		msgMenuItem = menu.findItem(R.id.message);
 		msgMenuItem.setIcon(this.getResources().getDrawable(R.drawable.ic_action_message));
 		msgMenuItem.setVisible(true);
+		msgMenuItem.setEnabled(false);
 		
 		msgMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 			@Override

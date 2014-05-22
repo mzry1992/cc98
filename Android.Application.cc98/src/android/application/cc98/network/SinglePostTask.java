@@ -177,7 +177,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	private String getSinglePostTitle(Element table) {
 		Element elem = table.getElementsByTag("th").first();
 		String text = elem.text();
-		int idx = text.indexOf("�������⣺");
+		int idx = text.indexOf("帖子主题：");
 		String title = text.substring(idx + 5).trim();
 		//System.out.println("Post title: " + title);
 		return title;
@@ -246,10 +246,8 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 					String contentStr = text.substring(idx + 9);
 					
 					rawContents.add(contentStr);
-					referStr = removeBrackets(referStr);
-					referStr = removeBR(referStr);
-					contentStr = removeBrackets(contentStr);
-					contentStr = removeBR(contentStr);
+					referStr = adjustText(referStr);
+					contentStr = adjustText(contentStr);
 					
 					contentSb.append(contentStr);
 					contents.add(contentSb.toString().trim());
@@ -257,8 +255,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 				}
 				else {
 					rawContents.add(text);
-					text = removeBrackets(text);
-					text = removeBR(text);
+					text = adjustText(text);
 					contentSb.append(text.trim());
 					contents.add(contentSb.toString());
 					references.add("");
@@ -275,6 +272,36 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 		}
 	}
 
+	private String adjustText(String text) {
+		text = replaceCharset(text);
+		text = removeBrackets(text);
+		text = removeBR(text);
+		return text;
+	}
+	
+	private String replaceCharset(String text) {
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		//int cnt = 0;
+		while (i < text.length()) {
+			if (text.charAt(i) == '&') {
+				int idx = text.indexOf(';', i);
+				if (idx == -1 || idx - i > 7 || idx == i + 1)
+					sb.append(text.charAt(i++));
+				else {
+					String symbol = text.substring(i + 1, idx - 1);
+					char ch = getCharFromCharset(symbol);
+					sb.append(ch);
+					i = idx + 1;
+				}
+			}
+			else
+				sb.append(text.charAt(i++));
+		}
+		String str = sb.toString();
+		return str;
+	}
+	
 	private String removeBrackets(String text) {
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
@@ -322,5 +349,81 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			str = str.substring(0, str.length() - 6);
 		str = str.replaceAll("<br />", "\n").trim();
 		return str;
+	}
+	
+	private char getCharFromCharset(String str) {
+		if (str.equals("quot")) return '“';
+		if (str.equals("amp")) return '&';
+		if (str.equals("lt")) return '<';
+		if (str.equals("gt")) return '>';
+		if (str.equals("nbsp")) return ' ';
+		//if (str.equals("iquest")) return '';
+		if (str.equals("laquo")) return '«';
+		if (str.equals("raquo")) return '»';
+		if (str.equals("lsquo")) return '‘';
+		if (str.equals("rsquo")) return '’';
+		if (str.equals("ldquo")) return '“';
+		if (str.equals("rdquo")) return '”';
+		if (str.equals("para")) return '\n';
+		if (str.equals("sect")) return '§';
+		if (str.equals("copy")) return '©';
+		if (str.equals("reg")) return '®';
+		if (str.equals("trade")) return '™';
+		if (str.equals("euro")) return '€';
+		if (str.equals("cent")) return '¢';
+		if (str.equals("pound")) return '£';
+		if (str.equals("yen")) return '¥';
+		if (str.equals("hellip")) return '…';
+		if (str.equals("oplus")) return '⊕';
+		if (str.equals("nabla")) return '∇';
+		if (str.equals("times")) return '×';
+		if (str.equals("divide")) return '÷';
+		if (str.equals("plusmn")) return '±';
+		//if (str.equals("fnof")) return '';
+		if (str.equals("radic")) return '√';
+		if (str.equals("infin")) return '∞';
+		if (str.equals("ang")) return '∠';
+		if (str.equals("int")) return '∫';
+		if (str.equals("deg")) return '°';
+		if (str.equals("ne")) return '≠';
+		if (str.equals("equiv")) return '≡';
+		if (str.equals("le")) return '≤';
+		if (str.equals("ge")) return '≥';
+		if (str.equals("perp")) return '⊥';
+		//if (str.equals("frac12")) return '';
+		//if (str.equals("frac14")) return '';
+		//if (str.equals("frac34")) return '';
+		if (str.equals("permil")) return '%';
+		if (str.equals("there4")) return '∴';
+		if (str.equals("pi")) return 'π';
+		if (str.equals("sup1")) return '¹';
+		if (str.equals("sup2")) return '²';
+		if (str.equals("sup3")) return '³';
+		if (str.equals("crarr")) return '↵';
+		if (str.equals("larr")) return '←';
+		if (str.equals("uarr")) return '↑';
+		if (str.equals("rarr")) return '→';
+		if (str.equals("darr")) return '↓';
+		if (str.equals("harr")) return '↔';
+		if (str.equals("lArr")) return '⇐';
+		if (str.equals("uArr")) return '⇑';
+		if (str.equals("rArr")) return '⇒';
+		if (str.equals("dArr")) return '⇓';
+		if (str.equals("hArr")) return '⇔';
+		if (str.equals("spades")) return '♠';
+		if (str.equals("clubs")) return '♣';
+		if (str.equals("hearts")) return '♥';
+		if (str.equals("diams")) return '♣';
+		if (str.equals("alpha")) return 'α';
+		if (str.equals("beta")) return 'β';
+		if (str.equals("gamma")) return 'γ';
+		if (str.equals("Delta")) return 'Δ';
+		if (str.equals("theta")) return 'θ';
+		if (str.equals("lambda")) return 'λ';
+		if (str.equals("Sigma")) return 'Σ';
+		if (str.equals("tau")) return 'τ';
+		if (str.equals("omega")) return 'ω';
+		if (str.equals("Omega")) return 'Ω';
+		return ' ';
 	}
 }

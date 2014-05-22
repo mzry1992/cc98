@@ -50,6 +50,7 @@ public class LoginActivity extends Activity  implements OnClickListener, GetWebP
     			Toast.makeText(this, "密码不能为空", Toast.LENGTH_LONG).show();
     			return;
     		}
+    		
 			// set progress dialog to indicate login progress
 			progressDialog = new ProgressDialog(LoginActivity.this);
 			progressDialog.setTitle("登陆信息");
