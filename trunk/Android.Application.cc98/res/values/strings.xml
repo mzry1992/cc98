@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">cc98</string>
+	<string name="app_name">CC98</string>
 	<string name="action_settings">Settings</string>
 	<!-- login string -->
 	<string name="username">用户名：</string>
