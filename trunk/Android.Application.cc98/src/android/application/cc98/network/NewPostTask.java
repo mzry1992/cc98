@@ -85,8 +85,8 @@ public class NewPostTask extends AsyncTask<String, Integer, String[]>{
 				resultList[0] = "3";
 				resultList[1] = EntityUtils.toString(response.getHttpEntity());
 				resultList[2] = response.getCookie();
-				if (!resultList[1].contains("发表帖子成功"))
-					resultList[0] = "4";
+				/*if (resultList[1].contains("发表帖子成功"))
+					resultList[0] = "4";*/
 			}
 			else {
 				resultList[0] = "2";
