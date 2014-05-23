@@ -143,13 +143,13 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			// get each post information
 			ArrayList<String> authors = new ArrayList<String>();
 			ArrayList<String> contents = new ArrayList<String>();
-			ArrayList<String> references = new ArrayList<String>();
+			//ArrayList<String> references = new ArrayList<String>();
 			ArrayList<String> timestamps = new ArrayList<String>();
 			ArrayList<String> replyIDs = new ArrayList<String>();
 			ArrayList<String> rawContents = new ArrayList<String>();
-			getPostsDetails(tables, authors, references, contents, timestamps, replyIDs, rawContents);
+			getPostsDetails(tables, authors, /*references,*/ contents, timestamps, replyIDs, rawContents);
 			outputs.add(authors);
-			outputs.add(references);
+			//outputs.add(references);
 			outputs.add(contents);
 			outputs.add(timestamps);
 			outputs.add(replyIDs);
@@ -186,7 +186,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	// get posts details
 	private void getPostsDetails(ArrayList<Element> tables,
 								ArrayList<String> authors,
-								ArrayList<String> references,
+								//ArrayList<String> references,
 								ArrayList<String> contents,
 								ArrayList<String> timestamps,
 								ArrayList<String> replyIDs,
@@ -241,7 +241,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 				Element span = td.getElementsByTag("span").first();
 				String text = span.html().trim();
 				
-				if (text.startsWith("[quotex]")) {
+				/*if (text.startsWith("[quotex]")) {
 					//System.out.println("Reference:" + text);
 					int idx = text.indexOf("[/quotex]");
 					int idx1 = text.indexOf("[/b]");
@@ -258,14 +258,15 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 					
 					contentSb.append(contentStr);
 					contents.add(contentSb.toString().trim());
-					references.add(referStr.trim()/* + "\n"*/);
+					//references.add(referStr.trim()/* + "\n");
 				}
-				else {
+				else */
+				{
 					rawContents.add(text);
 					text = adjustText(text);
 					contentSb.append(text.trim());
 					contents.add(contentSb.toString());
-					references.add("");
+					//references.add("");
 				}
 			}		
 			
@@ -292,7 +293,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 		int i = 0;
 		//int cnt = 0;
 		while (i < text.length()) {
-			if (text.charAt(i) == '[') {
+			/*if (text.charAt(i) == '[') {
 				if (   i + 1 < text.length() && text.charAt(i + 1) == 'e' 
 					&& i + 2 < text.length() && text.charAt(i + 2) == 'm')
 					sb.append(text.charAt(i++));
@@ -303,8 +304,8 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 						continue;
 					}
 				}
-			}
-			else if (text.charAt(i) == '<') {
+			}*/
+			if (text.charAt(i) == '<') {
 				int idx = text.indexOf('>', i);
 				if (idx != -1 && idx > i + 1) {
 /*					CharSequence charset = text.subSequence(i + 1, idx - 1);

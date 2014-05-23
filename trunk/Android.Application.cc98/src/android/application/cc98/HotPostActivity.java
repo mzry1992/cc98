@@ -45,12 +45,14 @@ public class HotPostActivity extends Activity implements
 
 	private void fillContent() {
 		SimpleAdapter adapter = new SimpleAdapter(this, getData(),
-				R.layout.hotpost_list_item, new String[] {"content",
-						"board", "author", "time", "attentioncount",
-						"postcount", "clickcount" }, new int[] { 
-						R.id.contentText, R.id.boardText, R.id.authorText,
-						R.id.timeText, R.id.attentionCountText,
-						R.id.replyCountText, R.id.clickCountText });
+				R.layout.hotpost_list_item, new String[] { 
+						"ranking", "content", 
+						"board", "author", "time",
+						"attentioncount", "postcount", "clickcount" }, 
+			new int[] { 
+						R.id.rankingText, R.id.contentText,
+						R.id.boardText, R.id.authorText, R.id.timeText,
+						R.id.attentionCountText, R.id.replyCountText, R.id.clickCountText });
 		lv.setAdapter(adapter);
 	}
 
@@ -59,13 +61,14 @@ public class HotPostActivity extends Activity implements
 		for (int i = 0; i < rankList.size(); ++i) {
 			HashMap<String, String> tempHashMap = new HashMap<String, String>();
 			//tempHashMap.put("rank", rankList.get(i));
-			tempHashMap.put("content", contentList.get(i));
-			tempHashMap.put("board", boardList.get(i));
-			tempHashMap.put("author", authorList.get(i));
-			tempHashMap.put("time", timeList.get(i));
-			tempHashMap.put("attentioncount", attentcountList.get(i));
-			tempHashMap.put("postcount", postcountList.get(i));
-			tempHashMap.put("clickcount", clickcountList.get(i));
+			tempHashMap.put("ranking", " NO." + (i + 1) + " ");
+			tempHashMap.put("content", contentList.get(i).trim());
+			tempHashMap.put("board", boardList.get(i).trim());
+			tempHashMap.put("author", authorList.get(i).trim());
+			tempHashMap.put("time", timeList.get(i).trim());
+			tempHashMap.put("attentioncount", attentcountList.get(i).trim());
+			tempHashMap.put("postcount", postcountList.get(i).trim());
+			tempHashMap.put("clickcount", clickcountList.get(i).trim());
 			arrayList.add(tempHashMap);
 		}
 		return arrayList;

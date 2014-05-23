@@ -44,11 +44,11 @@ class ExpressionAdapter extends BaseAdapter {
 
 	// references to our images
     private Integer[] expressions = {
-            R.drawable.em00, R.drawable.em01,
-            R.drawable.em02, R.drawable.em03,
-            R.drawable.em04, R.drawable.em05,
-            R.drawable.em06, R.drawable.em07,
-            R.drawable.em08, R.drawable.em09,
-            R.drawable.em10, R.drawable.em11,
+            R.drawable.em01, R.drawable.em02,
+            R.drawable.em03, R.drawable.em04,
+            R.drawable.em05, R.drawable.em06,
+            R.drawable.em07, R.drawable.em08,
+            R.drawable.em09, R.drawable.em10,
+            R.drawable.em11, R.drawable.em12,
     };
 }

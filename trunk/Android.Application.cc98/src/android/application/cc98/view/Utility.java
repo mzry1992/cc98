@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 public class Utility {
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
+		if (listView == null) return;
 		ListAdapter listAdapter = listView.getAdapter();
 		if (listAdapter == null) {
 			return;

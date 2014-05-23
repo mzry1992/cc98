@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:scrollbars="none">
+    android:scrollbars="none"
+    android:background="@color/info_panel_bg">
     
 	<LinearLayout 
 	    android:id="@+id/leafBoardLayout"
@@ -11,41 +12,17 @@
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical" >
         
-		 <TableLayout
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:stretchColumns="1"
-	        android:background="@color/lightPurple"
-	        android:layout_gravity="center"
-	     	android:gravity="center">
-        	<TableRow>
-	            <TextView
-			        android:layout_column="0"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:text="  "
-		            android:textSize="22sp"
-		            android:layout_marginTop="10dp"
-		            android:layout_marginBottom="10dp"/>
 			    <TextView
-			        android:layout_column="1"
 		            android:id="@+id/leafBoardBoardname"
-		            android:layout_width="wrap_content"
+		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
 		            android:textSize="22sp"
+		            android:background="@color/tinyBlack"
+		            android:textColor="@color/white"
+		            android:layout_marginLeft="5dp"
+		            android:layout_marginRight="5dp"
 		            android:layout_marginTop="10dp"
 		            android:layout_marginBottom="10dp"/>
-			    <TextView
-			        android:layout_column="2"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:text="  "
-		            android:textSize="22sp"
-		            android:layout_marginTop="10dp"
-		            android:layout_marginBottom="10dp"/>
-	    	</TableRow>
-	    </TableLayout>
-
    		
    		<TextView
    			android:id="@+id/leafBoardTopicCount"
@@ -54,7 +31,7 @@
             android:textSize="18sp"
             android:textColor="@color/darkgrey"
             android:layout_marginLeft="5dp"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="10dp" />
    		
        <!--  <TextView
             android:layout_width="fill_parent"
@@ -69,7 +46,11 @@
             android:id="@+id/leafBoardTopicList"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp" />
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:dividerHeight="5dp"
+            android:divider = "@color/info_panel_bg" />
         
     	<Button
 	        android:id="@+id/leafBoardMoreButton"
