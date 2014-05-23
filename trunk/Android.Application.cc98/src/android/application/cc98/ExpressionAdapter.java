@@ -40,7 +40,9 @@ class ExpressionAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setImageResource(expressions[position]);
+        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), expressions[position]);
+        imageView.setImageBitmap(bm);
+       // imageView.setImageResource(expressions[position]);
         return imageView;
     }
 

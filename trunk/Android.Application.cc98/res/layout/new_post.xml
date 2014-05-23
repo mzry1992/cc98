@@ -64,7 +64,7 @@
 	    android:layout_width = "fill_parent"
 	    android:layout_height="wrap_content"
 	    android:lines="15"
-	    android:scrollbars = "vertical"
+	    android:scrollbars="vertical"
 		android:hint="发表内容："
 		android:textSize="18sp"
 		android:layout_gravity="top"
