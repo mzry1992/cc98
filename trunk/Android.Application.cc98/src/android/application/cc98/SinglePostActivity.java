@@ -600,8 +600,8 @@ class SinglePostAdapter extends BaseAdapter {
 		//imgView.setTag(expUrl.toString());
 		//System.out.println("Image Tag:" + imgView.getTag());
 		//new DownloadImageTask(activity).execute(imgView);
-		Bitmap bm = BitmapFactory.decodeResource(context.getResources(), expDrawable);
-		imgView.setImageBitmap(bm);
+		//Bitmap bm = BitmapFactory.decodeResource(context.getResources(), expDrawable);
+		imgView.setImageResource(expDrawable);
 		return imgView;
 	}
 }

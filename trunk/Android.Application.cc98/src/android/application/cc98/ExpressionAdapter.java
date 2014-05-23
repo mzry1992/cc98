@@ -1,7 +1,8 @@
 package android.application.cc98;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -39,10 +40,7 @@ class ExpressionAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        imageView.setBackgroundResource(expressions[position]);
-		AnimationDrawable frameAnimation = (AnimationDrawable) imageView.getBackground();
-		frameAnimation.start();
-		
+        imageView.setImageResource(expressions[position]);
         return imageView;
     }
 
