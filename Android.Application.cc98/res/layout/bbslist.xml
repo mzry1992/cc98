@@ -2,13 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" android:background="#FFFFFF">
+    android:orientation="vertical"
+    android:background="@color/info_panel_bg">
 
-    <ListView android:id="@+id/bbslistView"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginTop="20dp"
-    android:layout_marginBottom="20dp"
-    />
+    <ListView
+        android:id="@+id/bbslistView"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_marginTop="10dp"
+	    android:layout_marginBottom="25dp"
+	    android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+	    android:dividerHeight="5dp"
+	    android:divider = "@color/info_panel_bg" />
 
 </LinearLayout>

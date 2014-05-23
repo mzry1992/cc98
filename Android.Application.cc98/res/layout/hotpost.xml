@@ -17,7 +17,7 @@
             android:name="android.application.cc98.view.NoScrollListView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="25dp"
             android:layout_marginLeft="5.0dip"
             android:layout_marginRight="5.0dip"
             android:layout_marginTop="10.0dip"

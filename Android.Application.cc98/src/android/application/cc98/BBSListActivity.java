@@ -3,35 +3,17 @@ package android.application.cc98;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.application.cc98.R.color;
 import android.application.cc98.network.BBSListTask;
-import android.application.cc98.network.HomePageTask;
-import android.application.cc98.network.UserInfoUtil;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class BBSListActivity extends LoadWebPageActivity {
 
@@ -70,9 +52,9 @@ public class BBSListActivity extends LoadWebPageActivity {
 		lv = (ListView) findViewById(R.id.bbslistView);
 		headerTextView = new TextView(this);
 		lv.addHeaderView(headerTextView);
-		headerTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f);
-		int lightPurple = this.getResources().getColor(R.color.lightPurple);
-		headerTextView.setBackgroundColor(lightPurple);
+		headerTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f);
+		headerTextView.setBackgroundColor(this.getResources().getColor(R.color.tinyBlack));
+		headerTextView.setTextColor(this.getResources().getColor(R.color.white));
 		fillContent(outputs);
 	}
 	

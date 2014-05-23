@@ -8,11 +8,17 @@
 		android:layout_height="wrap_content" android:orientation="vertical">
 
 		<android.application.cc98.view.GrapeGridView
-			android:name="android.application.cc98.view.GrapeGridView" class="android.application.cc98.view.GrapeGridView"
-			android:id="@+id/homePageDefaultGrid" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:gravity="left"
-			android:layout_marginLeft="5.0dip" android:layout_marginRight="5.0dip"
-			android:layout_marginTop="10.0dip" android:background="@drawable/shape_bg"
+			android:name="android.application.cc98.view.GrapeGridView"
+			class="android.application.cc98.view.GrapeGridView"
+			android:id="@+id/homePageDefaultGrid"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:gravity="left"
+			android:layout_marginLeft="5.0dp"
+			android:layout_marginRight="5.0dp"
+			android:layout_marginTop="10.0dp"
+			android:layout_marginBottom="5dp"
+			android:background="@drawable/shape_bg"
 			android:numColumns="4" />
 
 	</LinearLayout>

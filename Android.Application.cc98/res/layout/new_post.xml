@@ -3,13 +3,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:gravity="top" >
+    android:gravity="top"
+    android:background="@color/info_panel_bg" >
     
         <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="45dp"
         android:stretchColumns="1"
-        android:background="@color/purple"
+        android:background="@color/tinyBlack"
         android:layout_gravity="center"
         android:gravity="center">
         <TableRow>
@@ -37,13 +38,13 @@
 	          	android:layout_height="25dp"
 	          	android:id="@+id/newPostSubmitButton"
 	          	android:src="@drawable/paper_plane"
-	          	android:layout_gravity="center" />
+	          	android:layout_gravity="right" />
      	</TableRow>
     </TableLayout>
 	    
         
 	<EditText
-	    android:background="@drawable/textbox_style"
+	    android:background="@drawable/shape_bg"
 	    android:id="@+id/newPostSubjectEditText"
 	    android:layout_width = "fill_parent"
 	    android:layout_height="wrap_content"
@@ -52,13 +53,13 @@
 		android:hint="发表主题："
 		android:textSize="20sp"
 		android:layout_gravity="top"
-		android:layout_marginLeft="0dp"
-		android:layout_marginRight="0dp"
-		android:layout_marginTop="0dp"
-		android:layout_marginBottom="0dp">
+		android:layout_marginLeft="6dp"
+		android:layout_marginRight="6dp"
+		android:layout_marginTop="6dp"
+		android:layout_marginBottom="6dp">
 	</EditText>
 	<EditText
-	    android:background="@drawable/textbox_style"
+	    android:background="@drawable/shape_bg"
 	    android:id="@+id/newPostContentEditText"
 	    android:layout_width = "fill_parent"
 	    android:layout_height="wrap_content"
@@ -68,10 +69,10 @@
 		android:textSize="18sp"
 		android:layout_gravity="top"
 		android:gravity="top"
-		android:layout_marginLeft="0dp"
-		android:layout_marginRight="0dp"
+		android:layout_marginLeft="6dp"
+		android:layout_marginRight="6dp"
 		android:layout_marginTop="0dp"
-		android:layout_marginBottom="0dp">
+		android:layout_marginBottom="6dp">
 		
 	    <requestFocus />
 	    
@@ -79,12 +80,13 @@
 
 	<GridView
         	android:id="@+id/newPostGridView"
-        	android:layout_width="fill_parent"
+        	android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:numColumns="6"
-            android:background="@color/white">"
+            android:dividerHeight="5dp"
+            android:divider = "@color/info_panel_bg">
 	</GridView>
 </LinearLayout>
