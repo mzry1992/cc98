@@ -388,7 +388,7 @@ class SinglePostAdapter extends BaseAdapter {
 		contentLayout.setLayoutParams(layoutParams);
 		contentLayout.setGravity(Gravity.LEFT);
 		contentLayout.setOrientation(LinearLayout.VERTICAL);
-		System.out.println("Content:" + contentText);
+		//System.out.println("Content:" + contentText);
 		
 		Pattern urlPattern = Pattern.compile(
 				"(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
@@ -429,13 +429,13 @@ class SinglePostAdapter extends BaseAdapter {
 				int urlEnd = urlMatcher.end();
 				if (urlStart < urlEnd) {
 					String url = contentText.substring(urlStart, urlEnd);
-					System.out.println("Before Url:" + url);
+					//System.out.println("Before Url:" + url);
 					int httpIdx = url.indexOf("http"); httpIdx = (httpIdx == -1)? Integer.MAX_VALUE : httpIdx;
 					int wwwIdx = url.indexOf("www"); wwwIdx = (wwwIdx == -1)? Integer.MAX_VALUE : wwwIdx;
 					int urlIdx = Math.min(httpIdx, wwwIdx);
 					if (urlIdx > 0 && urlIdx < Integer.MAX_VALUE)
 						url = url.substring(urlIdx);
-					System.out.println("After Url:" + url);
+					//System.out.println("After Url:" + url);
 					TextView linkTv = makeTextView(url, size, linkColor, bgColor);
 					if (linkTv != null) contentLayout.addView(linkTv);
 	
@@ -600,8 +600,8 @@ class SinglePostAdapter extends BaseAdapter {
 		//imgView.setTag(expUrl.toString());
 		//System.out.println("Image Tag:" + imgView.getTag());
 		//new DownloadImageTask(activity).execute(imgView);
-		//Bitmap bm = BitmapFactory.decodeResource(context.getResources(), expDrawable);
-		imgView.setImageResource(expDrawable);
+		Bitmap bm = BitmapFactory.decodeResource(context.getResources(), expDrawable);
+		imgView.setImageBitmap(bm);
 		return imgView;
 	}
 }
