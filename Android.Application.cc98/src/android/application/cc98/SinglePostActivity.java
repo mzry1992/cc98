@@ -314,7 +314,6 @@ class SinglePostAdapter extends BaseAdapter {
 	private ArrayList<String> authors;
 	private ArrayList<String> contents;
 	private ArrayList<String> timestamps;
-
 	private final int referenceLineThreshold = 6;
 	
 	public SinglePostAdapter(Context context, SinglePostActivity activity) {
@@ -389,18 +388,20 @@ class SinglePostAdapter extends BaseAdapter {
 		contentLayout.setLayoutParams(layoutParams);
 		contentLayout.setGravity(Gravity.LEFT);
 		contentLayout.setOrientation(LinearLayout.VERTICAL);
-		//System.out.println("Content:" + contentText);
+		System.out.println("Content:" + contentText);
 		
-		// Pattern for recognizing a URL, based off RFC 3986
 		Pattern urlPattern = Pattern.compile(
+				"(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
+				Pattern.DOTALL);
+		/*Pattern.compile(
 		        "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
 		                + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
 		                + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
-		        Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+		        Pattern.CASE_INSENSITIVE);*/
 		Matcher urlMatcher = urlPattern.matcher(contentText);
 		Pattern expPattern = Pattern.compile("\\[em[0-9][0-9]\\]");
 		Matcher expMatcher = expPattern.matcher(contentText);
-		Pattern referPattern = Pattern.compile("\\[quotex\\]");
+		Pattern referPattern = Pattern.compile("\\[(quotex|quote)\\]");
 		Matcher refMatcher = referPattern.matcher(contentText);
 		
 		int startIndex = 0, endIndex = contentText.length();
@@ -428,7 +429,13 @@ class SinglePostAdapter extends BaseAdapter {
 				int urlEnd = urlMatcher.end();
 				if (urlStart < urlEnd) {
 					String url = contentText.substring(urlStart, urlEnd);
-					if (url.startsWith("]") || url.startsWith("[")) { url = url.substring(1); }
+					System.out.println("Before Url:" + url);
+					int httpIdx = url.indexOf("http"); httpIdx = (httpIdx == -1)? Integer.MAX_VALUE : httpIdx;
+					int wwwIdx = url.indexOf("www"); wwwIdx = (wwwIdx == -1)? Integer.MAX_VALUE : wwwIdx;
+					int urlIdx = Math.min(httpIdx, wwwIdx);
+					if (urlIdx > 0 && urlIdx < Integer.MAX_VALUE)
+						url = url.substring(urlIdx);
+					System.out.println("After Url:" + url);
 					TextView linkTv = makeTextView(url, size, linkColor, bgColor);
 					if (linkTv != null) contentLayout.addView(linkTv);
 	
@@ -517,13 +524,12 @@ class SinglePostAdapter extends BaseAdapter {
 	
 	private int findMatchRefEnd(String contentText, int refStart) {
 		while (true) {
-			int nextRef = contentText.indexOf("[quotex]", refStart + 1);
-			int end = contentText.indexOf("[/quotex]", refStart);
-			//System.out.println("nextRef:" + nextRef + " end:" + end);
-			if (nextRef == -1 || nextRef > end)
-				return end;
-			else
-				refStart = end + 9;
+			int end0 = contentText.indexOf("[/quotex]", refStart);
+			end0 = (end0 == -1)? Integer.MAX_VALUE : end0;
+			int end1 = contentText.indexOf("[/quote]", refStart);
+			end1 = (end1 == -1)? Integer.MAX_VALUE : end1;
+			if (end1 > end0) return end0;
+			else return end1;
 		}
 	}
 	
@@ -560,12 +566,14 @@ class SinglePostAdapter extends BaseAdapter {
 			}
 			sb.append(text.charAt(i++));
 		}
-		int len = sb.length() - 1;
-		if (len >= 0 && 
-			(sb.charAt(len) == ']' || sb.charAt(len) == '\n'))
-			sb.deleteCharAt(len);
-		String str = sb.toString();
-		return str;
+		while (true) {
+			int len = sb.length() - 1;
+			if (len >= 0 && 
+				(sb.charAt(len) == ']' || sb.charAt(len) == '['|| sb.charAt(len) == '\n'))
+				sb.deleteCharAt(len);
+			else break;
+		}
+		return sb.toString();
 	}
 	
 	private TextView makeTextView(String text, int size, int textColor, int bgColor) {
