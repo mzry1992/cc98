@@ -1,76 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="android.application.cc98"
-    android:versionCode="1"
-    android:versionName="1.0" >
+	package="android.application.cc98" android:versionCode="1"
+	android:versionName="1.0">
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+	<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="10" />
 	<uses-permission android:name="android.permission.INTERNET" />
-	
-    <application
-        android:allowBackup="true"
-        android:icon="@drawable/cc98logo"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity
-            android:name="android.application.cc98.WelcomeActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="android.application.cc98.LoginActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="android.application.cc98.HomePageActivity" 
-            android:launchMode="singleTop" 
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="android.application.cc98.LeafBoardActivity"
-            android:launchMode="singleTop"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="android.application.cc98.SinglePostActivity"
-            android:launchMode="singleTop"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="android.application.cc98.WebViewActivity"
-            android:label="@string/app_name" >
-        </activity>
-         <activity
-            android:name="android.application.cc98.BBSListActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="android.application.cc98.ReplyPostActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="android.application.cc98.NewPostActivity"
-            android:label="@string/app_name" >
-        </activity>
-          <activity
-            android:name="android.application.cc98.AboutActivity"
-            android:label="@string/about_title"
-			android:theme="@android:style/Theme.Dialog">
-        </activity>
-        <activity
-            android:name="android.application.cc98.HotPostActivity"
-            android:label="@string/app_name" >
-        </activity>
-          <activity
-            android:name="android.application.cc98.FragmentHomeActivity"
-            android:launchMode="singleTop" 
-            android:label="@string/app_name" >
-        </activity>
-    </application>
+	<application android:allowBackup="true" android:icon="@drawable/cc98logo"
+		android:label="@string/app_name" android:theme="@style/AppTheme">
+		<activity android:name="android.application.cc98.WelcomeActivity"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name="android.application.cc98.LoginActivity"
+			android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.HomePageActivity"
+			android:launchMode="singleTop" android:label="@string/app_name"
+			android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.LeafBoardActivity"
+			android:launchMode="singleTop" android:label="@string/app_name"
+			android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.SinglePostActivity"
+			android:launchMode="singleTop" android:label="@string/app_name"
+			android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.WebViewActivity"
+			android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.BBSListActivity"
+			android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.ReplyPostActivity"
+			android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.NewPostActivity"
+			android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.AboutActivity"
+			android:label="@string/about_title" android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.HotPostActivity"
+			android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+		<activity android:name="android.application.cc98.FragmentHomeActivity"
+			android:launchMode="singleTop" android:label="@string/app_name"
+			android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+		</activity>
+	</application>
 
 </manifest>

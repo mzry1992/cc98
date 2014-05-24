@@ -3,7 +3,7 @@ package android.application.cc98.fragment;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.application.cc98.BBSListActivity;
 import android.application.cc98.HomePageActivity;
 import android.application.cc98.LeafBoardActivity;
@@ -25,52 +25,60 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class CustomizationFragment extends Fragment {
 
+	private boolean isSetResetTag = true;
+
 	private int lastX = 0, lastY = 0;
 
 	private ScrollView scrollView = null;
-	
+
 	private View customizationLayout = null;
-	
+
 	private ArrayList<String> customBoardNames = null;
 	private ArrayList<String> customBoardUrls = null;
 	private ArrayList<String> customBoardDescripts = null;
-	
+
 	private String homePage = null, boardUrlName = null;
-	
+
 	public CustomizationFragment() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		customizationLayout = inflater.inflate(R.layout.customization,
-				container, false);	
+				container, false);
 		homePage = UserInfoUtil.getHomePageURL(getActivity());
 		boardUrlName = getActivity().getString(R.string.boardUrl);
-		scrollView = (ScrollView)customizationLayout.findViewById(R.id.customizationScrollView);
+		scrollView = (ScrollView) customizationLayout
+				.findViewById(R.id.customizationScrollView);
 		return customizationLayout;
 	}
-	
+
 	public void recordScrollPosition() {
 		lastX = scrollView.getScrollX();
 		lastY = scrollView.getScrollY();
 	}
-	
+
 	public void restoreScrollPosition() {
+		if (isSetResetTag) {
+			lastX = lastY = 0;
+			isSetResetTag = false;
+		}
 		scrollView.smoothScrollTo(lastX, lastY);
 	}
-	
+
 	public void fillContent(Object outputRes) {
-		
+
 		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) outputRes;
 
 		customBoardNames = outputs.get(1);
 		customBoardUrls = outputs.get(2);
 		customBoardDescripts = outputs.get(3);
-		
-		setCustomBoard();
 
+		setCustomBoard();
+		
+		isSetResetTag = true;
 	}
 
 	private void setCustomBoard() {
@@ -87,8 +95,9 @@ public class CustomizationFragment extends Fragment {
 		// Toast.makeText(this, "Custom List count:" + displist.size(),
 		// Toast.LENGTH_LONG).show();
 
-		SimpleAdapter mSchedule = new SimpleAdapter(this.getActivity(), displist,
-				R.layout.home_custom_list_item, // ListItem XML implementation
+		SimpleAdapter mSchedule = new SimpleAdapter(this.getActivity(),
+				displist, R.layout.home_custom_list_item, // ListItem XML
+															// implementation
 				new String[] { this.getString(R.string.customItemTitle),
 						this.getString(R.string.customItemText) }, // dynamic
 																	// array and
@@ -115,11 +124,9 @@ public class CustomizationFragment extends Fragment {
 				String titleName = customBoardNames.get(position);
 				Intent intent = null;
 				if (titleName.contains("("))
-					intent = new Intent(getActivity(),
-							BBSListActivity.class);
+					intent = new Intent(getActivity(), BBSListActivity.class);
 				else
-					intent = new Intent(getActivity(),
-							LeafBoardActivity.class);
+					intent = new Intent(getActivity(), LeafBoardActivity.class);
 				intent.putExtra(boardUrlName, boardUrl);
 				getActivity().startActivity(intent);
 			}

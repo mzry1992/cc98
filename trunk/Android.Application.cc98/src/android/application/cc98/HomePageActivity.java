@@ -57,7 +57,7 @@ public class HomePageActivity extends LoadWebPageActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent(HomePageActivity.this,
 						LoginActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear
+				//intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // clear
 																	// activity
 																	// stack
 				HomePageActivity.this.startActivity(intent);

@@ -143,6 +143,8 @@
             android:layout_marginLeft="5.0dip"
             android:layout_marginRight="5.0dip"
             android:layout_marginTop="10.0dip"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:background="@drawable/shape_bg"
             android:text="退出程序"
             android:textColor="#ff545454"

@@ -124,6 +124,10 @@ public class HomePageManager implements GetWebPageInterface {
 		activity.jumpToLogin();
 		activity.refresh();
 	}
+	
+	public boolean isNetRequesting() {
+		return isNetworkRequest;
+	}
 
 	public boolean isCookieValid() {
 		if (cookies == null)
