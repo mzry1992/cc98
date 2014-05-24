@@ -368,16 +368,17 @@ class SinglePostAdapter extends BaseAdapter {
 		// add face
 		if (faces.get(i) != ""){
 			ImageView imgView = makeExpression(faces.get(i), R.drawable.face01 - 1);
-			
-			LinearLayout expLayout = new LinearLayout(context.getApplicationContext());
-			LinearLayout.LayoutParams explayoutParams = new LinearLayout.LayoutParams(
-			         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			explayoutParams.gravity = Gravity.LEFT;
-			expLayout.setLayoutParams(explayoutParams);
-			expLayout.setGravity(Gravity.LEFT);
-			expLayout.setOrientation(LinearLayout.HORIZONTAL);
-			expLayout.addView(imgView);
-			layout.addView(expLayout);
+			if (imgView != null) {
+				LinearLayout expLayout = new LinearLayout(context.getApplicationContext());
+				LinearLayout.LayoutParams explayoutParams = new LinearLayout.LayoutParams(
+				         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				explayoutParams.gravity = Gravity.LEFT;
+				expLayout.setLayoutParams(explayoutParams);
+				expLayout.setGravity(Gravity.LEFT);
+				expLayout.setOrientation(LinearLayout.HORIZONTAL);
+				expLayout.addView(imgView);
+				layout.addView(expLayout);
+			}
 		}
 		// add text content
 		{
@@ -484,7 +485,8 @@ class SinglePostAdapter extends BaseAdapter {
 					int expEnd = expMatcher.end();
 					String expStr = contentText.substring(expStart + 1, expEnd - 1);
 					ImageView imgView = makeExpression(expStr, R.drawable.em01);
-					expLayout.addView(imgView);
+					if (imgView != null)
+						expLayout.addView(imgView);
 					// update index and matcher
 					startIndex = expEnd;
 					hasExp = expMatcher.find();
@@ -644,10 +646,14 @@ class SinglePostAdapter extends BaseAdapter {
 	private ImageView makeExpression(String expSrc, int startDrawable) {
 		int expDrawable = startDrawable;
 		int num = 0;
-		if (expSrc.startsWith("em"))
+		if (expSrc.startsWith("em")) {
 			num = Integer.parseInt(expSrc.substring(2));
-		else if (expSrc.startsWith("face"))
+			if (num < 0 || num > 92) return null;
+		}
+		else if (expSrc.startsWith("face")) {
 			num = Integer.parseInt(expSrc.substring(4));
+			if (num < 1 || num > 22) return null;
+		}
 		expDrawable += num;
 		ImageView imgView = new ImageView(context.getApplicationContext());
 		Bitmap bm = BitmapFactory.decodeResource(context.getResources(), expDrawable);
