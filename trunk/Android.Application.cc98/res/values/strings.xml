@@ -76,9 +76,10 @@
 
 	<!-- about dialog string -->
 	<string name="about_title">关于CC98安卓版</string>
-	<string name="about_text">
-		\
-		CC98安卓版是浙江大学内部人气论坛CC98的安卓手机版本，是一款免费且开源的安卓软件，项目地址:http://cc98.googlecode.com/，欢迎大家提供意见和加入我们。
+	<string name="about_text">CC98安卓版是浙江大学内部人气论坛CC98的安卓手机版本，是一款免费且开源的安卓软件，欢迎大家提供意见和加入我们。
+		\n\n有问题请联系zjuforum@yeah.net ^-^
+		\n\nCC98网站内部请@或站短给：weihao1988,lichaoren
+		
 	</string>
 	
 	<!-- loading string -->
