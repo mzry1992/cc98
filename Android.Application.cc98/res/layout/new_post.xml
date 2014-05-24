@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:gravity="top"
+    android:gravity="center|top"
     android:background="@color/info_panel_bg" >
     
         <TableLayout
