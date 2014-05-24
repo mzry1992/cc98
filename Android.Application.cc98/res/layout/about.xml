@@ -2,8 +2,29 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:scrollbars="none"
-	android:padding="10dip">
-	<TextView android:id="@+id/about_content"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:text="@string/about_text" />
+	android:padding="10dp"
+	android:background="@color/info_panel_bg">
+	
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg"
+        android:layout_gravity="top"
+        android:layout_marginTop="30dp"
+			android:layout_marginBottom="10dp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp" >
+		<TextView
+		    android:layout_gravity="center"
+		    android:id="@+id/about_content"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/about_text"
+			android:textSize="16sp"
+			android:layout_marginTop="15dp"
+			android:layout_marginBottom="15dp"
+			android:layout_marginLeft="15dp"
+			android:layout_marginRight="15dp" />        
+    </LinearLayout>
+
 </ScrollView>
