@@ -47,6 +47,7 @@ private GetWebPageInterface activity = null;
 		String rootID = inputs[6];
 		String referer = inputs[7];
 		String cookie = inputs[8];
+		String expSrc = inputs[9];
 		StringBuilder cookieSb = new StringBuilder();
 		cookieSb.append("BoardList=BoardID=Show; owaenabled=True; autoplay=True; ");
 		cookieSb.append(cookie);
@@ -55,7 +56,7 @@ private GetWebPageInterface activity = null;
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("Content", content);
-		params.put("Expression", "face7.gif");
+		params.put("Expression", expSrc);
 		params.put("followup", followup);
 		params.put("passwd", pwd);
 		params.put("ReplyId", followup);
@@ -71,14 +72,14 @@ private GetWebPageInterface activity = null;
 		HashMap<String, String> header = new HashMap<String, String>();
 		header.put("Accept", "text/html, application/xhtml+xml, */*");
 		header.put("Referer", referer);
-		header.put("Accept-Language", "zh-CN");
+		header.put("Accept-Language", "zh-CN, en-GB");
 		header.put("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
 		header.put("Content-Type","application/x-www-form-urlencoded");
 		header.put("Accept-Encoding", "gzip, deflate");
 		header.put("Host", "www.cc98.org");
 		header.put("Cookie", cookie);
-		
-/*		System.out.println("PostURL:" + postUrl);
+		/*
+		System.out.println("PostURL:" + postUrl);
 		System.out.println("Content:" + content);
 		System.out.println("followup:" + followup);
 		System.out.println("RootID:" + rootID);
@@ -86,7 +87,9 @@ private GetWebPageInterface activity = null;
 		System.out.println("passwd:" + pwd);
 		System.out.println("UserName:" + username);
 		System.out.println("Cookie:" + cookie);
-		System.out.println("Referer:" + referer);*/
+		System.out.println("Referer:" + referer);
+		System.out.println("Expression:" + expSrc);
+		*/
 		
 		try {
 			HttpResult response =  SendHttpRequest.sendPost(postUrl, header, params, "UTF-8");
