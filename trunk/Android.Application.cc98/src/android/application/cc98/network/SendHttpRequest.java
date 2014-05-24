@@ -69,7 +69,6 @@ public class SendHttpRequest {
 			list.add(new BasicNameValuePair(temp,params.get(temp)));
 		}
 		post.setEntity(new UrlEncodedFormEntity(list,encoding));
-		System.out.println("Post Data:" + EntityUtils.toString(post.getEntity()));
 		
 		//…Ë÷√Õ∑≤ø
 		if(null!=headers)post.setHeaders(assemblyHeader(headers));

@@ -1,5 +1,6 @@
 package android.application.cc98;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +37,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 
 	// store data from HTML, updated when loading following posts
 	private ArrayList<String> authors;
-	//private ArrayList<String> references;
+	private ArrayList<String> faces;
 	private ArrayList<String> contents;
 	private ArrayList<String> timestamps;
 	private ArrayList<String> replyIDs;
@@ -65,7 +66,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		StringBuilder sb = new StringBuilder();
 		sb.append(postUrl);
 		sb.append("&star=");
-		postUrl = sb.toString();
+		postUrl = sb.toString().toLowerCase();
 	}
 	
 	@Override
@@ -145,11 +146,11 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 			displayedPage = 1;
 
 			authors = outputs.get(2);
-			//references = outputs.get(3);
-			contents = outputs.get(3);
-			timestamps = outputs.get(4);
-			replyIDs = outputs.get(5);
-			rawContents = outputs.get(6);
+			faces = outputs.get(3);
+			contents = outputs.get(4);
+			timestamps = outputs.get(5);
+			replyIDs = outputs.get(6);
+			rawContents = outputs.get(7);
 			
 			// set single post UI
 			setSinglePostUI();
@@ -163,11 +164,11 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		else if (status.get(0).equals("5")) {
 
 			authors.addAll(outputs.get(2));
-			//references.addAll(outputs.get(3));
-			contents.addAll(outputs.get(3));
-			timestamps.addAll(outputs.get(4));
-			replyIDs.addAll(outputs.get(5));
-			rawContents.addAll(outputs.get(6));
+			faces.addAll(outputs.get(3));
+			contents.addAll(outputs.get(4));
+			timestamps.addAll(outputs.get(5));
+			replyIDs.addAll(outputs.get(6));
+			rawContents.addAll(outputs.get(7));
 			
 			// update UI for following posts
 			updateSinglePostUI();
@@ -189,7 +190,7 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 		
 		ListView postLv = (ListView) this.findViewById(R.id.singlePostList);
 		listAdapter = new SinglePostAdapter(getApplicationContext(), SinglePostActivity.this);
-		listAdapter.setData(authors, contents, timestamps);
+		listAdapter.setData(authors, faces, contents, timestamps);
 		postLv.setAdapter(listAdapter);
 		Utility.setListViewHeightBasedOnChildren(postLv);
 		
@@ -264,10 +265,12 @@ public class SinglePostActivity extends LoadWebPageActivity implements
 	}
 	
 	private void startReply(String followup, String referContent, String referAuthor, String referTimestamp) {
-		int idx1 = postUrl.indexOf("&ID=");
+		//System.out.println("Start reply, postUrl:" + postUrl);
+		int idx1 = postUrl.indexOf("&id=");
+		if (idx1 == -1) idx1 = postUrl.indexOf("?id=");
 		int idx2 = postUrl.indexOf('&', idx1 + 1);
 		String rootID = postUrl.substring(idx1 + 4, idx2);
-		idx1 = postUrl.indexOf("boardID=");
+		idx1 = postUrl.indexOf("boardid=");
 		idx2 = postUrl.indexOf('&', idx1);
 		String boardID = postUrl.substring(idx1 + 8, idx2);
 		
@@ -312,6 +315,7 @@ class SinglePostAdapter extends BaseAdapter {
 	private Context context;
 	private SinglePostActivity activity;
 	private ArrayList<String> authors;
+	private ArrayList<String> faces;
 	private ArrayList<String> contents;
 	private ArrayList<String> timestamps;
 	private final int referenceLineThreshold = 6;
@@ -322,10 +326,10 @@ class SinglePostAdapter extends BaseAdapter {
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
-	public void setData(ArrayList<String> authors, /*ArrayList<String> references,*/
+	public void setData(ArrayList<String> authors, ArrayList<String> faces,
 						ArrayList<String> contents, ArrayList<String> timestamps) {
 		this.authors = authors;
-		//this.references = references;
+		this.faces = faces;
 		this.contents = contents;
 		this.timestamps = timestamps;
 	}
@@ -361,19 +365,27 @@ class SinglePostAdapter extends BaseAdapter {
 		authorTv.setText(this.authors.get(i));
 		timestampTv.setText(this.timestamps.get(i));
 		
-		/*// add reference	
-		if (references.get(i).length() > 0) {
-			String referText = references.get(i);
-			setContentLayout(layout, referText, 5, 5, 5, 5, 
-					13, R.color.darkgrey, R.color.thingrey, R.color.blue);
-		}*/
-		
+		// add face
+		if (faces.get(i) != ""){
+			ImageView imgView = makeExpression(faces.get(i), R.drawable.face01 - 1);
+			
+			LinearLayout expLayout = new LinearLayout(context.getApplicationContext());
+			LinearLayout.LayoutParams explayoutParams = new LinearLayout.LayoutParams(
+			         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			explayoutParams.gravity = Gravity.LEFT;
+			expLayout.setLayoutParams(explayoutParams);
+			expLayout.setGravity(Gravity.LEFT);
+			expLayout.setOrientation(LinearLayout.HORIZONTAL);
+			expLayout.addView(imgView);
+			layout.addView(expLayout);
+		}
 		// add text content
 		{
 			String contentText = contents.get(i);
+			contentText = removeUrlContent(contentText);
 			setContentLayout(layout, contentText, 0, 0, 0, 0, 
 					16, R.color.black, R.color.white, R.color.blue);
-		}			
+		}
 		return convertView;
 	}
 
@@ -429,13 +441,13 @@ class SinglePostAdapter extends BaseAdapter {
 				int urlEnd = urlMatcher.end();
 				if (urlStart < urlEnd) {
 					String url = contentText.substring(urlStart, urlEnd);
-					//System.out.println("Before Url:" + url);
 					int httpIdx = url.indexOf("http"); httpIdx = (httpIdx == -1)? Integer.MAX_VALUE : httpIdx;
-					int wwwIdx = url.indexOf("www"); wwwIdx = (wwwIdx == -1)? Integer.MAX_VALUE : wwwIdx;
-					int urlIdx = Math.min(httpIdx, wwwIdx);
+					int ftpIdx = url.indexOf("ftp"); ftpIdx = (ftpIdx == -1)? Integer.MAX_VALUE : ftpIdx;
+					int fileIdx = url.indexOf("file"); fileIdx = (fileIdx == -1)? Integer.MAX_VALUE : fileIdx;
+					int urlIdx = Math.min(httpIdx, Math.min(ftpIdx, fileIdx));
 					if (urlIdx > 0 && urlIdx < Integer.MAX_VALUE)
 						url = url.substring(urlIdx);
-					//System.out.println("After Url:" + url);
+
 					TextView linkTv = makeTextView(url, size, linkColor, bgColor);
 					if (linkTv != null) contentLayout.addView(linkTv);
 	
@@ -463,7 +475,7 @@ class SinglePostAdapter extends BaseAdapter {
 				LinearLayout.LayoutParams explayoutParams = new LinearLayout.LayoutParams(
 				         LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 				explayoutParams.gravity = Gravity.LEFT;
-				expLayout.setLayoutParams(layoutParams);
+				expLayout.setLayoutParams(explayoutParams);
 				expLayout.setGravity(Gravity.LEFT);
 				expLayout.setOrientation(LinearLayout.HORIZONTAL);
 				
@@ -471,7 +483,7 @@ class SinglePostAdapter extends BaseAdapter {
 					// expression
 					int expEnd = expMatcher.end();
 					String expStr = contentText.substring(expStart + 1, expEnd - 1);
-					ImageView imgView = makeExpression(expStr);
+					ImageView imgView = makeExpression(expStr, R.drawable.em01);
 					expLayout.addView(imgView);
 					// update index and matcher
 					startIndex = expEnd;
@@ -492,13 +504,12 @@ class SinglePostAdapter extends BaseAdapter {
 				// draw reference
 				int refEnd = findMatchRefEnd(contentText, refStart);
 				if (refStart + 8 < refEnd) {
-					//System.out.println("refStart:" + refStart + " refEnd:" + refEnd);
 					StringBuilder referStrSb = new StringBuilder();
 					int idx1 = contentText.indexOf("[/b]", refStart);
 					referStrSb.append(contentText.substring(refStart, idx1));
 					referStrSb.append('\n');
 					referStrSb.append(contentText.substring(idx1 + 4, refEnd));
-					String referStr = getFirstFiveLine(referStrSb.toString());
+					String referStr = getFirstRefLine(referStrSb.toString());
 					setContentLayout(contentLayout, referStr, 5, 5, 5, 5, 
 							13, R.color.darkgrey, R.color.thingrey, R.color.blue);
 				}
@@ -522,6 +533,35 @@ class SinglePostAdapter extends BaseAdapter {
 		layout.addView(contentLayout);
 	}
 	
+	private String removeUrlContent(String contentText) {
+		Pattern urlPattern = Pattern.compile("\\[url=");
+		Matcher urlMatcher = urlPattern.matcher(contentText);
+		boolean hasUrl = urlMatcher.find();
+		
+		
+		StringBuilder sb = new StringBuilder();
+		int startIndex = 0, endIndex = contentText.length();
+		while (true) {
+			if (!hasUrl) {
+				if (startIndex < endIndex)
+					sb.append(contentText.substring(startIndex, endIndex));
+				break;
+			}
+			else {
+				int urlStart = urlMatcher.start();
+				if (startIndex < urlStart)
+					sb.append(contentText.substring(startIndex, urlStart));
+				
+				int end1 = contentText.indexOf(']', urlStart + 1);
+				sb.append(contentText.substring(urlStart, end1 + 1));
+				int start2 = contentText.indexOf("[/url]", end1);
+				startIndex = start2 + 6;
+				hasUrl = urlMatcher.find();
+			}
+		}
+		return sb.toString();
+	}
+	
 	private int findMatchRefEnd(String contentText, int refStart) {
 		while (true) {
 			int end0 = contentText.indexOf("[/quotex]", refStart);
@@ -533,7 +573,7 @@ class SinglePostAdapter extends BaseAdapter {
 		}
 	}
 	
-	private String getFirstFiveLine(String text) {
+	private String getFirstRefLine(String text) {
 		String[] lines = removeBrackets(text).split("\n");
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 5 && i < lines.length; i++) {
@@ -567,12 +607,25 @@ class SinglePostAdapter extends BaseAdapter {
 			sb.append(text.charAt(i++));
 		}
 		while (true) {
+			int len = sb.length();
+			if (len > 0 && 
+				(sb.charAt(0) == ']' || sb.charAt(0) == '[')) sb.deleteCharAt(0);
+			else break;
+		}
+		while (true) {
 			int len = sb.length() - 1;
-			if (len >= 0 && 
-				(sb.charAt(len) == ']' || sb.charAt(len) == '['|| sb.charAt(len) == '\n'))
+			if (len >= 0 && (sb.charAt(len) == ']' || sb.charAt(len) == '['))
 				sb.deleteCharAt(len);
 			else break;
 		}
+		if (sb.length() == 0) return "";
+		boolean hasReturn = sb.charAt(sb.length() - 1) == '\n';
+		while (true) {
+			int len = sb.length() - 1;
+			if (len >= 0 && sb.charAt(len) == '\n') sb.deleteCharAt(len);
+			else break;
+		}
+		if (hasReturn) sb.append('\n');
 		return sb.toString();
 	}
 	
@@ -588,18 +641,15 @@ class SinglePostAdapter extends BaseAdapter {
 		return tv;
 	}
 	
-	private ImageView makeExpression(String expStr) {
-		int expDrawable = R.drawable.em01;
-		int num = Integer.parseInt(expStr.substring(2));
+	private ImageView makeExpression(String expSrc, int startDrawable) {
+		int expDrawable = startDrawable;
+		int num = 0;
+		if (expSrc.startsWith("em"))
+			num = Integer.parseInt(expSrc.substring(2));
+		else if (expSrc.startsWith("face"))
+			num = Integer.parseInt(expSrc.substring(4));
 		expDrawable += num;
-		/*StringBuilder expUrl = new StringBuilder();
-		expUrl.append("http://www.cc98.org/emot/");
-		expUrl.append(expStr);
-		expUrl.append(".gif");*/
 		ImageView imgView = new ImageView(context.getApplicationContext());
-		//imgView.setTag(expUrl.toString());
-		//System.out.println("Image Tag:" + imgView.getTag());
-		//new DownloadImageTask(activity).execute(imgView);
 		Bitmap bm = BitmapFactory.decodeResource(context.getResources(), expDrawable);
 		imgView.setImageBitmap(bm);
 		return imgView;

@@ -45,6 +45,7 @@ public class NewPostTask extends AsyncTask<String, Integer, String[]>{
 		String content = inputs[4];
 		String referer = inputs[5];
 		String cookie = inputs[6];
+		String expSrc = inputs[7];
 		StringBuilder cookieSb = new StringBuilder();
 		cookieSb.append("BoardList=BoardID=Show; owaenabled=True; autoplay=True; ");
 		cookieSb.append(cookie);
@@ -53,18 +54,17 @@ public class NewPostTask extends AsyncTask<String, Integer, String[]>{
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("Content", content);
-		params.put("Expression", "face7.gif");
+		params.put("Expression", expSrc);
 		params.put("passwd", pwd);
 		params.put("signflag", "yes");
 		params.put("subject", subject);
 		params.put("upfilerename", "");
 		params.put("UserName", username);
-				
 		
 		HashMap<String, String> header = new HashMap<String, String>();
 		header.put("Accept", "text/html, application/xhtml+xml, */*");
 		header.put("Referer", referer);
-		header.put("Accept-Language", "zh-CN");
+		header.put("Accept-Language", "zh-CN, en-GB");
 		header.put("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
 		header.put("Content-Type","application/x-www-form-urlencoded");
 		header.put("Accept-Encoding", "gzip, deflate");

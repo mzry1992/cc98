@@ -54,7 +54,8 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 		Intent intent = getIntent();
 		boardUrl = intent.getStringExtra(this.getString(R.string.boardUrl));
 		boardUrl = boardUrl + "&page=";
-
+		boardUrl = boardUrl.toLowerCase();
+		
 		homePage = UserInfoUtil.getHomePageURL(this);
 		postUrlName = this.getString(R.string.postUrl);
 	}
@@ -71,7 +72,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 		msgMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				int idx1 = boardUrl.toLowerCase().indexOf("boardid=");
+				int idx1 = boardUrl.indexOf("boardid=");
 				int idx2 = boardUrl.indexOf('&', idx1);
 				String boardID = boardUrl.substring(idx1 + 8, idx2);
 
@@ -222,7 +223,7 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 				String postUrl = homePage + globalTopicUrls.get(position);
 				/*Toast.makeText(getApplicationContext(), "Url:" + postUrl,
 						Toast.LENGTH_LONG).show();*/
-				System.out.println("Post Url: " + postUrl);
+				//System.out.println("Post Url: " + postUrl);
 				Intent intent = new Intent(LeafBoardActivity.this,
 						SinglePostActivity.class);
 				intent.putExtra(postUrlName, postUrl);
@@ -261,8 +262,8 @@ public class LeafBoardActivity extends LoadWebPageActivity implements
 				displayedPage++;
 				String followingPageUrl = boardUrl
 						+ Integer.toString(displayedPage);
-				System.out.println("Loading follow page URL: "
-						+ followingPageUrl);
+				/*System.out.println("Loading follow page URL: "
+						+ followingPageUrl);*/
 				pageMoreBtn.setText(this
 						.getString(R.string.loadingMorePageText));
 				new LeafBoardTask(this, serverName).execute(cookie,

@@ -143,13 +143,13 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 			// get each post information
 			ArrayList<String> authors = new ArrayList<String>();
 			ArrayList<String> contents = new ArrayList<String>();
-			//ArrayList<String> references = new ArrayList<String>();
+			ArrayList<String> faces = new ArrayList<String>();
 			ArrayList<String> timestamps = new ArrayList<String>();
 			ArrayList<String> replyIDs = new ArrayList<String>();
 			ArrayList<String> rawContents = new ArrayList<String>();
-			getPostsDetails(tables, authors, /*references,*/ contents, timestamps, replyIDs, rawContents);
+			getPostsDetails(tables, authors, faces, contents, timestamps, replyIDs, rawContents);
 			outputs.add(authors);
-			//outputs.add(references);
+			outputs.add(faces);
 			outputs.add(contents);
 			outputs.add(timestamps);
 			outputs.add(replyIDs);
@@ -186,7 +186,7 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 	// get posts details
 	private void getPostsDetails(ArrayList<Element> tables,
 								ArrayList<String> authors,
-								//ArrayList<String> references,
+								ArrayList<String> faces,
 								ArrayList<String> contents,
 								ArrayList<String> timestamps,
 								ArrayList<String> replyIDs,
@@ -238,29 +238,23 @@ public class SinglePostTask extends AsyncTask<String, Integer, ArrayList<ArrayLi
 					contentSb.append(title);
 					contentSb.append("\n\n");
 				}
-				Element span = td.getElementsByTag("span").first();
-				String text = span.html().trim();
-				
-				/*if (text.startsWith("[quotex]")) {
-					//System.out.println("Reference:" + text);
-					int idx = text.indexOf("[/quotex]");
-					int idx1 = text.indexOf("[/b]");
-					StringBuilder referStrSb = new StringBuilder();
-					referStrSb.append(text.substring(0, idx1));
-					referStrSb.append('\n');
-					referStrSb.append(text.substring(idx1 + 4, idx));
-					String referStr = referStrSb.toString();
-					String contentStr = text.substring(idx + 9);
-					
-					rawContents.add(contentStr);
-					referStr = adjustText(referStr);
-					contentStr = adjustText(contentStr);
-					
-					contentSb.append(contentStr);
-					contents.add(contentSb.toString().trim());
-					//references.add(referStr.trim()/* + "\n");
+				//face
+				Elements imgs = td.getElementsByTag("img");
+				if (imgs != null) {
+					Element img = imgs.first();
+					String imgSrc = img.attr("src");	// face/face19.gif
+					if (!imgSrc.contains("face")) faces.add("");
+					else {
+						int idx0 = imgSrc.indexOf('/');
+						int idx1 = imgSrc.indexOf('.');
+						if (idx0 + 1 < idx1) faces.add(imgSrc.substring(idx0 + 1, idx1)); 
+						else faces.add("");
+					}
 				}
-				else */
+				else faces.add("");
+				//text
+				Element span = td.getElementsByTag("span").first();
+				String text = span.html().trim();				
 				{
 					rawContents.add(text);
 					text = adjustText(text);
