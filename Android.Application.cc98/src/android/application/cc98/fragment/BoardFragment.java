@@ -3,7 +3,7 @@ package android.application.cc98.fragment;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.application.cc98.BBSListActivity;
 import android.application.cc98.HomePageActivity;
 import android.application.cc98.R;
@@ -25,13 +25,15 @@ public class BoardFragment extends Fragment {
 	private int lastX = 0, lastY = 0;
 
 	private ScrollView scrollView = null;
-	
+
 	private View boardLayout = null;
 
 	private ArrayList<String> defaultBoardNames = null;
 	private ArrayList<String> defaultBoardUrls = null;
 
 	private String homePage = null, boardUrlName = null;
+
+	private boolean isFillContent = false;
 
 	public BoardFragment() {
 		// TODO Auto-generated constructor stub
@@ -43,28 +45,28 @@ public class BoardFragment extends Fragment {
 		boardLayout = inflater.inflate(R.layout.board, container, false);
 		homePage = UserInfoUtil.getHomePageURL(getActivity());
 		boardUrlName = getActivity().getString(R.string.boardUrl);
-		scrollView = (ScrollView)boardLayout.findViewById(R.id.boardScrollView);
+		scrollView = (ScrollView) boardLayout
+				.findViewById(R.id.boardScrollView);
 		return boardLayout;
 	}
-	
+
 	public void recordScrollPosition() {
 		lastX = scrollView.getScrollX();
 		lastY = scrollView.getScrollY();
 	}
-	
+
 	public void restoreScrollPosition() {
 		scrollView.smoothScrollTo(lastX, lastY);
 	}
 
 	public void fillContent(Object outputRes) {
-
-		ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) outputRes;
-
-		defaultBoardNames = outputs.get(4);
-		defaultBoardUrls = outputs.get(5);
-
-		setDefaultBoard();
-
+		if (!isFillContent) {
+			isFillContent = true;
+			ArrayList<ArrayList<String>> outputs = (ArrayList<ArrayList<String>>) outputRes;
+			defaultBoardNames = outputs.get(4);
+			defaultBoardUrls = outputs.get(5);
+			setDefaultBoard();
+		}
 	}
 
 	private void setDefaultBoard() {
@@ -79,23 +81,24 @@ public class BoardFragment extends Fragment {
 			displist.add(map);
 		}
 
-
 		SimpleAdapter mSchedule = new SimpleAdapter(getActivity(), displist,
 				R.layout.home_default_list_item, // ListItem XML implementation
-				new String[] { 	this.getString(R.string.defaultItemTitle),
-								this.getString(R.string.defaultItemImage)}, // dynamic
-																			// array
-																			// and
-																			// ListItem
-																			// correspondings
-				new int[] { R.id.defaultItemTitle, R.id.defaultItemImage }); // ListItem XML's two
-														// TextView ID
+				new String[] { this.getString(R.string.defaultItemTitle),
+						this.getString(R.string.defaultItemImage) }, // dynamic
+																		// array
+																		// and
+																		// ListItem
+																		// correspondings
+				new int[] { R.id.defaultItemTitle, R.id.defaultItemImage }); // ListItem
+																				// XML's
+																				// two
+		// TextView ID
 
 		// set custom list view and listener
 		GrapeGridView defaultGv = (GrapeGridView) boardLayout
 				.findViewById(R.id.homePageDefaultGrid);
 		defaultGv.setAdapter(mSchedule);
-		Utility.getGridViewHeightBasedOnChildren(defaultGv,4);
+		Utility.getGridViewHeightBasedOnChildren(defaultGv, 4);
 
 		// set view
 		defaultGv.setOnItemClickListener(new OnItemClickListener() {
@@ -154,6 +157,14 @@ public class BoardFragment extends Fragment {
 		if (boardName.equals("天下一家"))
 			return R.drawable.world;
 		return R.drawable.cc98_smallest;
+	}
+
+	public boolean isLoad() {
+		return isFillContent;
+	}
+	
+	public void invalidPos() {
+		lastX = lastY = 0;
 	}
 
 }

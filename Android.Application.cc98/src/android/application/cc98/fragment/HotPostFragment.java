@@ -3,7 +3,7 @@ package android.application.cc98.fragment;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.application.cc98.BBSListActivity;
 import android.application.cc98.FragmentHomeActivity;
 import android.application.cc98.GetWebPageInterface;
@@ -31,10 +31,12 @@ import android.widget.AdapterView.OnItemClickListener;
 public class HotPostFragment extends Fragment implements GetWebPageInterface,
 		OnClickListener {
 
+	private boolean isSetResetTag = true;
+
 	private int lastX = 0, lastY = 0;
 
 	private ScrollView scrollView = null;
-	
+
 	private View linearLayout = null;
 
 	private boolean isNetworkRequest = false;
@@ -74,7 +76,8 @@ public class HotPostFragment extends Fragment implements GetWebPageInterface,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		hotPostLayout = inflater.inflate(R.layout.hotpost, container, false);
-		scrollView = (ScrollView)hotPostLayout.findViewById(R.id.hotpostScrollView);
+		scrollView = (ScrollView) hotPostLayout
+				.findViewById(R.id.hotpostScrollView);
 		linearLayout = hotPostLayout.findViewById(R.id.hotpostLinearLayout);
 		lv = (ListView) hotPostLayout.findViewById(R.id.hotpostlistView);
 		refreshButton = (Button) hotPostLayout
@@ -82,13 +85,17 @@ public class HotPostFragment extends Fragment implements GetWebPageInterface,
 		refreshButton.setOnClickListener(this);
 		return hotPostLayout;
 	}
-	
+
 	public void recordScrollPosition() {
 		lastX = scrollView.getScrollX();
 		lastY = scrollView.getScrollY();
 	}
-	
+
 	public void restoreScrollPosition() {
+		if (isSetResetTag) {
+			lastX = lastY = 0;
+			isSetResetTag = false;
+		}
 		scrollView.smoothScrollTo(lastX, lastY);
 	}
 
@@ -110,16 +117,16 @@ public class HotPostFragment extends Fragment implements GetWebPageInterface,
 
 	private void fillContent() {
 		SimpleAdapter adapter = new SimpleAdapter(activity, getData(),
-				R.layout.hotpost_list_item, new String[] { 
-						"ranking", "content", 
-						"board", "author", "time",
-						"attentioncount", "postcount", "clickcount" }, 
-			new int[] { 
-						R.id.rankingText, R.id.contentText,
-						R.id.boardText, R.id.authorText, R.id.timeText,
-						R.id.attentionCountText, R.id.replyCountText, R.id.clickCountText });
+				R.layout.hotpost_list_item, new String[] { "ranking",
+						"content", "board", "author", "time", "attentioncount",
+						"postcount", "clickcount" }, new int[] {
+						R.id.rankingText, R.id.contentText, R.id.boardText,
+						R.id.authorText, R.id.timeText,
+						R.id.attentionCountText, R.id.replyCountText,
+						R.id.clickCountText });
 		lv.setAdapter(adapter);
 		Utility.setListViewHeightBasedOnChildren(lv);
+		isSetResetTag = true;
 	}
 
 	private ArrayList<HashMap<String, String>> getData() {
@@ -207,8 +214,10 @@ public class HotPostFragment extends Fragment implements GetWebPageInterface,
 				intent.putExtra(activity.getString(R.string.postUrl),
 						singlePostUrl);
 				getActivity().startActivity(intent);
-				/*Toast.makeText(activity, singlePostUrl, Toast.LENGTH_LONG)
-						.show();*/
+				/*
+				 * Toast.makeText(activity, singlePostUrl, Toast.LENGTH_LONG)
+				 * .show();
+				 */
 			}
 		});
 		activity.refresh();
@@ -226,6 +235,10 @@ public class HotPostFragment extends Fragment implements GetWebPageInterface,
 		isCookieValid = false;
 		activity.jumpToLogin();
 		activity.refresh();
+	}
+
+	public boolean isNetRequesting() {
+		return isNetworkRequest;
 	}
 
 	public boolean isCookieValid() {

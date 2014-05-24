@@ -1,77 +1,104 @@
 package android.application.cc98;
 
-import android.app.Activity;
+import java.lang.reflect.Field;
+
+import android.app.Dialog;
 import android.application.cc98.network.UserInfoUtil;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.PopupMenu;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
-public abstract class LoadWebPageActivity extends Activity implements GetWebPageInterface {
-	
+public abstract class LoadWebPageActivity extends ActionBarActivity implements
+		GetWebPageInterface {
+
 	protected MenuItem msgMenuItem = null;
 	protected MenuItem refreshItem = null;
+	protected MenuItem moreItem = null;
 	protected String cookie = null, serverName = null;
-	private boolean isPageLoad = false; 
-		
+	private boolean isPageLoad = false;
+
+	private Dialog popupDialog = null;
+	
+	private Boolean popupState = false;
+	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		serverName = getString(R.string.serverName);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.refresh_menu, menu);
+		// mainMenu = menu;
 		refreshItem = menu.findItem(R.id.refresh);
 		msgMenuItem = menu.findItem(R.id.message);
 		msgMenuItem.setVisible(false);
+		moreItem = menu.findItem(R.id.moreoption);
 		preLoadPage();
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.refresh:
 			preLoadPage();
 			return true;
-		case R.id.exit_menu_item:
-			exitProgram();
-			return true;
-		case R.id.change_user_menu_item:
-			jumpToLogin(false);
-			return true;
-		case R.id.about_us_menu_item:
-			Intent i = new Intent(this, AboutActivity.class);
-			startActivity(i);
+		case R.id.moreoption:
+			if (!popupState) {
+				showPop();
+			} else {
+				popupDialog.dismiss();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	protected void preLoadPage() {
 		cookie = UserInfoUtil.GetCookieInfo(this);
-		if (cookie == null) 
+		if (cookie == null)
 			jumpToLogin(true);
 		else
 			loadPage();
 	}
-	
-	abstract public void loadPage() ;
-	
+
+	abstract public void loadPage();
+
 	abstract public void loadPageSucess(Object outputs);
-	
+
 	abstract public int getStatusCode(Object outputs);
-	
+
 	abstract public String getErrorMessage(Object outputs);
 
 	private void loadPageErrorHandle(int statusCode) {
@@ -88,7 +115,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 				});
 			}
 		} else {
-			//jump to login page
+			// jump to login page
 			jumpToLogin(true);
 		}
 	}
@@ -101,7 +128,6 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 	@Override
 	public void getWebPagePreProgress() {
 		// TODO Auto-generated method stub
-		//showRefreshAnimation();
 		if (!isPageLoad) {
 			showLoadingPage();
 		}
@@ -116,10 +142,9 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 	@Override
 	public void getWebPagePostProgress(Object status) {
 		// TODO Auto-generated method stub
-		hideRefreshAnimation();
-		
+
 		int statusCode = getStatusCode(status);
-		//System.out.println("statusCode:" + statusCode);
+		// System.out.println("statusCode:" + statusCode);
 		boolean isLoadSucess = false;
 		StringBuilder errorStrBuilder = new StringBuilder();
 
@@ -152,7 +177,7 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 		}
 
 	}
-	
+
 	private void jumpToLogin(boolean isSetView) {
 		if (isSetView) {
 			setContentView(R.layout.login_in_error);
@@ -169,42 +194,85 @@ public abstract class LoadWebPageActivity extends Activity implements GetWebPage
 		Intent welcomeIntent = new Intent(this, LoginActivity.class);
 		this.startActivity(welcomeIntent);
 	}
-	
+
 	private void exitProgram() {
-		Intent intent = new Intent(); 
+		Intent intent = new Intent();
 		intent.setClass(this, FragmentHomeActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra("exit_code", "true");
 		startActivity(intent);
 		finish();
 	}
-	
-	private void showRefreshAnimation() {
-		hideRefreshAnimation();
 
-		// 这里使用一个ImageView设置成MenuItem的ActionView，这样我们就可以使用这个ImageView显示旋转动画了
-		ImageView refreshActionView = (ImageView) getLayoutInflater().inflate(
-				R.layout.refresh_action_view, null);
-		refreshActionView.setImageResource(R.drawable.ic_action_refresh);
+	private void showPop() {
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.more_menu, null);
+		ListView listView = (ListView) view.findViewById(R.id.moreMenuListView);
 
-		refreshItem.setActionView(refreshActionView);
-
-		// 显示刷新动画
-		Animation animation = AnimationUtils
-				.loadAnimation(this, R.anim.refresh);
-		animation.setRepeatMode(Animation.RESTART);
-		animation.setRepeatCount(Animation.INFINITE);
-		refreshActionView.startAnimation(animation);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				R.layout.more_menu_list_item, R.id.menu_title);
+		adapter.add("切换用户");
+		adapter.add("关于我们");
+		adapter.add("退出程序");
+		listView.setAdapter(adapter);
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				popupDialog.dismiss();
+				if (position == 2) {
+					exitProgram();
+				}
+				else if (position == 0){
+					jumpToLogin(false);
+				}
+				else if (position == 1) {
+					Intent i = new Intent(LoadWebPageActivity.this, AboutActivity.class);
+					startActivity(i);
+				}
+			}
+			
+		});
+		popupDialog = new Dialog(this);
+		popupDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		popupDialog.getWindow().setBackgroundDrawable(
+				new ColorDrawable(Color.WHITE));
+		popupDialog.getWindow().clearFlags(
+				WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+		popupDialog.setContentView(view);
+		// Calculate ActionBar height
+		TypedValue tv = new TypedValue();
+		ActionBar maActionBar = getSupportActionBar();
+		int actionBarHeight = maActionBar.getHeight();
+		if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+			actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
+					getResources().getDisplayMetrics());
+		}
+		WindowManager.LayoutParams wmlp = popupDialog.getWindow()
+				.getAttributes();
+		wmlp.gravity = Gravity.TOP | Gravity.RIGHT;
+		wmlp.x += 12;
+		wmlp.y += actionBarHeight;
+		popupDialog.getWindow().setAttributes(wmlp);
+		popupDialog.setCanceledOnTouchOutside(true);
+		popupDialog.show();
 	}
 
-	private void hideRefreshAnimation() {
-		if (refreshItem != null) {
-			View view = refreshItem.getActionView();
-			if (view != null) {
-				view.clearAnimation();
-				refreshItem.setActionView(null);
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_MENU:
+			if (!popupState) {
+				showPop();
+			} else {
+				popupDialog.dismiss();
 			}
+			return true;
+		default:
+			break;
 		}
+		return super.onKeyDown(keyCode, event);
 	}
 	
 	private void showLoadingPage() {

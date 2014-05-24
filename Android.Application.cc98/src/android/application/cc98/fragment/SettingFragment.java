@@ -2,7 +2,7 @@ package android.application.cc98.fragment;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.application.cc98.AboutActivity;
 import android.application.cc98.FragmentHomeActivity;
 import android.application.cc98.LoginActivity;

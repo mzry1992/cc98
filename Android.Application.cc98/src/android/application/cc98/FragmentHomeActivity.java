@@ -3,9 +3,13 @@ package android.application.cc98;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.Dialog;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.application.cc98.fragment.BoardFragment;
 import android.application.cc98.fragment.CustomizationFragment;
 import android.application.cc98.fragment.HomePageManager;
@@ -14,19 +18,43 @@ import android.application.cc98.fragment.LoadingFragment;
 import android.application.cc98.fragment.LoginErrorFragment;
 import android.application.cc98.fragment.NetErrorFragment;
 import android.application.cc98.fragment.SettingFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class FragmentHomeActivity extends Activity implements OnClickListener {
+public class FragmentHomeActivity extends ActionBarActivity implements
+		OnClickListener {
+
+	private boolean isShowing = true;
 
 	private int currSelectedTab = 0;
 
 	private boolean isHotPostInit = false, isHomePageInit = false;
+
+	protected MenuItem msgMenuItem = null;
+	protected MenuItem refreshItem = null;
+	protected MenuItem moreItem = null;
+
+	private Dialog popupDialog = null;
+	private Boolean popupState = false;
 
 	int layoutIds[] = { R.id.hotpost_layout, R.id.customization_layout,
 			R.id.board_layout, R.id.setting_layout };
@@ -60,7 +88,7 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 	private HomePageManager homePageManager = null;
 
 	private FragmentManager fragmentManager;
-	
+
 	private Fragment globalFragment = null;
 
 	public FragmentHomeActivity() {
@@ -70,12 +98,25 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.fragment_home);
 		initViews();
-		fragmentManager = getFragmentManager();
+		fragmentManager = getSupportFragmentManager();
 		initFragment();
 		setTabSelection(0);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		isShowing = false;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		isShowing = true;
+		refresh();
 	}
 
 	private void initViews() {
@@ -116,7 +157,7 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 		}
 		transaction.commit();
 	}
-	
+
 	private void reStartActivity() {
 		hotPostFragment.invalidData();
 		homePageManager.invalidData();
@@ -124,6 +165,45 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 		isHomePageInit = false;
 		currSelectedTab = 0;
 		refresh();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.refresh_menu, menu);
+		// mainMenu = menu;
+		refreshItem = menu.findItem(R.id.refresh);
+		msgMenuItem = menu.findItem(R.id.message);
+		msgMenuItem.setVisible(false);
+		moreItem = menu.findItem(R.id.moreoption);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.refresh:
+			if (currSelectedTab == 0 && !hotPostFragment.isNetRequesting()) {
+				hotPostFragment.invalidData();
+				isHotPostInit = false;
+				refresh();
+			} else if ((currSelectedTab == 1 || (currSelectedTab == 2 && !boardFragment.isLoad()) )
+					&& !homePageManager.isNetRequesting()) {
+				homePageManager.invalidData();
+				isHomePageInit = false;
+				refresh();
+			}
+			return true;
+		case R.id.moreoption:
+			if (!popupState) {
+				showPop();
+			} else {
+				popupDialog.dismiss();
+			}
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -151,15 +231,25 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 			}
 			currFragment = getFragment(hotPostFragment.getFragmentStatus(),
 					index);
-		} else if (index == 1 || index == 2) {
+		} else if (index == 1) {
 			if (!isHomePageInit) {
 				isHomePageInit = true;
 				homePageManager.loadData();
 			}
 			currFragment = getFragment(homePageManager.getFragmentStatus(),
 					index);
-		}
-		else {
+		} else if (index == 2) {
+			if (boardFragment.isLoad())
+				currFragment = boardFragment;
+			else {
+				if (!isHomePageInit) {
+					isHomePageInit = true;
+					homePageManager.loadData();
+				}
+				currFragment = getFragment(homePageManager.getFragmentStatus(),
+						index);
+			}
+		} else {
 			currFragment = settingFragment;
 			settingFragment.updateUserInfo();
 		}
@@ -173,8 +263,7 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 		transaction.commit();
 		if (globalFragment == hotPostFragment) {
 			hotPostFragment.restoreScrollPosition();
-		}
-		else if (globalFragment == custimizationFragment)
+		} else if (globalFragment == custimizationFragment)
 			custimizationFragment.restoreScrollPosition();
 		else if (globalFragment == boardFragment)
 			boardFragment.restoreScrollPosition();
@@ -199,7 +288,8 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 	}
 
 	public void refresh() {
-		setTabSelection(currSelectedTab);
+		if (isShowing)
+			setTabSelection(currSelectedTab);
 	}
 
 	public void jumpToLogin() {
@@ -241,6 +331,76 @@ public class FragmentHomeActivity extends Activity implements OnClickListener {
 			else
 				reStartActivity();
 		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_MENU:
+			if (!popupState) {
+				showPop();
+			} else {
+				popupDialog.dismiss();
+			}
+			return true;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private void showPop() {
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.more_menu, null);
+		ListView listView = (ListView) view.findViewById(R.id.moreMenuListView);
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				R.layout.more_menu_list_item, R.id.menu_title);
+		adapter.add("切换用户");
+		adapter.add("关于我们");
+		adapter.add("退出程序");
+		listView.setAdapter(adapter);
+
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				popupDialog.dismiss();
+				if (position == 2) {
+					FragmentHomeActivity.this.finish();
+				} else if (position == 0) {
+					jumpToLogin();
+				} else if (position == 1) {
+					Intent i = new Intent(FragmentHomeActivity.this,
+							AboutActivity.class);
+					startActivity(i);
+				}
+			}
+
+		});
+		popupDialog = new Dialog(this);
+		popupDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		popupDialog.getWindow().setBackgroundDrawable(
+				new ColorDrawable(Color.WHITE));
+		popupDialog.getWindow().clearFlags(
+				WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+		popupDialog.setContentView(view);
+		// Calculate ActionBar height
+		TypedValue tv = new TypedValue();
+		ActionBar maActionBar = getSupportActionBar();
+		int actionBarHeight = maActionBar.getHeight();
+		if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+			actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
+					getResources().getDisplayMetrics());
+		}
+		WindowManager.LayoutParams wmlp = popupDialog.getWindow()
+				.getAttributes();
+		wmlp.gravity = Gravity.TOP | Gravity.RIGHT;
+		wmlp.x += 12;
+		wmlp.y += actionBarHeight;
+		popupDialog.getWindow().setAttributes(wmlp);
+		popupDialog.setCanceledOnTouchOutside(true);
+		popupDialog.show();
 	}
 
 }

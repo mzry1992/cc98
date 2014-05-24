@@ -1,6 +1,6 @@
 package android.application.cc98.fragment;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.application.cc98.FragmentHomeActivity;
 import android.application.cc98.R;
 import android.os.Bundle;
